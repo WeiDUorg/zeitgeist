@@ -1,9 +1,9 @@
-QT += core gui widgets
-
 TARGET = zeitgeist
 TEMPLATE = app
 
-CONFIG += c++11
+CONFIG += c++11 debug
+QT += core gui widgets
+
 QMAKE_CXXFLAGS += \
     -Wextra \
     -Werror \
