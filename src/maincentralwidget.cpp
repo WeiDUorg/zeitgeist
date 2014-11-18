@@ -16,16 +16,23 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#include <QHBoxLayout>
+#include <QString>
 
-#include "mainwindow.h"
-#include <QApplication>
+#include "maincentralwidget.h"
+#include "modlist.h"
+#include "modtree.h"
 
-int main(int argc, char* argv[])
+MainCentralWidget::MainCentralWidget()
 {
-    QApplication app(argc, argv);
-    QApplication::setApplicationDisplayName("Zeitgeist");
-    MainWindow w;
-    w.show();
+  availableMods = new ModList(QString(tr("Available Mods")));
+  queuedMods = new ModTree(QString(tr("Queue")));
+  installedMods = new ModTree(QString(tr("Installed Mods")));
 
-    return app.exec();
+  layout = new QHBoxLayout;
+  layout->addWidget(availableMods);
+  layout->addWidget(queuedMods);
+  layout->addWidget(installedMods);
+
+  setLayout(layout);
 }

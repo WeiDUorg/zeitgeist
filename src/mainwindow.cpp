@@ -18,9 +18,13 @@
  */
 
 #include "mainwindow.h"
+#include "maincentralwidget.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
+  centralWidget = new MainCentralWidget;
+  setCentralWidget(centralWidget);
+  setMinimumSize(800, 600);
 }
 
 MainWindow::~MainWindow()

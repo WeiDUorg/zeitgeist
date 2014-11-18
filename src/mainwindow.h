@@ -3,13 +3,18 @@
 
 #include <QMainWindow>
 
+class MainCentralWidget;
+
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+  Q_OBJECT
 
-public:
-    MainWindow(QWidget* parent = 0);
-    ~MainWindow();
+ public:
+  MainWindow(QWidget* parent = 0);
+  ~MainWindow();
+
+ private:
+  MainCentralWidget* centralWidget;
 };
 
 #endif // MAINWINDOW_H

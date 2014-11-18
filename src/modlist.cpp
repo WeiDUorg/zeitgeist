@@ -16,16 +16,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#include "modlist.h"
 
-#include "mainwindow.h"
-#include <QApplication>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QListView>
 
-int main(int argc, char* argv[])
+ModList::ModList(QString title)
 {
-    QApplication app(argc, argv);
-    QApplication::setApplicationDisplayName("Zeitgeist");
-    MainWindow w;
-    w.show();
-
-    return app.exec();
+  QLabel* label = new QLabel(title);
+  QListView* view = new QListView;
+  QVBoxLayout* layout = new QVBoxLayout;
+  layout->addWidget(label);
+  layout->addWidget(view);
+  setLayout(layout);
 }
