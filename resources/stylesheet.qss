@@ -1,1 +1,1 @@
-
+QStatusBar::item {border: 0px solid black}
