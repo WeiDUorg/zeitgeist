@@ -20,14 +20,29 @@
 #include "mainwindow.h"
 #include "maincentralwidget.h"
 
+#include <QLabel>
+#include <QStatusBar>
+
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
   centralWidget = new MainCentralWidget;
   setCentralWidget(centralWidget);
+
+  createStatusBar();
+
   setMinimumSize(800, 600);
 }
 
 MainWindow::~MainWindow()
 {
 
+}
+
+void MainWindow::createStatusBar()
+{
+  statusBarGameLabel = new QLabel(tr("Current Game:"));
+  statusBarCurrentGame = new QLabel(tr("none"));
+  statusBar()->addWidget(statusBarGameLabel);
+  statusBar()->addWidget(statusBarCurrentGame);
+  statusBar()->setSizeGripEnabled(false);
 }

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class MainCentralWidget;
+class QLabel;
 
 class MainWindow : public QMainWindow
 {
@@ -12,9 +13,12 @@ class MainWindow : public QMainWindow
  public:
   MainWindow(QWidget* parent = 0);
   ~MainWindow();
+  void createStatusBar();
 
  private:
   MainCentralWidget* centralWidget;
+  QLabel* statusBarGameLabel;
+  QLabel* statusBarCurrentGame;
 };
 
 #endif // MAINWINDOW_H
