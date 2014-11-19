@@ -4,6 +4,8 @@ TEMPLATE = app
 CONFIG += c++11 debug
 QT += core gui widgets
 
+RESOURCES += resources/resources.qrc
+
 QMAKE_CXXFLAGS += \
     -Wextra \
     -Werror \
@@ -19,5 +21,6 @@ QMAKE_CXXFLAGS += \
 artifacts_dir = tmp
 MOC_DIR = $$artifacts_dir
 OBJECTS_DIR = $$artifacts_dir
+RCC_DIR = $$artifacts_dir
 
 include(src.pri)

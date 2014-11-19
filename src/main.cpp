@@ -18,12 +18,22 @@
  */
 
 #include "mainwindow.h"
+
 #include <QApplication>
+#include <QFile>
+#include <QIODevice>
 
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
     QApplication::setApplicationDisplayName("Zeitgeist");
+
+    QFile stylesheet(":/stylesheet.qss");
+    if (stylesheet.open(QIODevice::ReadOnly | QIODevice::Text)) {
+      app.setStyleSheet(stylesheet.readAll());
+      stylesheet.close();
+    }
+
     MainWindow w;
     w.show();
 
