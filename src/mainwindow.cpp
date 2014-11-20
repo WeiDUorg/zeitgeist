@@ -19,6 +19,7 @@
 
 #include "mainwindow.h"
 #include "maincentralwidget.h"
+#include "gamewindow.h"
 
 #include <QApplication>
 #include <QLabel>
@@ -36,6 +37,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
   createStatusBar();
   createMenus();
+
+  gameWindow = 0;
 
   setMinimumSize(800, 600);
 }
@@ -68,6 +71,8 @@ void MainWindow::createActions()
 
   gameEditAction = new QAction(tr("Edit"), this);
   gameEditAction->setStatusTip(tr("Edit games"));
+  connect(gameEditAction, SIGNAL(triggered()),
+          this, SLOT(showGameWindow()));
 
   gameRefreshAction = new QAction(tr("Refresh"), this);
   gameRefreshAction->setStatusTip(tr("Refresh game"));
@@ -100,4 +105,16 @@ void MainWindow::createMenus()
   gameMenu->addAction(gameUnqueueAction);
   gameMenu->addAction(gameUninstallAction);
   gameMenu->addAction(gameProcessAction);
+}
+
+void MainWindow::showGameWindow()
+{
+  if (!gameWindow) {
+    gameWindow = new GameWindow(this);
+  }
+  if (gameWindow->isHidden()) {
+    gameWindow->show();
+  } else {
+    gameWindow->activateWindow();
+  }
 }

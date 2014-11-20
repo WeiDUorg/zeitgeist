@@ -7,6 +7,7 @@ class MainCentralWidget;
 class QLabel;
 class QAction;
 class QMenu;
+class GameWindow;
 
 class MainWindow : public QMainWindow
 {
@@ -15,6 +16,9 @@ class MainWindow : public QMainWindow
  public:
   MainWindow(QWidget* parent = 0);
   ~MainWindow();
+
+  private slots:
+    void showGameWindow();
 
  private:
   void createStatusBar();
@@ -35,6 +39,7 @@ class MainWindow : public QMainWindow
   QAction* gameProcessAction;
   QMenu* programMenu;
   QMenu* gameMenu;
+  GameWindow* gameWindow;
 };
 
 #endif // MAINWINDOW_H
