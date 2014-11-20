@@ -20,6 +20,7 @@
 #include "mainwindow.h"
 #include "maincentralwidget.h"
 
+#include <QApplication>
 #include <QLabel>
 #include <QStatusBar>
 #include <QAction>
@@ -62,6 +63,8 @@ void MainWindow::createActions()
   programSettingsAction->setStatusTip(tr("Edit program settings"));
 
   programQuitAction = new QAction(tr("Quit"), this);
+  connect(programQuitAction, SIGNAL(triggered()),
+          qApp, SLOT(closeAllWindows()));
 
   gameEditAction = new QAction(tr("Edit"), this);
   gameEditAction->setStatusTip(tr("Edit games"));
