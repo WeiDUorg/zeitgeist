@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 #include "modtree.h"
 
 #include <QLabel>
@@ -24,8 +25,8 @@
 
 ModTree::ModTree(QString title)
 {
+  view = new QTreeView;
   QLabel* label = new QLabel(title);
-  QTreeView* view = new QTreeView;
   QVBoxLayout* layout = new QVBoxLayout;
   layout->addWidget(label);
   layout->addWidget(view);

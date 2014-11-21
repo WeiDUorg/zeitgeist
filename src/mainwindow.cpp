@@ -30,7 +30,7 @@
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 {
-  centralWidget = new MainCentralWidget;
+  MainCentralWidget* centralWidget = new MainCentralWidget;
   setCentralWidget(centralWidget);
 
   createActions();

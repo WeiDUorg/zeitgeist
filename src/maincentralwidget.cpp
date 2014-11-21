@@ -16,8 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 #include <QHBoxLayout>
-#include <QString>
 
 #include "maincentralwidget.h"
 #include "modlist.h"
@@ -25,11 +25,11 @@
 
 MainCentralWidget::MainCentralWidget()
 {
-  availableMods = new ModList(QString(tr("Available Mods")));
-  queuedMods = new ModTree(QString(tr("Queue")));
-  installedMods = new ModTree(QString(tr("Installed Mods")));
+  availableMods = new ModList(tr("Available Mods"));
+  queuedMods = new ModTree(tr("Queue"));
+  installedMods = new ModTree(tr("Installed Mods"));
 
-  layout = new QHBoxLayout;
+  QHBoxLayout* layout = new QHBoxLayout;
   layout->addWidget(availableMods);
   layout->addWidget(queuedMods);
   layout->addWidget(installedMods);

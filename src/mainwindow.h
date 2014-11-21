@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 
-class MainCentralWidget;
 class QLabel;
 class QAction;
 class QMenu;
@@ -25,7 +24,6 @@ class MainWindow : public QMainWindow
   void createActions();
   void createMenus();
 
-  MainCentralWidget* centralWidget;
   QLabel* statusBarGameLabel;
   QLabel* statusBarCurrentGame;
   QAction* programAboutAction;

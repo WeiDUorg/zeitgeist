@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class QString;
+class QListView;
 
 class ModList : public QWidget
 {
@@ -11,6 +12,9 @@ class ModList : public QWidget
 
  public:
   ModList(QString title);
+
+ private:
+  QListView* view;
 };
 
 #endif // MODLIST_H

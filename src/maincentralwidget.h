@@ -15,7 +15,6 @@ class MainCentralWidget : public QWidget
   MainCentralWidget();
 
  private:
-  QHBoxLayout* layout;
   ModList* availableMods;
   ModTree* queuedMods;
   ModTree* installedMods;
