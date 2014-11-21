@@ -12,14 +12,14 @@ class MainWindow : public QMainWindow
 {
   Q_OBJECT
 
- public:
+public:
   MainWindow(QWidget* parent = 0);
   ~MainWindow();
 
-  private slots:
-    void showGameWindow();
+private slots:
+  void showGameWindow();
 
- private:
+private:
   void createStatusBar();
   void createActions();
   void createMenus();

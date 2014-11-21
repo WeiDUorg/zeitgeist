@@ -10,10 +10,10 @@ class ModTree : public QWidget
 {
   Q_OBJECT
 
- public:
+public:
   ModTree(QString title);
 
- private:
+private:
   QTreeView* view;
 };
 

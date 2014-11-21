@@ -11,10 +11,10 @@ class MainCentralWidget : public QWidget
 {
   Q_OBJECT
 
- public:
+public:
   MainCentralWidget();
 
- private:
+private:
   ModList* availableMods;
   ModTree* queuedMods;
   ModTree* installedMods;

@@ -10,10 +10,10 @@ class ModList : public QWidget
 {
   Q_OBJECT
 
- public:
+public:
   ModList(QString title);
 
- private:
+private:
   QListView* view;
 };
 
