@@ -18,31 +18,79 @@
  */
 
 #include "gamewindow.h"
+#include "gamelistmodel.h"
 
 #include <QTableView>
 #include <QHeaderView>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QString>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QModelIndex>
+#include <QAbstractItemView>
 
 GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
 {
+  resize(640, 400);
   setWindowFlags(Qt::Window);
   setWindowTitle(tr("Edit Games"));
 
   gameList = new QTableView;
   gameList->verticalHeader()->hide();
+  gameList->setSelectionMode(QAbstractItemView::SingleSelection);
+
+  model = new GameListModel(this);
+  gameList->setModel(model);
 
   addGameButton = new QPushButton(tr("Add"), this);
   removeGameButton = new QPushButton(tr("Remove"), this);
   selectGameButton = new QPushButton(tr("Select"), this);
   QVBoxLayout* buttonLayout = new QVBoxLayout;
+  buttonLayout->addStretch();
   buttonLayout->addWidget(addGameButton);
   buttonLayout->addWidget(removeGameButton);
   buttonLayout->addWidget(selectGameButton);
+  connect(addGameButton, SIGNAL(clicked()),
+          this, SLOT(browse()));
+  connect(this, SIGNAL(addGame(QString)),
+          model, SLOT(addGame(QString)));
+  connect(model, SIGNAL(notAGameDirectory(QString)),
+          this, SLOT(notAGameDirectory(QString)));
+  connect(removeGameButton, SIGNAL(clicked()),
+          this, SLOT(remove()));
+  connect(this, SIGNAL(removeGame(QModelIndex)),
+          model, SLOT(removeGame(QModelIndex)));
 
   QHBoxLayout* layout = new QHBoxLayout;
   layout->addWidget(gameList);
   layout->addLayout(buttonLayout);
   setLayout(layout);
+}
+
+void GameWindow::browse()
+{
+  QString path = QFileDialog::getExistingDirectory(this,
+                                                   tr("Open Game Directory"),
+                                                   "/home");
+  // Guard against the user clicking cancel
+  if (!path.isEmpty()) {
+    emit addGame(path);
+  }
+}
+
+void GameWindow::remove()
+{
+  QModelIndex index = gameList->currentIndex();
+  if (index.isValid()) {
+    emit removeGame(index);
+  }
+}
+
+void GameWindow::notAGameDirectory(QString path)
+{
+  QMessageBox msg;
+  msg.setText(path + " " + tr("does not contain a valid game directory."));
+  msg.exec();
 }
