@@ -19,6 +19,7 @@
 
 #include "gamewindow.h"
 #include "gamelistmodel.h"
+#include "datamanager.h"
 
 #include <QTableView>
 #include <QHeaderView>
@@ -31,7 +32,7 @@
 #include <QModelIndex>
 #include <QAbstractItemView>
 
-GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
+GameWindow::GameWindow(DataManager* dataManager, QWidget* parent) : QWidget(parent), dataManager(dataManager)
 {
   resize(640, 400);
   setWindowFlags(Qt::Window);
@@ -41,7 +42,7 @@ GameWindow::GameWindow(QWidget* parent) : QWidget(parent)
   gameList->verticalHeader()->hide();
   gameList->setSelectionMode(QAbstractItemView::SingleSelection);
 
-  model = new GameListModel(this);
+  model = dataManager->gameListModel;
   gameList->setModel(model);
 
   addGameButton = new QPushButton(tr("Add"), this);

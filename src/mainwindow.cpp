@@ -20,6 +20,7 @@
 #include "mainwindow.h"
 #include "maincentralwidget.h"
 #include "gamewindow.h"
+#include "datamanager.h"
 
 #include <QApplication>
 #include <QLabel>
@@ -28,7 +29,7 @@
 #include <QMenuBar>
 #include <QMenu>
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
+MainWindow::MainWindow(DataManager* dataManager, QWidget* parent) : QMainWindow(parent), dataManager(dataManager)
 {
   MainCentralWidget* centralWidget = new MainCentralWidget;
   setCentralWidget(centralWidget);
@@ -110,7 +111,7 @@ void MainWindow::createMenus()
 void MainWindow::showGameWindow()
 {
   if (!gameWindow) {
-    gameWindow = new GameWindow(this);
+    gameWindow = new GameWindow(dataManager, this);
   }
   if (gameWindow->isHidden()) {
     gameWindow->show();

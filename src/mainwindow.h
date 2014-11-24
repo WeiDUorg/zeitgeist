@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class DataManager;
 class QLabel;
 class QAction;
 class QMenu;
@@ -13,7 +14,7 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 
 public:
-  MainWindow(QWidget* parent = 0);
+  MainWindow(DataManager* dataManager, QWidget* parent = 0);
   ~MainWindow();
 
 private slots:
@@ -24,6 +25,7 @@ private:
   void createActions();
   void createMenus();
 
+  DataManager* dataManager;
   QLabel* statusBarGameLabel;
   QLabel* statusBarCurrentGame;
   QAction* programAboutAction;

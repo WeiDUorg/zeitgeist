@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QModelIndex> // Apparently forward-declaration is not good enough
 
+class DataManager;
 class QTableView;
 class QPushButton;
 class GameListModel;
@@ -14,7 +15,7 @@ class GameWindow : public QWidget
   Q_OBJECT
 
 public:
-  GameWindow(QWidget* parent);
+  GameWindow(DataManager* dataManager, QWidget* parent);
 
 private slots:
   void browse();
@@ -26,6 +27,7 @@ signals:
   void removeGame(QModelIndex index);
 
 private:
+  DataManager* dataManager;
   QTableView* gameList;
   QPushButton* addGameButton;
   QPushButton* removeGameButton;

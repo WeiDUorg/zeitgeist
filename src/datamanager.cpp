@@ -17,28 +17,13 @@
  *
  */
 
-#include "mainwindow.h"
 #include "datamanager.h"
+#include "gamelistmodel.h"
 
-#include <QApplication>
-#include <QFile>
-#include <QIODevice>
+#include <QSettings>
 
-int main(int argc, char* argv[])
+DataManager::DataManager(QObject* parent) : QObject(parent)
 {
-    QApplication app(argc, argv);
-    QApplication::setApplicationDisplayName("Zeitgeist");
-
-    QFile stylesheet(":/stylesheet.qss");
-    if (stylesheet.open(QIODevice::ReadOnly | QIODevice::Text)) {
-      app.setStyleSheet(stylesheet.readAll());
-      stylesheet.close();
-    }
-
-    DataManager* dataManager = new DataManager;
-
-    MainWindow w(dataManager);
-    w.show();
-
-    return app.exec();
+  settings = new QSettings("zeitgeist", "zeitgeist", this);
+  gameListModel = new GameListModel(this);
 }
