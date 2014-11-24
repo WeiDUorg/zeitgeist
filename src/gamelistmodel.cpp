@@ -55,6 +55,30 @@ void GameListModel::removeGame(QModelIndex index)
   }
 }
 
+QList<GameListDataEntry> GameListModel::exportData()
+{
+  int rows = rowCount();
+  QList<GameListDataEntry> result;
+  result.reserve(rows);
+  for (int i = 0; i < rows; ++i) {
+    GameListDataEntry row;
+    row.name = item(i, 0)->text();
+    row.path = item(i, 1)->text();
+    result.append(row);
+  }
+  return result;
+}
+
+void GameListModel::importData(QList<GameListDataEntry> dataList)
+{
+  int rows = dataList.length();
+  for (int i = 0; i < rows; ++i) {
+    GameListDataEntry row = dataList.at(i);
+    setItem(i, 0, new QStandardItem(row.name));
+    setItem(i, 1, new QStandardItem(row.path));
+  }
+}
+
 /*
  * Return the directory which contains the file chitin.key
  * and (dialog.tlk or lang/en_us/dialog.tlk). The matching

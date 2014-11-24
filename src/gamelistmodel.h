@@ -2,10 +2,16 @@
 #define GAMELISTMODEL_H
 
 #include <QStandardItemModel>
+#include <QList>
 
 class QObject;
 class QString;
 class QModelIndex;
+
+struct GameListDataEntry {
+  QString name;
+  QString path;
+};
 
 class GameListModel : public QStandardItemModel
 {
@@ -20,6 +26,8 @@ signals:
 
 public:
   GameListModel(QObject* parent = 0);
+  QList<GameListDataEntry> exportData();
+  void importData(QList<GameListDataEntry> dataList);
 
 private:
   QString findKeyFileDirectory(QString path);

@@ -8,6 +8,7 @@ class QLabel;
 class QAction;
 class QMenu;
 class GameWindow;
+class QCloseEvent;
 
 class MainWindow : public QMainWindow
 {
@@ -16,6 +17,9 @@ class MainWindow : public QMainWindow
 public:
   MainWindow(DataManager* dataManager, QWidget* parent = 0);
   ~MainWindow();
+
+protected:
+  void closeEvent(QCloseEvent* event);
 
 private slots:
   void showGameWindow();

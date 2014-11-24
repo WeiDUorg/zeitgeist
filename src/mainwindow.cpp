@@ -119,3 +119,9 @@ void MainWindow::showGameWindow()
     gameWindow->activateWindow();
   }
 }
+
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+  dataManager->saveState();
+  QMainWindow::closeEvent(event);
+}

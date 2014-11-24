@@ -12,9 +12,17 @@ class DataManager : public QObject
 
 public:
   DataManager(QObject* parent = 0);
+  void saveState();
+  void restoreState();
 
   QSettings* settings;
   GameListModel* gameListModel;
+
+private:
+  void saveGameList();
+  void restoreGameList();
+
+  const QString gameListSettingsName = "gameList";
 };
 
 #endif // DATAMANAGER_H

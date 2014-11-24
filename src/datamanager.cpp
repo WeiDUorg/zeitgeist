@@ -21,9 +21,54 @@
 #include "gamelistmodel.h"
 
 #include <QSettings>
+#include <QList>
+#include <QString>
 
 DataManager::DataManager(QObject* parent) : QObject(parent)
 {
   settings = new QSettings("zeitgeist", "zeitgeist", this);
   gameListModel = new GameListModel(this);
+
+  restoreState();
+}
+
+void DataManager::saveState()
+{
+  saveGameList();
+}
+
+void DataManager::restoreState()
+{
+  restoreGameList();
+}
+
+void DataManager::saveGameList()
+{
+  if (gameListModel) {
+    QList<GameListDataEntry> gameList = gameListModel->exportData();
+    settings->remove(gameListSettingsName);
+    settings->beginWriteArray(gameListSettingsName);
+    for (int i = 0; i < gameList.length(); ++i) {
+      settings->setArrayIndex(i);
+      settings->setValue("name", gameList.at(i).name);
+      settings->setValue("path", gameList.at(i).path);
+    }
+    settings->endArray();
+  }
+}
+
+void DataManager::restoreGameList()
+{
+  int length = settings->beginReadArray(gameListSettingsName);
+  QList<GameListDataEntry> list;
+  list.reserve(length);
+  for (int i = 0; i < length; ++i) {
+    settings->setArrayIndex(i);
+    GameListDataEntry entry;
+    entry.name = settings->value("name").toString();
+    entry.path = settings->value("path").toString();
+    list.append(entry);
+  }
+  settings->endArray();
+  gameListModel->importData(list);
 }
