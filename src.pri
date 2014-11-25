@@ -7,7 +7,8 @@ HEADERS += \
         src/maincentralwidget.h \
         src/mainwindow.h \
         src/modlist.h \
-        src/modtree.h
+        src/modtree.h \
+        src/settingswindow.h
 
 SOURCES += \
         src/datamanager.cpp \
@@ -17,4 +18,5 @@ SOURCES += \
         src/maincentralwidget.cpp \
         src/mainwindow.cpp \
         src/modlist.cpp \
-        src/modtree.cpp
+        src/modtree.cpp \
+        src/settingswindow.cpp

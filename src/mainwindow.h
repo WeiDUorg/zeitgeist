@@ -4,11 +4,12 @@
 #include <QMainWindow>
 
 class DataManager;
+class GameWindow;
+class SettingsWindow;
+class QCloseEvent;
 class QLabel;
 class QAction;
 class QMenu;
-class GameWindow;
-class QCloseEvent;
 
 class MainWindow : public QMainWindow
 {
@@ -23,6 +24,7 @@ protected:
 
 private slots:
   void showGameWindow();
+  void showSettingsWindow();
 
 private:
   void createStatusBar();
@@ -44,6 +46,7 @@ private:
   QMenu* programMenu;
   QMenu* gameMenu;
   GameWindow* gameWindow;
+  SettingsWindow* settingsWindow;
 };
 
 #endif // MAINWINDOW_H

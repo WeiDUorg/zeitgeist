@@ -20,6 +20,7 @@
 #include "mainwindow.h"
 #include "maincentralwidget.h"
 #include "gamewindow.h"
+#include "settingswindow.h"
 #include "datamanager.h"
 
 #include <QApplication>
@@ -29,17 +30,16 @@
 #include <QMenuBar>
 #include <QMenu>
 
-MainWindow::MainWindow(DataManager* dataManager, QWidget* parent) : QMainWindow(parent), dataManager(dataManager)
+MainWindow::MainWindow(DataManager* dataManager, QWidget* parent) :
+  QMainWindow(parent), dataManager(dataManager),
+  gameWindow(0), settingsWindow(0)
 {
-  MainCentralWidget* centralWidget = new MainCentralWidget;
-  setCentralWidget(centralWidget);
+  setCentralWidget(new MainCentralWidget);
 
   createActions();
 
   createStatusBar();
   createMenus();
-
-  gameWindow = 0;
 
   setMinimumSize(800, 600);
 }
@@ -65,6 +65,8 @@ void MainWindow::createActions()
 
   programSettingsAction = new QAction(tr("Settings"), this);
   programSettingsAction->setStatusTip(tr("Edit program settings"));
+  connect(programSettingsAction, SIGNAL(triggered()),
+          this, SLOT(showSettingsWindow()));
 
   programQuitAction = new QAction(tr("Quit"), this);
   connect(programQuitAction, SIGNAL(triggered()),
@@ -117,6 +119,18 @@ void MainWindow::showGameWindow()
     gameWindow->show();
   } else {
     gameWindow->activateWindow();
+  }
+}
+
+void MainWindow::showSettingsWindow()
+{
+  if (!settingsWindow) {
+    settingsWindow = new SettingsWindow(dataManager, this);
+  }
+  if (settingsWindow->isHidden()) {
+    settingsWindow->show();
+  } else {
+    settingsWindow->activateWindow();
   }
 }
 
