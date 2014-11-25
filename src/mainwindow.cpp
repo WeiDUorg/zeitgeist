@@ -51,8 +51,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::createStatusBar()
 {
-  statusBarGameLabel = new QLabel(tr("Current Game:"));
-  statusBarCurrentGame = new QLabel(tr("none"));
+  statusBarGameLabel = new QLabel(tr("Current Game:"), this);
+  statusBarCurrentGame = new QLabel(tr("none"), this);
   statusBar()->addWidget(statusBarGameLabel);
   statusBar()->addWidget(statusBarCurrentGame);
   statusBar()->setSizeGripEnabled(false);

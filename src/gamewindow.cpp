@@ -32,13 +32,14 @@
 #include <QModelIndex>
 #include <QAbstractItemView>
 
-GameWindow::GameWindow(DataManager* dataManager, QWidget* parent) : QWidget(parent), dataManager(dataManager)
+GameWindow::GameWindow(DataManager* dataManager, QWidget* parent) :
+  QWidget(parent), dataManager(dataManager)
 {
   resize(640, 400);
   setWindowFlags(Qt::Window);
   setWindowTitle(tr("Edit Games"));
 
-  gameList = new QTableView;
+  gameList = new QTableView(this);
   gameList->verticalHeader()->hide();
   gameList->setSelectionMode(QAbstractItemView::SingleSelection);
 

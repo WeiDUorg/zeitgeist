@@ -11,7 +11,7 @@ class ModTree : public QWidget
   Q_OBJECT
 
 public:
-  ModTree(QString title);
+  ModTree(QString title, QWidget* parent = 0);
 
 private:
   QTreeView* view;

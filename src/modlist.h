@@ -11,7 +11,7 @@ class ModList : public QWidget
   Q_OBJECT
 
 public:
-  ModList(QString title);
+  ModList(QString title, QWidget* parent = 0);
 
 private:
   QListView* view;

@@ -12,7 +12,7 @@ class MainCentralWidget : public QWidget
   Q_OBJECT
 
 public:
-  MainCentralWidget();
+  MainCentralWidget(QWidget* parent = 0);
 
 private:
   ModList* availableMods;

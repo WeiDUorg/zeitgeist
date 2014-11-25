@@ -23,11 +23,11 @@
 #include <QVBoxLayout>
 #include <QListView>
 
-ModList::ModList(QString title)
+ModList::ModList(QString title, QWidget* parent) : QWidget(parent)
 {
-  view = new QListView;
-  QLabel* label = new QLabel(title);
-  QVBoxLayout* layout = new QVBoxLayout;
+  view = new QListView(this);
+  QLabel* label = new QLabel(title, this);
+  QVBoxLayout* layout = new QVBoxLayout(this);
   layout->addWidget(label);
   layout->addWidget(view);
   setLayout(layout);

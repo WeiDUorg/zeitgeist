@@ -23,11 +23,11 @@
 #include "modlist.h"
 #include "modtree.h"
 
-MainCentralWidget::MainCentralWidget()
+MainCentralWidget::MainCentralWidget(QWidget* parent) : QWidget(parent)
 {
-  availableMods = new ModList(tr("Available Mods"));
-  queuedMods = new ModTree(tr("Queue"));
-  installedMods = new ModTree(tr("Installed Mods"));
+  availableMods = new ModList(tr("Available Mods"), this);
+  queuedMods = new ModTree(tr("Queue"), this);
+  installedMods = new ModTree(tr("Installed Mods"), this);
 
   QHBoxLayout* layout = new QHBoxLayout;
   layout->addWidget(availableMods);
