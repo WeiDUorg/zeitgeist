@@ -31,6 +31,7 @@
 #include <QMessageBox>
 #include <QModelIndex>
 #include <QAbstractItemView>
+#include <QDir>
 
 GameWindow::GameWindow(DataManager* dataManager, QWidget* parent) :
   QWidget(parent), dataManager(dataManager)
@@ -75,7 +76,7 @@ void GameWindow::browse()
 {
   QString path = QFileDialog::getExistingDirectory(this,
                                                    tr("Open Game Directory"),
-                                                   "/home");
+                                                   QDir::homePath());
   // Guard against the user clicking cancel
   if (!path.isEmpty()) {
     emit addGame(path);
