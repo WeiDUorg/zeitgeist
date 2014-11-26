@@ -8,6 +8,7 @@ HEADERS += \
         src/mainwindow.h \
         src/modlist.h \
         src/modtree.h \
+        src/platform.h \
         src/settingswindow.h
 
 SOURCES += \

@@ -19,12 +19,65 @@
 
 #include "settingswindow.h"
 #include "datamanager.h"
+#include "platform.h"
 
 #include <QWidget>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QString>
+#include <QFileDialog>
+#include <QDir>
+#include <QFileInfo>
+
+#include <iostream>
 
 SettingsWindow::SettingsWindow(DataManager* dataManager, QWidget* parent) :
   QWidget(parent), dataManager(dataManager)
 {
   setWindowFlags(Qt::Window);
   setWindowTitle(tr("Edit Program Settings"));
+
+  const QString weidu = "WeiDU";
+  QLabel* weiduLabel = new QLabel(weidu, this);
+  weiduTextField = new QLineEdit(this);
+  weiduTextField->setMinimumWidth(100);
+  connect(weiduTextField, SIGNAL(textChanged(const QString&)),
+          this, SLOT(initialWeiduValidation(const QString&)));
+  QPushButton* weiduBrowse = new QPushButton(tr("Browse"), this);
+  weiduBrowse->setFocus();
+  connect(weiduBrowse, SIGNAL(clicked()),
+          this, SLOT(browseForWeidu()));
+  QHBoxLayout* weiduLayout = new QHBoxLayout;
+  weiduLayout->addWidget(weiduLabel);
+  weiduLayout->addWidget(weiduTextField);
+  weiduLayout->addWidget(weiduBrowse);
+
+  setLayout(weiduLayout);
+}
+
+void SettingsWindow::browseForWeidu()
+{
+  QString caption = tr("Locate WeiDU");
+  QString filter = WEIDU_EXECUTABLE;
+  QString* selectedFilter = 0;
+  QString path = QFileDialog::getOpenFileName(this, caption,
+                                              QDir::homePath(),
+                                              filter, selectedFilter,
+                                              QFileDialog::ReadOnly);
+  if (!path.isEmpty()) {
+    weiduTextField->setText(path);
+  }
+}
+
+void SettingsWindow::initialWeiduValidation(const QString& path)
+{
+  QFileInfo info(path);
+  if (info.isFile() && info.fileName().compare(WEIDU_EXECUTABLE,
+                                               Qt::CaseInsensitive) == 0) {
+    // there should be some visual indication that the file passes initial validation
+    // pass it off somewhere deeper into the program
+    std::cout << "WeiDU at " << path.toUtf8().data() << " checks out" << std::endl;
+  }
 }

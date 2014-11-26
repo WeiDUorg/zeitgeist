@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class DataManager;
+class QLineEdit;
 
 class SettingsWindow : public QWidget
 {
@@ -12,8 +13,13 @@ class SettingsWindow : public QWidget
 public:
   SettingsWindow(DataManager* dataManager, QWidget* parent = 0);
 
+private slots:
+  void browseForWeidu();
+  void initialWeiduValidation(const QString& path);
+
 private:
   DataManager* dataManager;
+  QLineEdit* weiduTextField;
 };
 
 #endif // SETTINGSWINDOW_H
