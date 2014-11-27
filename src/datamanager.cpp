@@ -85,7 +85,10 @@ void DataManager::restoreGameList()
     GameListDataEntry entry;
     entry.name = settings->value("name").toString();
     entry.path = settings->value("path").toString();
-    list.append(entry);
+    if (QDir(entry.path).exists()) {
+      qDebug() << "Restoring game list entry:" << entry.path;
+      list.append(entry);
+    }
   }
   settings->endArray();
   gameListModel->importData(list);
