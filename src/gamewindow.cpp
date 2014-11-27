@@ -65,6 +65,10 @@ GameWindow::GameWindow(DataManager* dataManager, QWidget* parent) :
           this, SLOT(remove()));
   connect(this, SIGNAL(removeGame(QModelIndex)),
           model, SLOT(removeGame(QModelIndex)));
+  connect(selectGameButton, SIGNAL(clicked()),
+          this, SLOT(select()));
+  connect(this, SIGNAL(useGame(QString)),
+          dataManager, SLOT(useGame(QString)));
 
   QHBoxLayout* layout = new QHBoxLayout;
   layout->addWidget(gameList);
@@ -88,6 +92,17 @@ void GameWindow::remove()
   QModelIndex index = gameList->currentIndex();
   if (index.isValid()) {
     emit removeGame(index);
+  }
+}
+
+void GameWindow::select()
+{
+  QModelIndex index = gameList->currentIndex();
+  if (index.isValid()) {
+    QString path = model->pathOfIndex(index);
+    if (!path.isEmpty()) {
+      emit useGame(path);
+    } // else?
   }
 }
 

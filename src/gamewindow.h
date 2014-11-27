@@ -20,11 +20,13 @@ public:
 private slots:
   void browse();
   void remove();
+  void select();
   void notAGameDirectory(QString path);
 
 signals:
   void addGame(QString path);
   void removeGame(QModelIndex index);
+  void useGame(QString path);
 
 private:
   DataManager* dataManager;

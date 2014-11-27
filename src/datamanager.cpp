@@ -23,13 +23,17 @@
 #include <QSettings>
 #include <QList>
 #include <QString>
+#include <QDir>
+#include <QtDebug>
 
 DataManager::DataManager(QObject* parent) : QObject(parent)
 {
   settings = new QSettings("zeitgeist", "zeitgeist", this);
   gameListModel = new GameListModel(this);
 
+  qDebug() << "Restoring state";
   restoreState();
+  qDebug() << "Finished restoring state";
 }
 
 void DataManager::saveState()
@@ -39,7 +43,21 @@ void DataManager::saveState()
 
 void DataManager::restoreState()
 {
+  QString settingsGame = settings->value("currentGame").toString();
+  if (QDir(settingsGame).exists()) {
+    currentGame = settingsGame;
+    qDebug() << "Restoring game:" << currentGame;
+    loadGame(currentGame);
+  }
   restoreGameList();
+}
+
+void DataManager::useGame(QString path)
+{
+  qDebug() << "Using game:" << path;
+  currentGame = path;
+  settings->setValue("currentGame", path);
+  loadGame(currentGame);
 }
 
 void DataManager::saveGameList()
@@ -71,4 +89,9 @@ void DataManager::restoreGameList()
   }
   settings->endArray();
   gameListModel->importData(list);
+}
+
+void DataManager::loadGame(QString path)
+{
+
 }

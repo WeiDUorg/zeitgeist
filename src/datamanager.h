@@ -4,6 +4,7 @@
 #include <QObject>
 
 class QSettings;
+class QString;
 class GameListModel;
 
 class DataManager : public QObject
@@ -18,11 +19,16 @@ public:
   QSettings* settings;
   GameListModel* gameListModel;
 
+private slots:
+  void useGame(QString path);
+
 private:
   void saveGameList();
   void restoreGameList();
+  void loadGame(QString path);
 
   const QString gameListSettingsName = "gameList";
+  QString currentGame;
 };
 
 #endif // DATAMANAGER_H

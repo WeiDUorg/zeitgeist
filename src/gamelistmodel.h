@@ -28,6 +28,7 @@ public:
   GameListModel(QObject* parent = 0);
   QList<GameListDataEntry> exportData();
   void importData(QList<GameListDataEntry> dataList);
+  QString pathOfIndex(QModelIndex index);
 
 private:
   QString findKeyFileDirectory(QString path);

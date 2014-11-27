@@ -79,6 +79,15 @@ void GameListModel::importData(QList<GameListDataEntry> dataList)
   }
 }
 
+QString GameListModel::pathOfIndex(QModelIndex index)
+{
+  int row = index.row();
+  if (index.isValid() && row < rowCount()) {
+    return item(row, 1)->text();
+  }
+  return QString();
+}
+
 /*
  * Return the directory which contains the file chitin.key
  * and (dialog.tlk or lang/en_us/dialog.tlk). The matching
