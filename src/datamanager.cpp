@@ -19,6 +19,7 @@
 
 #include "datamanager.h"
 #include "gamelistmodel.h"
+#include "game.h"
 
 #include <QSettings>
 #include <QList>
@@ -96,5 +97,5 @@ void DataManager::restoreGameList()
 
 void DataManager::loadGame(QString path)
 {
-
+  game = new Game(path, this);
 }

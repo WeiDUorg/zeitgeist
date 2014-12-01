@@ -2,10 +2,13 @@
 
 HEADERS += \
         src/datamanager.h \
+        src/game.h \
         src/gamelistmodel.h \
         src/gamewindow.h \
+        src/logfile.h \
         src/maincentralwidget.h \
         src/mainwindow.h \
+        src/mod.h \
         src/modlist.h \
         src/modtree.h \
         src/platform.h \
@@ -13,11 +16,14 @@ HEADERS += \
 
 SOURCES += \
         src/datamanager.cpp \
+        src/game.cpp \
         src/gamelistmodel.cpp \
         src/gamewindow.cpp \
+        src/logfile.cpp \
         src/main.cpp \
         src/maincentralwidget.cpp \
         src/mainwindow.cpp \
+        src/mod.cpp \
         src/modlist.cpp \
         src/modtree.cpp \
         src/settingswindow.cpp

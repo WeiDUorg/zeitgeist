@@ -5,7 +5,9 @@
 
 class QSettings;
 class QString;
+
 class GameListModel;
+class Game;
 
 class DataManager : public QObject
 {
@@ -29,6 +31,7 @@ private:
 
   const QString gameListSettingsName = "gameList";
   QString currentGame;
+  Game* game;
 };
 
 #endif // DATAMANAGER_H
