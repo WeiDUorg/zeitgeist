@@ -53,7 +53,7 @@ void DataManager::restoreState()
   restoreGameList();
 }
 
-void DataManager::useGame(QString path)
+void DataManager::useGame(const QString& path)
 {
   qDebug() << "Using game:" << path;
   currentGame = path;
@@ -95,7 +95,7 @@ void DataManager::restoreGameList()
   gameListModel->importData(list);
 }
 
-void DataManager::loadGame(QString path)
+void DataManager::loadGame(const QString& path)
 {
   game = new Game(path, this);
 }

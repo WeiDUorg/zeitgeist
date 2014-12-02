@@ -11,14 +11,14 @@ class SettingsWindow : public QWidget
   Q_OBJECT
 
 public:
-  SettingsWindow(DataManager* dataManager, QWidget* parent = 0);
+  SettingsWindow(const DataManager* dataManager, QWidget* parent = 0);
 
 private slots:
   void browseForWeidu();
   void initialWeiduValidation(const QString& path);
 
 private:
-  DataManager* dataManager;
+  const DataManager* dataManager;
   QLineEdit* weiduTextField;
 };
 

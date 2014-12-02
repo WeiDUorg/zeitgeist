@@ -22,12 +22,12 @@ public:
   GameListModel* gameListModel;
 
 private slots:
-  void useGame(QString path);
+  void useGame(const QString& path);
 
 private:
   void saveGameList();
   void restoreGameList();
-  void loadGame(QString path);
+  void loadGame(const QString& path);
 
   const QString gameListSettingsName = "gameList";
   QString currentGame;

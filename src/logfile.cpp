@@ -27,7 +27,7 @@
 #include <QRegExp>
 #include <QtDebug>
 
-LogFile::LogFile(QString gamePath, QObject* parent) : QObject(parent)
+LogFile::LogFile(const QString& gamePath, QObject* parent) : QObject(parent)
 {
   QString logFile = gamePath + "/weidu.log";
   qDebug() << "Looking for log file:" << logFile;
@@ -39,7 +39,7 @@ LogFile::LogFile(QString gamePath, QObject* parent) : QObject(parent)
   }
 }
 
-QList<LogFileComponent> LogFile::parse(QString logFilePath)
+QList<LogFileComponent> LogFile::parse(const QString& logFilePath) const
 {
   qDebug() << "Parsing log file:" << logFilePath;
   QList<LogFileComponent> list;
@@ -60,7 +60,7 @@ QList<LogFileComponent> LogFile::parse(QString logFilePath)
   return list;
 }
 
-bool LogFile::validLine(QString line)
+bool LogFile::validLine(const QString& line) const
 {
   if (line.isEmpty()) {
     return false;
@@ -77,7 +77,7 @@ bool LogFile::validLine(QString line)
   return false;
 }
 
-LogFileComponent LogFile::parseLine(QString line)
+LogFileComponent LogFile::parseLine(const QString& line) const
 {
   // ~(FOO/\\)?(SETUP-)?FOO.TP2~ #[0-9]+ #[0-9]+
   int firstTilde = line.indexOf("~") + 1;

@@ -33,7 +33,7 @@
 #include <QAbstractItemView>
 #include <QDir>
 
-GameWindow::GameWindow(DataManager* dataManager, QWidget* parent) :
+GameWindow::GameWindow(const DataManager* dataManager, QWidget* parent) :
   QWidget(parent), dataManager(dataManager)
 {
   resize(640, 400);
@@ -57,18 +57,18 @@ GameWindow::GameWindow(DataManager* dataManager, QWidget* parent) :
   buttonLayout->addWidget(selectGameButton);
   connect(addGameButton, SIGNAL(clicked()),
           this, SLOT(browse()));
-  connect(this, SIGNAL(addGame(QString)),
-          model, SLOT(addGame(QString)));
-  connect(model, SIGNAL(notAGameDirectory(QString)),
-          this, SLOT(notAGameDirectory(QString)));
+  connect(this, SIGNAL(addGame(const QString&)),
+          model, SLOT(addGame(const QString&)));
+  connect(model, SIGNAL(notAGameDirectory(const QString&)),
+          this, SLOT(notAGameDirectory(const QString&)));
   connect(removeGameButton, SIGNAL(clicked()),
           this, SLOT(remove()));
-  connect(this, SIGNAL(removeGame(QModelIndex)),
-          model, SLOT(removeGame(QModelIndex)));
+  connect(this, SIGNAL(removeGame(const QModelIndex&)),
+          model, SLOT(removeGame(const QModelIndex&)));
   connect(selectGameButton, SIGNAL(clicked()),
           this, SLOT(select()));
-  connect(this, SIGNAL(useGame(QString)),
-          dataManager, SLOT(useGame(QString)));
+  connect(this, SIGNAL(useGame(const QString&)),
+          dataManager, SLOT(useGame(const QString&)));
 
   QHBoxLayout* layout = new QHBoxLayout;
   layout->addWidget(gameList);
@@ -106,7 +106,7 @@ void GameWindow::select()
   }
 }
 
-void GameWindow::notAGameDirectory(QString path)
+void GameWindow::notAGameDirectory(const QString& path)
 {
   QMessageBox msg;
   msg.setText(path + " " + tr("does not contain a valid game directory."));

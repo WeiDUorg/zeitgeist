@@ -33,7 +33,7 @@
 
 #include <iostream>
 
-SettingsWindow::SettingsWindow(DataManager* dataManager, QWidget* parent) :
+SettingsWindow::SettingsWindow(const DataManager* dataManager, QWidget* parent) :
   QWidget(parent), dataManager(dataManager)
 {
   setWindowFlags(Qt::Window);

@@ -26,13 +26,13 @@
 #include <QDirIterator>
 #include <QtDebug>
 
-Game::Game(QString path, QObject* parent) :QObject(parent), path(path)
+Game::Game(const QString& path, QObject* parent) :QObject(parent), path(path)
 {
   availableMods = getModList(path);
   installedMods = new LogFile(path, this);
 }
 
-QList<Mod*> Game::getModList(QString path)
+QList<Mod*> Game::getModList(const QString& path)
 {
   QStringList topLevelMods = getTopLevelMods(path);
   QStringList subLevelMods = getSubLevelMods(path);
@@ -46,7 +46,7 @@ QList<Mod*> Game::getModList(QString path)
   return result;
 }
 
-QStringList Game::getTopLevelMods(QString path)
+QStringList Game::getTopLevelMods(const QString& path) const
 {
   QStringList result;
   QStringList nameFilter("*.tp2");
@@ -58,7 +58,7 @@ QStringList Game::getTopLevelMods(QString path)
   return result;
 }
 
-QStringList Game::getSubLevelMods(QString path)
+QStringList Game::getSubLevelMods(const QString& path) const
 {
   QStringList result;
   QDirIterator iterator(path, QDir::Dirs);

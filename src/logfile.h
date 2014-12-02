@@ -18,12 +18,12 @@ class LogFile : public QObject
   Q_OBJECT
 
 public:
-  LogFile(QString gamePath, QObject* parent = 0);
+  LogFile(const QString& gamePath, QObject* parent = 0);
 
 private:
-  QList<LogFileComponent> parse(QString logFilePath);
-  bool validLine(QString line);
-  LogFileComponent parseLine(QString line);
+  QList<LogFileComponent> parse(const QString& logFilePath) const;
+  bool validLine(const QString& line) const;
+  LogFileComponent parseLine(const QString& line) const;
   QList<LogFileComponent> data;
 };
 

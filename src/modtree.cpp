@@ -23,7 +23,7 @@
 #include <QVBoxLayout>
 #include <QTreeView>
 
-ModTree::ModTree(QString title, QWidget* parent) : QWidget(parent)
+ModTree::ModTree(const QString& title, QWidget* parent) : QWidget(parent)
 {
   view = new QTreeView(this);
   QLabel* label = new QLabel(title, this);

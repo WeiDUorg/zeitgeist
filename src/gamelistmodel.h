@@ -18,22 +18,22 @@ class GameListModel : public QStandardItemModel
   Q_OBJECT
 
 private slots:
-  void addGame(QString path);
-  void removeGame(QModelIndex row);
+  void addGame(const QString& path);
+  void removeGame(const QModelIndex& row);
 
 signals:
-  void notAGameDirectory(QString path);
+  void notAGameDirectory(const QString& path) const;
 
 public:
   GameListModel(QObject* parent = 0);
-  QList<GameListDataEntry> exportData();
-  void importData(QList<GameListDataEntry> dataList);
-  QString pathOfIndex(QModelIndex index);
+  QList<GameListDataEntry> exportData() const;
+  void importData(const QList<GameListDataEntry>& dataList);
+  QString pathOfIndex(const QModelIndex& index) const;
 
 private:
-  QString findKeyFileDirectory(QString path);
-  QString fingerprintGameDirectory(QString path);
-  bool duplicate(QString path);
+  QString findKeyFileDirectory(const QString& path) const;
+  QString fingerprintGameDirectory(const QString& path) const;
+  bool duplicate(const QString& path) const;
 };
 
 #endif // GAMELISTMODEL_H

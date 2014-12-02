@@ -22,7 +22,7 @@
 #include <QString>
 #include <QFileInfo>
 
-Mod::Mod(QString tp2Path, QObject* parent) :
+Mod::Mod(const QString& tp2Path, QObject* parent) :
   QObject(parent), tp2Path(tp2Path)
 {
   modName = tp2Path;

@@ -15,21 +15,21 @@ class GameWindow : public QWidget
   Q_OBJECT
 
 public:
-  GameWindow(DataManager* dataManager, QWidget* parent = 0);
+  GameWindow(const DataManager* dataManager, QWidget* parent = 0);
 
 private slots:
   void browse();
   void remove();
   void select();
-  void notAGameDirectory(QString path);
+  void notAGameDirectory(const QString& path);
 
 signals:
-  void addGame(QString path);
-  void removeGame(QModelIndex index);
-  void useGame(QString path);
+  void addGame(const QString& path);
+  void removeGame(const QModelIndex& index);
+  void useGame(const QString& path);
 
 private:
-  DataManager* dataManager;
+  const DataManager* dataManager;
   QTableView* gameList;
   QPushButton* addGameButton;
   QPushButton* removeGameButton;

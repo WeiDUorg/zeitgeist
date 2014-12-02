@@ -15,12 +15,12 @@ class Game : public QObject
   Q_OBJECT
 
 public:
-  Game(QString path, QObject* parent = 0);
+  Game(const QString& path, QObject* parent = 0);
 
 private:
-  QList<Mod*> getModList(QString path);
-  QStringList getTopLevelMods(QString path);
-  QStringList getSubLevelMods(QString path);
+  QList<Mod*> getModList(const QString& path);
+  QStringList getTopLevelMods(const QString& path) const;
+  QStringList getSubLevelMods(const QString& path) const;
 
   const QString path;
   QList<Mod*> availableMods;

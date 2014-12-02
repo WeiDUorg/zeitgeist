@@ -34,7 +34,7 @@ GameListModel::GameListModel(QObject* parent) : QStandardItemModel(parent)
   setHorizontalHeaderLabels(headerLabels);
 }
 
-void GameListModel::addGame(QString path)
+void GameListModel::addGame(const QString& path)
 {
   QString gamePath = findKeyFileDirectory(path);
   if (gamePath.isEmpty()) {
@@ -47,7 +47,7 @@ void GameListModel::addGame(QString path)
   }
 }
 
-void GameListModel::removeGame(QModelIndex index)
+void GameListModel::removeGame(const QModelIndex& index)
 {
   int row = index.row();
   if (index.isValid() && row < rowCount()) {
@@ -55,7 +55,7 @@ void GameListModel::removeGame(QModelIndex index)
   }
 }
 
-QList<GameListDataEntry> GameListModel::exportData()
+QList<GameListDataEntry> GameListModel::exportData() const
 {
   int rows = rowCount();
   QList<GameListDataEntry> result;
@@ -69,7 +69,7 @@ QList<GameListDataEntry> GameListModel::exportData()
   return result;
 }
 
-void GameListModel::importData(QList<GameListDataEntry> dataList)
+void GameListModel::importData(const QList<GameListDataEntry>& dataList)
 {
   int rows = dataList.length();
   for (int i = 0; i < rows; ++i) {
@@ -79,7 +79,7 @@ void GameListModel::importData(QList<GameListDataEntry> dataList)
   }
 }
 
-QString GameListModel::pathOfIndex(QModelIndex index)
+QString GameListModel::pathOfIndex(const QModelIndex& index) const
 {
   int row = index.row();
   if (index.isValid() && row < rowCount()) {
@@ -95,7 +95,7 @@ QString GameListModel::pathOfIndex(QModelIndex index)
  * false positives on chitin.key files located in backup
  * directories.
  */
-QString GameListModel::findKeyFileDirectory(QString path)
+QString GameListModel::findKeyFileDirectory(const QString& path) const
 {
   QString chitinkey("chitin.key");
   QString dialogtlk("dialog.tlk");
@@ -119,7 +119,7 @@ QString GameListModel::findKeyFileDirectory(QString path)
  * Determine the generic game type of a game directory by
  * looking for characteristic files.
  */
-QString GameListModel::fingerprintGameDirectory(QString path)
+QString GameListModel::fingerprintGameDirectory(const QString& path) const
 {
   QDir dir(path);
   if (dir.exists("bgmain2.exe")) {
@@ -140,7 +140,7 @@ QString GameListModel::fingerprintGameDirectory(QString path)
   return QString("IE game");
 }
 
-bool GameListModel::duplicate(QString path)
+bool GameListModel::duplicate(const QString& path) const
 {
   for (int i = 0; i < rowCount(); ++i) {
     if (path.compare(item(i, 1)->text()) == 0) {
