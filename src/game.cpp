@@ -21,6 +21,7 @@
 #include "mod.h"
 #include "logfile.h"
 
+#include <algorithm>
 #include <QString>
 #include <QStringList>
 #include <QDirIterator>
@@ -42,7 +43,9 @@ QList<Mod*> Game::getModList(const QString& path)
     qDebug() << "Found mod at:" << tp2Path;
     result << new Mod(tp2Path, this);
   }
-  // sort results by name
+  std::sort(result.begin(), result.end(), [](const Mod* l, const Mod* r) {
+      return l->getName() < r->getName();
+    });
   return result;
 }
 

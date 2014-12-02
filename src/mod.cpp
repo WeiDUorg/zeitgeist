@@ -25,5 +25,11 @@
 Mod::Mod(const QString& tp2Path, QObject* parent) :
   QObject(parent), tp2Path(tp2Path)
 {
-  modName = tp2Path;
+  name = tp2Path;
+}
+
+QString Mod::getName() const
+{
+  // Will be more elaborate in the future
+  return name;
 }

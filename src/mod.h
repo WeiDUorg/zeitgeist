@@ -11,10 +11,11 @@ class Mod : public QObject
 
 public:
   Mod(const QString& tp2Path, QObject* parent = 0);
+  QString getName() const;
 
 private:
   const QString tp2Path;
-  QString modName;
+  QString name;
 };
 
 #endif // MOD_H
