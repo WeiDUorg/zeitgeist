@@ -11,6 +11,7 @@ CONFIG += c++11 debug
 CONFIG(debug, debug|release) {
 message ("debug build")
 BUILD_DIR = build/debug
+#QMAKE_CXXFLAGS += -Wno-unused-variable
 } else {
 message ("release build")
 DEFINES += QT_NO_DEBUG_OUTPUT
