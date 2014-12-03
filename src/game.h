@@ -17,12 +17,13 @@ class Game : public QObject
 public:
   Game(const QString& path, QObject* parent = 0);
 
+  const QString path;
+
 private:
   QList<Mod*> getModList(const QString& path);
   QStringList getTopLevelMods(const QString& path) const;
   QStringList getSubLevelMods(const QString& path) const;
 
-  const QString path;
   QList<Mod*> availableMods;
   LogFile* installedMods;
 };

@@ -2,6 +2,7 @@
 #define DATAMANAGER_H
 
 #include <QObject>
+#include <QHash>
 
 class QSettings;
 class QString;
@@ -29,9 +30,10 @@ private:
   void restoreGameList();
   void loadGame(const QString& path);
 
+  QHash<QString, Game*> games;
+  Game* currentGame;
+
   const QString gameListSettingsName = "gameList";
-  QString currentGame;
-  Game* game;
 };
 
 #endif // DATAMANAGER_H

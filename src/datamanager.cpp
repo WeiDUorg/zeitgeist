@@ -27,7 +27,7 @@
 #include <QDir>
 #include <QtDebug>
 
-DataManager::DataManager(QObject* parent) : QObject(parent)
+DataManager::DataManager(QObject* parent) : QObject(parent), currentGame(0)
 {
   settings = new QSettings("zeitgeist", "zeitgeist", this);
   gameListModel = new GameListModel(this);
@@ -39,6 +39,7 @@ DataManager::DataManager(QObject* parent) : QObject(parent)
 
 void DataManager::saveState()
 {
+  settings->setValue("currentGame", currentGame->path);
   saveGameList();
 }
 
@@ -46,19 +47,15 @@ void DataManager::restoreState()
 {
   QString settingsGame = settings->value("currentGame").toString();
   if (QDir(settingsGame).exists()) {
-    currentGame = settingsGame;
-    qDebug() << "Restoring game:" << currentGame;
-    loadGame(currentGame);
+    qDebug() << "Restoring game:" << settingsGame;
+    useGame(settingsGame);
   }
   restoreGameList();
 }
 
 void DataManager::useGame(const QString& path)
 {
-  qDebug() << "Using game:" << path;
-  currentGame = path;
-  settings->setValue("currentGame", path);
-  loadGame(currentGame);
+  loadGame(path);
 }
 
 void DataManager::saveGameList()
@@ -97,5 +94,13 @@ void DataManager::restoreGameList()
 
 void DataManager::loadGame(const QString& path)
 {
-  game = new Game(path, this);
+  if (games.contains(path)) {
+    qDebug() << "Retrieving cached game:" << path;
+    currentGame = games.value(path);
+  } else {
+    qDebug() << "Loading game:" << path;
+    Game* game = new Game(path, this);
+    games.insert(path, game);
+    currentGame = game;
+  }
 }
