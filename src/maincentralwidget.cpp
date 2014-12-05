@@ -17,22 +17,48 @@
  *
  */
 
-#include <QHBoxLayout>
-
 #include "maincentralwidget.h"
-#include "modlist.h"
-#include "modtree.h"
+#include "datamanager.h"
+#include "availablemodsmodel.h"
 
-MainCentralWidget::MainCentralWidget(QWidget* parent) : QWidget(parent)
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QListView>
+#include <QTreeView>
+#include <QAbstractItemView>
+
+MainCentralWidget::MainCentralWidget(const DataManager* dataManager,
+                                     QWidget* parent) :
+  QWidget(parent), dataManager(dataManager)
 {
-  availableMods = new ModList(tr("Available Mods"), this);
-  queuedMods = new ModTree(tr("Queue"), this);
-  installedMods = new ModTree(tr("Installed Mods"), this);
+  QLabel* availableModsLabel = new QLabel(tr("Available Mods"), this);
+  QLabel* queueLabel = new QLabel(tr("Queue"), this);
+  QLabel* installedModsLabel = new QLabel(tr("Installed Mods"), this);
+
+  availableModsView = new QListView(this);
+  availableModsView->setSelectionMode(QAbstractItemView::SingleSelection);
+  availableModsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  queueView = new QTreeView(this);
+  installedModsView = new QTreeView(this);
+
+  availableModsModel = dataManager->availableModsModel;
+  availableModsView->setModel(availableModsModel);
+
+  QVBoxLayout* availableModsLayout = new QVBoxLayout;
+  availableModsLayout->addWidget(availableModsLabel);
+  availableModsLayout->addWidget(availableModsView);
+  QVBoxLayout* queueLayout = new QVBoxLayout;
+  queueLayout->addWidget(queueLabel);
+  queueLayout->addWidget(queueView);
+  QVBoxLayout* installedModsLayout = new QVBoxLayout;
+  installedModsLayout->addWidget(installedModsLabel);
+  installedModsLayout->addWidget(installedModsView);
 
   QHBoxLayout* layout = new QHBoxLayout;
-  layout->addWidget(availableMods);
-  layout->addWidget(queuedMods);
-  layout->addWidget(installedMods);
+  layout->addLayout(availableModsLayout);
+  layout->addLayout(queueLayout);
+  layout->addLayout(installedModsLayout);
 
   setLayout(layout);
 }

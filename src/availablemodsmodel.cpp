@@ -17,18 +17,29 @@
  *
  */
 
-#include "modtree.h"
+#include "availablemodsmodel.h"
+#include "game.h"
 
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QTreeView>
+#include <QString>
+#include <QtDebug>
 
-ModTree::ModTree(const QString& title, QWidget* parent) : QWidget(parent)
+AvailableModsModel::AvailableModsModel(QObject* parent) :
+  QStringListModel(parent)
 {
-  view = new QTreeView(this);
-  QLabel* label = new QLabel(title, this);
-  QVBoxLayout* layout = new QVBoxLayout(this);
-  layout->addWidget(label);
-  layout->addWidget(view);
-  setLayout(layout);
+
+}
+
+void AvailableModsModel::clear()
+{
+  beginResetModel();
+  removeRows(0, rowCount());
+  endResetModel();
+}
+
+void AvailableModsModel::populate(const Game* game)
+{
+  clear();
+  names = game->getModNames();
+  paths = game->getModPaths();
+  setStringList(names);
 }

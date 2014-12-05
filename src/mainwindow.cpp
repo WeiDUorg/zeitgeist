@@ -34,7 +34,7 @@ MainWindow::MainWindow(DataManager* dataManager, QWidget* parent) :
   QMainWindow(parent), dataManager(dataManager),
   gameWindow(0), settingsWindow(0)
 {
-  setCentralWidget(new MainCentralWidget);
+  setCentralWidget(new MainCentralWidget(dataManager));
 
   createActions();
 

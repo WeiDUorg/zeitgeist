@@ -3,21 +3,25 @@
 
 #include <QWidget>
 
-class QHBoxLayout;
-class ModList;
-class ModTree;
+class QListView;
+class QTreeView;
+
+class DataManager;
+class AvailableModsModel;
 
 class MainCentralWidget : public QWidget
 {
   Q_OBJECT
 
 public:
-  MainCentralWidget(QWidget* parent = 0);
+  MainCentralWidget(const DataManager* dataManager, QWidget* parent = 0);
 
 private:
-  ModList* availableMods;
-  ModTree* queuedMods;
-  ModTree* installedMods;
+  const DataManager* dataManager;
+  QListView* availableModsView;
+  QTreeView* queueView;
+  QTreeView* installedModsView;
+  AvailableModsModel* availableModsModel;
 };
 
 #endif // MAINCENTRALWIDGET_H

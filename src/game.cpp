@@ -83,3 +83,23 @@ QStringList Game::getSubLevelMods(const QString& path) const
   }
   return result;
 }
+
+QList<QString> Game::getModNames() const
+{
+  QList<QString> result;
+  result.reserve(availableMods.size());
+  foreach (const Mod* mod, availableMods) {
+    result.append(mod->getName());
+  }
+  return result;
+}
+
+QList<QString> Game::getModPaths() const
+{
+  QList<QString> result;
+  result.reserve(availableMods.size());
+  foreach (const Mod* mod, availableMods) {
+    result.append(mod->tp2Path);
+  }
+  return result;
+}

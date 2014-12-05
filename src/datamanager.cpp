@@ -19,6 +19,7 @@
 
 #include "datamanager.h"
 #include "gamelistmodel.h"
+#include "availablemodsmodel.h"
 #include "game.h"
 
 #include <QSettings>
@@ -31,6 +32,7 @@ DataManager::DataManager(QObject* parent) : QObject(parent), currentGame(0)
 {
   settings = new QSettings("zeitgeist", "zeitgeist", this);
   gameListModel = new GameListModel(this);
+  availableModsModel = new AvailableModsModel(this);
 
   qDebug() << "Restoring state";
   restoreState();
@@ -103,4 +105,5 @@ void DataManager::loadGame(const QString& path)
     games.insert(path, game);
     currentGame = game;
   }
+  availableModsModel->populate(currentGame);
 }
