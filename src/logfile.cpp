@@ -50,7 +50,7 @@ QList<LogFileComponent> LogFile::parse(const QString& logFilePath) const
       QString line = in.readLine();
       if (validLine(line)) {
         LogFileComponent c = parseLine(line);
-        qDebug() << "Name:" << c.name << "Language:" << c.language
+        qDebug() << "Name:" << c.modName << "Language:" << c.language
                  << "Number:" << c.number;
         list << c;
       }
@@ -79,21 +79,24 @@ bool LogFile::validLine(const QString& line) const
 
 LogFileComponent LogFile::parseLine(const QString& line) const
 {
-  // ~(FOO/\\)?(SETUP-)?FOO.TP2~ #[0-9]+ #[0-9]+
+  // ~(FOO/\\)?(SETUP-)?FOO.TP2~ #[0-9]+ #[0-9]+ // Comment
   int firstTilde = line.indexOf("~") + 1;
   int secondTilde = line.indexOf("~", firstTilde);
   int firstNumber = line.indexOf("#") + 1;
   int firstNumberEnd = line.indexOf(" ", firstNumber);
   int secondNumber = line.indexOf("#", firstNumber) + 1;
   int secondNumberEnd = line.indexOf(" ", secondNumber);
+  int commentStart = line.indexOf("//") + 3;
   QString tp2Name = line.mid(firstTilde, secondTilde - firstTilde);
   QString languageNumber = line.mid(firstNumber,
                                     firstNumberEnd - firstNumber);
   QString componentNumber = line.mid(secondNumber,
                                      secondNumberEnd - secondNumber);
+  QString comment = line.mid(commentStart);
   LogFileComponent c;
-  c.name = tp2Name;
+  c.modName = tp2Name;
   c.language = languageNumber.toInt();
   c.number = componentNumber.toInt();
+  c.comment = comment;
   return c;
 }

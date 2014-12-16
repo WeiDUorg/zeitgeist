@@ -8,9 +8,10 @@ class QString;
 
 struct LogFileComponent
 {
-  QString name;
+  QString modName;
   int language;
   int number;
+  QString comment;
 };
 
 class LogFile : public QObject
