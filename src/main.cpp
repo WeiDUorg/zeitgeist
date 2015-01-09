@@ -27,7 +27,7 @@
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
-    QApplication::setApplicationDisplayName("Zeitgeist");
+    //QApplication::setApplicationDisplayName("Zeitgeist"); // Qt 5
 
     QFile stylesheet(":/stylesheet.qss");
     if (stylesheet.open(QIODevice::ReadOnly | QIODevice::Text)) {

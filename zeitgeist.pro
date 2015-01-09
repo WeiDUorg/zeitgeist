@@ -7,6 +7,7 @@ TEMPLATE = app
 # distribution).
 
 CONFIG += c++11 debug
+QMAKE_CXXFLAGS += -std=c++11 # For Qt 4 (maybe remove on Qt 5)
 
 CONFIG(debug, debug|release) {
 message ("debug build")
