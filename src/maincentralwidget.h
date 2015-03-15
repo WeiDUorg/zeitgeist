@@ -8,6 +8,7 @@ class QTreeView;
 
 class DataManager;
 class AvailableModsModel;
+class InstalledModsModel;
 
 class MainCentralWidget : public QWidget
 {
@@ -22,6 +23,7 @@ private:
   QTreeView* queueView;
   QTreeView* installedModsView;
   AvailableModsModel* availableModsModel;
+  InstalledModsModel* installedModsModel;
 };
 
 #endif // MAINCENTRALWIDGET_H

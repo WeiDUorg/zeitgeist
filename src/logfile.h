@@ -20,12 +20,12 @@ class LogFile : public QObject
 
 public:
   LogFile(const QString& gamePath, QObject* parent = 0);
+  QList<LogFileComponent> data;
 
 private:
   QList<LogFileComponent> parse(const QString& logFilePath) const;
   bool validLine(const QString& line) const;
   LogFileComponent parseLine(const QString& line) const;
-  QList<LogFileComponent> data;
 };
 
 #endif // LOGFILE_H

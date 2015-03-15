@@ -20,6 +20,7 @@
 #include "maincentralwidget.h"
 #include "datamanager.h"
 #include "availablemodsmodel.h"
+#include "installedmodsmodel.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -41,9 +42,16 @@ MainCentralWidget::MainCentralWidget(const DataManager* dataManager,
   availableModsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
   queueView = new QTreeView(this);
   installedModsView = new QTreeView(this);
+  installedModsView->setHeaderHidden(true);
+  installedModsView->setSelectionMode(QAbstractItemView::MultiSelection);
+  installedModsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  // TODO: if you select a parent, all children should be selected; same for deselection
+  // TODO: if you select a child, the parent should also be selected; if you deselect all children, the parent should also be deselected
 
   availableModsModel = dataManager->availableModsModel;
+  installedModsModel = dataManager->installedModsModel;
   availableModsView->setModel(availableModsModel);
+  installedModsView->setModel(installedModsModel);
 
   QVBoxLayout* availableModsLayout = new QVBoxLayout;
   availableModsLayout->addWidget(availableModsLabel);

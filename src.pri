@@ -6,6 +6,7 @@ HEADERS += \
         src/game.h \
         src/gamelistmodel.h \
         src/gamewindow.h \
+        src/installedmodsmodel.h \
         src/logfile.h \
         src/maincentralwidget.h \
         src/mainwindow.h \
@@ -19,6 +20,7 @@ SOURCES += \
         src/game.cpp \
         src/gamelistmodel.cpp \
         src/gamewindow.cpp \
+        src/installedmodsmodel.cpp \
         src/logfile.cpp \
         src/main.cpp \
         src/maincentralwidget.cpp \

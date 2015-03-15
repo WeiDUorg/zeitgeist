@@ -9,6 +9,7 @@ class QString;
 
 class GameListModel;
 class AvailableModsModel;
+class InstalledModsModel;
 class Game;
 
 class DataManager : public QObject
@@ -23,6 +24,7 @@ public:
   QSettings* settings;
   GameListModel* gameListModel;
   AvailableModsModel* availableModsModel;
+  InstalledModsModel* installedModsModel;
 
 private slots:
   void useGame(const QString& path);

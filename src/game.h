@@ -20,6 +20,7 @@ public:
   QList<QString> getModPaths() const;
 
   const QString path;
+  LogFile* installedMods;
 
 private:
   QList<Mod*> getModList(const QString& path);
@@ -27,7 +28,6 @@ private:
   QStringList getSubLevelMods(const QString& path) const;
 
   QList<Mod*> availableMods;
-  LogFile* installedMods;
 };
 
 #endif // GAME_H
