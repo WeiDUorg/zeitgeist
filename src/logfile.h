@@ -1,5 +1,5 @@
 #ifndef LOGFILE_H
-#define LOFFILE_H
+#define LOGFILE_H
 
 #include <QObject>
 #include <QList>
