@@ -42,6 +42,7 @@ MainWindow::MainWindow(DataManager* dataManager, QWidget* parent) :
   createMenus();
 
   setMinimumSize(800, 600);
+  setWindowTitle("Zeitgeist");
 }
 
 MainWindow::~MainWindow()
