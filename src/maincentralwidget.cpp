@@ -27,7 +27,13 @@
 #include <QLabel>
 #include <QListView>
 #include <QTreeView>
+#include <QAbstractItemModel>
 #include <QAbstractItemView>
+#include <QItemSelection>
+#include <QItemSelectionModel>
+#include <QModelIndex>
+#include <QList>
+#include <QDebug>
 
 MainCentralWidget::MainCentralWidget(const DataManager* dataManager,
                                      QWidget* parent) :
@@ -41,17 +47,19 @@ MainCentralWidget::MainCentralWidget(const DataManager* dataManager,
   availableModsView->setSelectionMode(QAbstractItemView::SingleSelection);
   availableModsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
   queueView = new QTreeView(this);
+
   installedModsView = new QTreeView(this);
   installedModsView->setHeaderHidden(true);
   installedModsView->setSelectionMode(QAbstractItemView::MultiSelection);
   installedModsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  // TODO: if you select a parent, all children should be selected; same for deselection
-  // TODO: if you select a child, the parent should also be selected; if you deselect all children, the parent should also be deselected
 
   availableModsModel = dataManager->availableModsModel;
   installedModsModel = dataManager->installedModsModel;
   availableModsView->setModel(availableModsModel);
   installedModsView->setModel(installedModsModel);
+  connect(installedModsView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
+                                                                       const QItemSelection&)),
+          this, SLOT(handleInstalledSelection(const QItemSelection&, const QItemSelection&)));
 
   QVBoxLayout* availableModsLayout = new QVBoxLayout;
   availableModsLayout->addWidget(availableModsLabel);
@@ -70,3 +78,74 @@ MainCentralWidget::MainCentralWidget(const DataManager* dataManager,
 
   setLayout(layout);
 }
+
+void MainCentralWidget::handleInstalledSelection(const QItemSelection& selected,
+                                                 const QItemSelection& deselected)
+{
+  QItemSelectionModel* selectionModel = installedModsView->selectionModel();
+  QModelIndex current = selectionModel->currentIndex();
+  QItemSelection selectChildren;
+  QItemSelection selectParent;
+  QItemSelection deselectChildren;
+  QItemSelection deselectParent;
+  foreach (QModelIndex index, selected.indexes()) {
+    if (index.isValid()) {
+      const QAbstractItemModel* model = index.model();
+      if (model->hasChildren(index)) {
+        if (current.isValid() && current == index) {
+          qDebug() << "Selecting all children";
+          selectChildren.select(model->index(0, 0, index),
+                                model->index(model->rowCount(index) - 1, 0, index));
+        }
+      } else {
+        if (!selectionModel->isSelected(index.parent())) {
+          qDebug() << "Selecting the parent";
+          QModelIndex parent = index.parent();
+          selectParent.select(parent, parent);
+        }
+      }
+    }
+  }
+  foreach (QModelIndex index, deselected.indexes()) {
+    if (index.isValid()) {
+      const QAbstractItemModel* model = index.model();
+      if (model->hasChildren(index)) {
+        qDebug() << "Deselecting all children";
+        QItemSelection selection;
+        deselectChildren.select(model->index(0, 0, index),
+                                model->index(model->rowCount(index) - 1, 0, index));
+      } else {
+        if (selectionModel->isSelected(index.parent())) {
+          qDebug() << "Maybe deselecting the parent";
+          QModelIndex parent = index.parent();
+          bool deselect = true;
+          for (int i = 0; i < model->rowCount(parent); ++i) {
+            QModelIndex childIndex = model->index(i, 0, parent);
+            if (selectionModel->isSelected(childIndex)) {
+              deselect = false;
+              break;
+            }
+          }
+          if (deselect) {
+            qDebug() << "Deselecting the parent";
+            deselectParent.select(parent, parent);
+          }
+        }
+      }
+    }
+  }
+  QItemSelection selection;
+  if (!selected.isEmpty()) {
+    qDebug() << "Merging selection";
+    selection.merge(selectChildren, QItemSelectionModel::Select);
+    selection.merge(selectParent, QItemSelectionModel::Select);
+    selectionModel->select(selection, QItemSelectionModel::Select);
+  } else
+  if (!deselected.isEmpty()) {
+    qDebug() << "Merging deselection";
+    selection.merge(deselectChildren, QItemSelectionModel::Select);
+    selection.merge(deselectParent, QItemSelectionModel::Select);
+    selectionModel->select(selection, QItemSelectionModel::Deselect);
+  }
+}
+
