@@ -29,8 +29,6 @@ private:
   QListView* availableModsView;
   QTreeView* queueView;
   QTreeView* installedModsView;
-  AvailableModsModel* availableModsModel;
-  InstalledModsModel* installedModsModel;
 };
 
 #endif // MAINCENTRALWIDGET_H

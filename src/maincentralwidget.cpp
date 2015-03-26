@@ -53,10 +53,8 @@ MainCentralWidget::MainCentralWidget(const DataManager* dataManager,
   installedModsView->setSelectionMode(QAbstractItemView::MultiSelection);
   installedModsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-  availableModsModel = dataManager->availableModsModel;
-  installedModsModel = dataManager->installedModsModel;
-  availableModsView->setModel(availableModsModel);
-  installedModsView->setModel(installedModsModel);
+  availableModsView->setModel(dataManager->availableModsModel);
+  installedModsView->setModel(dataManager->installedModsModel);
   connect(installedModsView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
                                                                        const QItemSelection&)),
           this, SLOT(handleInstalledSelection(const QItemSelection&, const QItemSelection&)));
