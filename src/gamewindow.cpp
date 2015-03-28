@@ -46,6 +46,7 @@ GameWindow::GameWindow(const DataManager* dataManager, QWidget* parent) :
 
   model = dataManager->gameListModel;
   gameList->setModel(model);
+  gameList->resizeColumnsToContents();
 
   addGameButton = new QPushButton(tr("Add"), this);
   removeGameButton = new QPushButton(tr("Remove"), this);
@@ -84,6 +85,7 @@ void GameWindow::browse()
   // Guard against the user clicking cancel
   if (!path.isEmpty()) {
     emit addGame(path);
+    gameList->resizeColumnsToContents();
   }
 }
 
@@ -92,6 +94,7 @@ void GameWindow::remove()
   QModelIndex index = gameList->currentIndex();
   if (index.isValid()) {
     emit removeGame(index);
+    gameList->resizeColumnsToContents();
   }
 }
 
