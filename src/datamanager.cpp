@@ -98,15 +98,10 @@ void DataManager::restoreGameList()
 
 void DataManager::loadGame(const QString& path)
 {
-  if (games.contains(path)) {
-    qDebug() << "Retrieving cached game:" << path;
-    currentGame = games.value(path);
-  } else {
-    qDebug() << "Loading game:" << path;
-    Game* game = new Game(path, this);
-    games.insert(path, game);
-    currentGame = game;
-  }
+  qDebug() << "Loading game:" << path;
+  delete currentGame;
+  currentGame = new Game(path, this);
+
   identifyCurrentGame();
   availableModsModel->populate(currentGame);
   installedModsModel->populate(currentGame->installedMods);
@@ -115,4 +110,9 @@ void DataManager::loadGame(const QString& path)
 void DataManager::identifyCurrentGame()
 {
   emit identityOfCurrentGame(gameListModel->identifierOfPath(currentGame->path));
+}
+
+void DataManager::refreshCurrentGame()
+{
+  loadGame(currentGame->path);
 }

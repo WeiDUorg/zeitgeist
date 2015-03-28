@@ -84,6 +84,8 @@ void MainWindow::createActions()
 
   gameRefreshAction = new QAction(tr("Refresh"), this);
   gameRefreshAction->setStatusTip(tr("Refresh game"));
+  connect(gameRefreshAction, SIGNAL(triggered()),
+          dataManager, SLOT(refreshCurrentGame()));
 
   gameInstallAction = new QAction(tr("Install"), this);
   gameInstallAction->setStatusTip(tr("Queue a mod for installation"));

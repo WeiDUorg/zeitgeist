@@ -31,6 +31,7 @@ private slots:
 
 public slots:
   void identifyCurrentGame();
+  void refreshCurrentGame();
 
 signals:
   void identityOfCurrentGame(const QString& name);
@@ -40,7 +41,6 @@ private:
   void restoreGameList();
   void loadGame(const QString& path);
 
-  QHash<QString, Game*> games;
   Game* currentGame;
 
   const QString gameListSettingsName = "gameList";
