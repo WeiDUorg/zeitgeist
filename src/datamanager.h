@@ -29,6 +29,12 @@ public:
 private slots:
   void useGame(const QString& path);
 
+public slots:
+  void identifyCurrentGame();
+
+signals:
+  void identityOfCurrentGame(const QString& name);
+
 private:
   void saveGameList();
   void restoreGameList();

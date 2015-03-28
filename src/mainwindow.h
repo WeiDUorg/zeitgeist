@@ -25,6 +25,7 @@ protected:
 private slots:
   void showGameWindow();
   void showSettingsWindow();
+  void updateNameOfCurrentGame(const QString& name);
 
 private:
   void createStatusBar();

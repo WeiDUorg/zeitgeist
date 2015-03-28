@@ -29,6 +29,7 @@ public:
   QList<GameListDataEntry> exportData() const;
   void importData(const QList<GameListDataEntry>& dataList);
   QString pathOfIndex(const QModelIndex& index) const;
+  QString identifierOfPath(const QString& path) const;
 
 private:
   QString findKeyFileDirectory(const QString& path) const;

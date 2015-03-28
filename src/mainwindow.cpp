@@ -41,6 +41,10 @@ MainWindow::MainWindow(DataManager* dataManager, QWidget* parent) :
   createStatusBar();
   createMenus();
 
+  connect(dataManager, SIGNAL(identityOfCurrentGame(const QString&)),
+          this, SLOT(updateNameOfCurrentGame(const QString&)));
+  dataManager->identifyCurrentGame(); // Side-effect
+
   setMinimumSize(800, 600);
   setWindowTitle("Zeitgeist");
 }
@@ -133,6 +137,11 @@ void MainWindow::showSettingsWindow()
   } else {
     settingsWindow->activateWindow();
   }
+}
+
+void MainWindow::updateNameOfCurrentGame(const QString& name)
+{
+  statusBarCurrentGame->setText(name);
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)

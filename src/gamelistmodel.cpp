@@ -21,6 +21,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <QDebug>
 #include <QDirIterator>
 #include <QDir>
 #include <QFileInfo>
@@ -85,6 +86,17 @@ QString GameListModel::pathOfIndex(const QModelIndex& index) const
   if (index.isValid() && row < rowCount()) {
     return item(row, 1)->text();
   }
+  return QString();
+}
+
+QString GameListModel::identifierOfPath(const QString& path) const
+{
+  for (int i = 0; i < rowCount(); ++i) {
+    if (path.compare(item(i, 1)->text()) == 0) {
+      return item(i, 0)->text();
+    }
+  }
+  qDebug() << "Could not find an identity for path" << path;
   return QString();
 }
 

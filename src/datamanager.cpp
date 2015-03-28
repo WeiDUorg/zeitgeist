@@ -49,12 +49,12 @@ void DataManager::saveState()
 
 void DataManager::restoreState()
 {
+  restoreGameList();
   QString settingsGame = settings->value("currentGame").toString();
   if (QDir(settingsGame).exists()) {
     qDebug() << "Restoring game:" << settingsGame;
     useGame(settingsGame);
   }
-  restoreGameList();
 }
 
 void DataManager::useGame(const QString& path)
@@ -107,6 +107,12 @@ void DataManager::loadGame(const QString& path)
     games.insert(path, game);
     currentGame = game;
   }
+  identifyCurrentGame();
   availableModsModel->populate(currentGame);
   installedModsModel->populate(currentGame->installedMods);
+}
+
+void DataManager::identifyCurrentGame()
+{
+  emit identityOfCurrentGame(gameListModel->identifierOfPath(currentGame->path));
 }
