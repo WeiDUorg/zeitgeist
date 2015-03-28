@@ -34,7 +34,9 @@ InstalledModsModel::InstalledModsModel(QObject* parent) :
 
 void InstalledModsModel::clear()
 {
+  beginResetModel();
   removeColumns(0, columnCount());
+  endResetModel();
 }
 
 void InstalledModsModel::populate(const LogFile* logFile)
