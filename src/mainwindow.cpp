@@ -21,6 +21,7 @@
 #include "maincentralwidget.h"
 #include "gamewindow.h"
 #include "settingswindow.h"
+#include "coordinator.h"
 #include "datamanager.h"
 
 #include <QApplication>
@@ -30,9 +31,9 @@
 #include <QMenuBar>
 #include <QMenu>
 
-MainWindow::MainWindow(DataManager* dataManager, QWidget* parent) :
-  QMainWindow(parent), dataManager(dataManager),
-  gameWindow(0), settingsWindow(0)
+MainWindow::MainWindow(Coordinator* coordinator, QWidget* parent) :
+  QMainWindow(parent), coordinator(coordinator),
+  dataManager(coordinator->dataManager), gameWindow(0), settingsWindow(0)
 {
   setCentralWidget(new MainCentralWidget(dataManager));
 

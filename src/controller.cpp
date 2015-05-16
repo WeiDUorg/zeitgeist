@@ -17,28 +17,9 @@
  *
  */
 
-#include "mainwindow.h"
-#include "coordinator.h"
+#include "controller.h"
 
-#include <QApplication>
-#include <QFile>
-#include <QIODevice>
-
-int main(int argc, char* argv[])
+Controller::Controller(QObject* parent) : QObject(parent)
 {
-    QApplication app(argc, argv);
-    //QApplication::setApplicationDisplayName("Zeitgeist"); // Qt 5
 
-    QFile stylesheet(":/stylesheet.qss");
-    if (stylesheet.open(QIODevice::ReadOnly | QIODevice::Text)) {
-      app.setStyleSheet(stylesheet.readAll());
-      stylesheet.close();
-    }
-
-    Coordinator* coordinator = new Coordinator();
-
-    MainWindow w(coordinator);
-    w.show();
-
-    return app.exec();
 }

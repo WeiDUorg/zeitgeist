@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class Coordinator;
 class DataManager;
 class GameWindow;
 class SettingsWindow;
@@ -16,7 +17,7 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 
 public:
-  MainWindow(DataManager* dataManager, QWidget* parent = 0);
+  MainWindow(Coordinator* coordinator, QWidget* parent = 0);
   ~MainWindow();
 
 protected:
@@ -32,6 +33,7 @@ private:
   void createActions();
   void createMenus();
 
+  Coordinator* coordinator;
   DataManager* dataManager;
   QLabel* statusBarGameLabel;
   QLabel* statusBarCurrentGame;

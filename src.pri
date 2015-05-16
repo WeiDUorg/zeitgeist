@@ -2,6 +2,8 @@
 
 HEADERS += \
         src/availablemodsmodel.h \
+        src/controller.h \
+        src/coordinator.h \
         src/datamanager.h \
         src/game.h \
         src/gamelistmodel.h \
@@ -16,6 +18,8 @@ HEADERS += \
 
 SOURCES += \
         src/availablemodsmodel.cpp \
+        src/controller.cpp \
+        src/coordinator.cpp \
         src/datamanager.cpp \
         src/game.cpp \
         src/gamelistmodel.cpp \
