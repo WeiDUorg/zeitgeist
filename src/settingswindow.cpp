@@ -21,6 +21,7 @@
 #include "datamanager.h"
 #include "platform.h"
 
+#include <QDebug>
 #include <QWidget>
 #include <QLabel>
 #include <QLineEdit>
@@ -30,8 +31,6 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QFileInfo>
-
-#include <iostream>
 
 SettingsWindow::SettingsWindow(const DataManager* dataManager, QWidget* parent) :
   QWidget(parent), dataManager(dataManager)
@@ -78,6 +77,6 @@ void SettingsWindow::initialWeiduValidation(const QString& path)
                                                Qt::CaseInsensitive) == 0) {
     // there should be some visual indication that the file passes initial validation
     // pass it off somewhere deeper into the program
-    std::cout << "WeiDU at " << path.toUtf8().data() << " checks out" << std::endl;
+    qDebug() << "WeiDU at" << path << "checks out";
   }
 }
