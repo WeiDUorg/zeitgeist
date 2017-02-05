@@ -18,7 +18,7 @@
  */
 
 #include "settingswindow.h"
-#include "datamanager.h"
+#include "coordinator.h"
 #include "platform.h"
 
 #include <QDebug>
@@ -32,8 +32,8 @@
 #include <QDir>
 #include <QFileInfo>
 
-SettingsWindow::SettingsWindow(const DataManager* dataManager, QWidget* parent) :
-  QWidget(parent), dataManager(dataManager)
+SettingsWindow::SettingsWindow(const Coordinator* coordinator, QWidget* parent) :
+  QWidget(parent), coordinator(coordinator)
 {
   setWindowFlags(Qt::Window);
   setWindowTitle(tr("Edit Program Settings"));
@@ -78,5 +78,6 @@ void SettingsWindow::initialWeiduValidation(const QString& path)
     // there should be some visual indication that the file passes initial validation
     // pass it off somewhere deeper into the program
     qDebug() << "WeiDU at" << path << "checks out";
+    emit weiduPassOff(path);
   }
 }

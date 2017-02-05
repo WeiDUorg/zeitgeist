@@ -18,8 +18,46 @@
  */
 
 #include "controller.h"
+#include "weidumanager.h"
+
+#include <QDebug>
 
 Controller::Controller(QObject* parent) : QObject(parent)
 {
 
+}
+
+void Controller::setWeiduPath(const QString& weiduPath)
+{
+  qDebug() << "weiduPath is" << weiduPath;
+  // We need some way of cleaning WeiduManager up if this function is called more than once
+  WeiduManager* weiduManager = new WeiduManager(weiduPath);
+  weiduManager->moveToThread(&workerThread);
+
+
+  connect(this, SLOT(weiduVersion(const QString&)),
+          weiduManager, SIGNAL(versionSignal(const QString&)));
+  connect(weiduManager, SLOT(version()),
+          this, SIGNAL(getVersion));
+  emit getVersion();
+  /*
+  if (!valid(weiduManager)) {
+    // do something, like emitting a signal
+    qDebug() << "WeiduManager is not valid";
+  }
+  qDebug() << "WeiduManager appears legit";
+  */
+}
+/*
+bool Controller::valid(const WeiduManager* manager) const
+{
+  bool valid = manager->valid();
+  // also check the version
+  return valid;
+}
+*/
+
+void Controller::weiduVersion(const QString& version)
+{
+  qDebug() << "Version is" << version;
 }

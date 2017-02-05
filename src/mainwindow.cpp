@@ -133,7 +133,7 @@ void MainWindow::showGameWindow()
 void MainWindow::showSettingsWindow()
 {
   if (!settingsWindow) {
-    settingsWindow = new SettingsWindow(dataManager, this);
+    settingsWindow = new SettingsWindow(coordinator, this);
   }
   if (settingsWindow->isHidden()) {
     settingsWindow->show();

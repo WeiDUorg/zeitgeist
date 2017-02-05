@@ -17,15 +17,33 @@
  *
  */
 
-#include "coordinator.h"
-#include "controller.h"
-#include "datamanager.h"
+#include "weidumanager.h"
 
-Coordinator::Coordinator(QObject* parent) :
-  QObject(parent), dataManager(new DataManager(this)),
-  controller(new Controller(this))
+#include <QFile>
+//#include <QFileDevice> // Qt 5
+#include <QFileInfo>
+
+// We will also need gamePath
+
+WeiduManager::WeiduManager(const QString& weiduPath) : weiduPath(weiduPath)
 {
 
 }
 
-//If this is the hub, periferal components, like SettingsWindow, need to signal stuff here, where it gets passed on to wherever it should end up.
+bool WeiduManager::valid() const
+{
+  QFileInfo info(weiduPath);
+  if (!info.isExecutable() &&
+      //      !QFile::setPermissions(path, QFileDevice::ExeOther)) // Qt 5
+      !QFile::setPermissions(weiduPath, QFile::ExeOther))
+    {
+      return false;
+    }
+  return true;
+}
+
+void WeiduManager::version()
+{
+  const QString version = "latest";
+  emit versionSignal(version);
+}

@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-class DataManager;
+class Coordinator;
 class QLineEdit;
 
 class SettingsWindow : public QWidget
@@ -11,14 +11,17 @@ class SettingsWindow : public QWidget
   Q_OBJECT
 
 public:
-  SettingsWindow(const DataManager* dataManager, QWidget* parent = 0);
+  SettingsWindow(const Coordinator* coordinator, QWidget* parent = 0);
 
 private slots:
   void browseForWeidu();
   void initialWeiduValidation(const QString& path);
 
+signals:
+  void weiduPassOff(const QString& weiduPath);
+
 private:
-  const DataManager* dataManager;
+  const Coordinator* coordinator;
   QLineEdit* weiduTextField;
 };
 
