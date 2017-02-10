@@ -19,6 +19,7 @@
 
 #include "weidumanager.h"
 
+#include <QDebug>
 #include <QFile>
 //#include <QFileDevice> // Qt 5
 #include <QFileInfo>

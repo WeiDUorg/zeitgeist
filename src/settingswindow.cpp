@@ -44,6 +44,8 @@ SettingsWindow::SettingsWindow(const Coordinator* coordinator, QWidget* parent) 
   weiduTextField->setMinimumWidth(100);
   connect(weiduTextField, SIGNAL(textChanged(const QString&)),
           this, SLOT(initialWeiduValidation(const QString&)));
+  connect(this, SIGNAL(weiduPassOff(const QString&)),
+          coordinator, SLOT(weiduPath(const QString&)));
   QPushButton* weiduBrowse = new QPushButton(tr("Browse"), this);
   weiduBrowse->setFocus();
   connect(weiduBrowse, SIGNAL(clicked()),

@@ -25,7 +25,11 @@ Coordinator::Coordinator(QObject* parent) :
   QObject(parent), dataManager(new DataManager(this)),
   controller(new Controller(this))
 {
-
+  connect(this, SIGNAL(setWeiduPath(const QString&)),
+          controller, SLOT(setWeiduPath(const QString&)));
 }
 
-//If this is the hub, periferal components, like SettingsWindow, need to signal stuff here, where it gets passed on to wherever it should end up.
+void Coordinator::weiduPath(const QString& path)
+{
+  emit setWeiduPath(path);
+}

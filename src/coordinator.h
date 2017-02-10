@@ -15,6 +15,12 @@ public:
 
   DataManager* dataManager;
   Controller* controller;
+
+public slots:
+  void weiduPath(const QString& path);
+
+signals:
+  void setWeiduPath(const QString& path);
 };
 
 #endif // COORDINATOR_H

@@ -22,7 +22,7 @@
 
 #include <QDebug>
 
-Controller::Controller(QObject* parent) : QObject(parent)
+Controller::Controller(QObject* parent) : QObject(parent), workerThread(new QThread(this))
 {
 
 }
@@ -32,13 +32,14 @@ void Controller::setWeiduPath(const QString& weiduPath)
   qDebug() << "weiduPath is" << weiduPath;
   // We need some way of cleaning WeiduManager up if this function is called more than once
   WeiduManager* weiduManager = new WeiduManager(weiduPath);
-  weiduManager->moveToThread(&workerThread);
+  weiduManager->moveToThread(workerThread);
 
 
-  connect(this, SLOT(weiduVersion(const QString&)),
-          weiduManager, SIGNAL(versionSignal(const QString&)));
-  connect(weiduManager, SLOT(version()),
-          this, SIGNAL(getVersion));
+  connect(weiduManager, SIGNAL(versionSignal(const QString&)),
+          this, SLOT(weiduVersion(const QString&)));
+  connect(this, SIGNAL(getVersion()),
+          weiduManager, SLOT(version()));
+  workerThread->start();
   emit getVersion();
   /*
   if (!valid(weiduManager)) {

@@ -17,15 +17,13 @@ public:
 
 public slots:
   void setWeiduPath(const QString& weiduPath);
-
-private slots:
   void weiduVersion(const QString& version);
 
 signals:
   void getVersion();
 
 private:
-  QThread workerThread;
+  QThread* workerThread;
 
   //bool valid(const WeiduManager* manager) const;
 
