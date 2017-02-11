@@ -42,6 +42,11 @@ bool WeiduManager::valid() const
   return true;
 }
 
+void WeiduManager::terminateManager()
+{
+  deleteLater();
+}
+
 void WeiduManager::version()
 {
   const QString version = "latest";

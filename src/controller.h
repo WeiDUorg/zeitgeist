@@ -12,6 +12,7 @@ class Controller : public QObject
 
 public:
   Controller(QObject* parent);
+  ~Controller();
 
 public slots:
   void setupWeidu(const QString& weiduPath, QString gamePath);
@@ -19,6 +20,7 @@ public slots:
 
 signals:
   void weiduFailedValidation(const QString& weiduPath);
+  void terminateManager();
   void getVersion();
 
 private:

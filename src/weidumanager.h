@@ -15,6 +15,7 @@ public:
 
 public slots:
   void version();
+  void terminateManager();
 
 signals:
   void versionSignal(const QString& version);

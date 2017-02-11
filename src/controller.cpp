@@ -27,14 +27,22 @@ Controller::Controller(QObject* parent) : QObject(parent), workerThread(new QThr
 
 }
 
+Controller::~Controller()
+{
+  emit terminateManager();
+}
+
 void Controller::setupWeidu(const QString& weiduPath, QString gamePath)
 {
   qDebug() << "weidu path is" << weiduPath;
   qDebug() << "Game path is" << gamePath;
+  emit terminateManager();
   WeiduManager* weiduManager = new WeiduManager(weiduPath, gamePath);
   if (weiduManager->valid()) {
     qDebug() << "WeiduManager succeeded validation";
     weiduManager->moveToThread(workerThread);
+    connect(this, SIGNAL(terminateManager()),
+            weiduManager, SLOT(terminateManager()));
     connect(weiduManager, SIGNAL(versionSignal(const QString&)),
             this, SLOT(weiduVersion(const QString&)));
     connect(this, SIGNAL(getVersion()),
@@ -43,6 +51,7 @@ void Controller::setupWeidu(const QString& weiduPath, QString gamePath)
     emit getVersion();
   } else {
     qDebug() << "WeiduManager failed validation";
+    delete weiduManager;
     emit weiduFailedValidation(weiduPath);
   }
 }
