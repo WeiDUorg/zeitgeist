@@ -19,15 +19,18 @@
 
 #include "weidumanager.h"
 
+#include <QByteArray>
 #include <QDebug>
 #include <QFile>
 //#include <QFileDevice> // Qt 5
 #include <QFileInfo>
+#include <QProcess>
+#include <QStringList>
 
 WeiduManager::WeiduManager(const QString& weiduPath, QString gamePath) :
-  weiduPath(weiduPath), gamePath(gamePath)
+  weiduPath(weiduPath), gamePath(gamePath), process(new QProcess(this))
 {
-
+  process->setWorkingDirectory(gamePath);
 }
 
 bool WeiduManager::valid() const
@@ -47,8 +50,25 @@ void WeiduManager::terminateManager()
   deleteLater();
 }
 
+/* This implementation is not suitable for arguments which:
+     may run WeiDU interactively
+     may cause WeiDU to run for a long time (due to the time-out)
+   We need to hook stdout up to a widget and allow for writing to stdin
+   But perhaps only for select arguments, so it would be an alternate way
+   of running WeiDU, rather than a replacement one
+*/
+QByteArray WeiduManager::run(const QStringList& arguments)
+{
+  process->start(weiduPath, arguments);
+  process->waitForFinished();
+  return process->readAllStandardOutput();
+}
+
 void WeiduManager::version()
 {
-  const QString version = "latest";
-  emit versionSignal(version);
+  qDebug() << "Attempting to get version";
+  QStringList arguments;
+  arguments << "--version";
+  QByteArray version = run(arguments);
+  emit versionSignal(QString(version));
 }

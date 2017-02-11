@@ -37,6 +37,7 @@ void Controller::setupWeidu(const QString& weiduPath, QString gamePath)
   qDebug() << "weidu path is" << weiduPath;
   qDebug() << "Game path is" << gamePath;
   emit terminateManager();
+  qDebug() << "Creating WeiduManager";
   WeiduManager* weiduManager = new WeiduManager(weiduPath, gamePath);
   if (weiduManager->valid()) {
     qDebug() << "WeiduManager succeeded validation";

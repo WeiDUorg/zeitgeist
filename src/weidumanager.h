@@ -3,7 +3,10 @@
 
 #include <QObject>
 
+class QByteArray;
+class QProcess;
 class QString;
+class QStringList;
 
 class WeiduManager : public QObject
 {
@@ -21,8 +24,11 @@ signals:
   void versionSignal(const QString& version);
 
 private:
+  QByteArray run(const QStringList& arguments);
+
   const QString weiduPath;
   QString gamePath;
+  QProcess* process;
 
 };
 
