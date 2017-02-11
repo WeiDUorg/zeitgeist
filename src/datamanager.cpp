@@ -98,9 +98,10 @@ void DataManager::restoreGameList()
 
 void DataManager::loadGame(const QString& path)
 {
-  qDebug() << "Loading game:" << path;
+  const QString new_path = path;
   delete currentGame;
-  currentGame = new Game(path, this);
+  qDebug() << "Loading game from path " << new_path;
+  currentGame = new Game(new_path, this);
 
   identifyCurrentGame();
   availableModsModel->populate(currentGame);
