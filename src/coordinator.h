@@ -20,7 +20,7 @@ public slots:
   void weiduPath(const QString& path);
 
 signals:
-  void setWeiduPath(const QString& path);
+  void setWeiduPath(const QString& path, QString gamePath);
 };
 
 #endif // COORDINATOR_H

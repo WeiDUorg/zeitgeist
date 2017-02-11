@@ -20,6 +20,7 @@ public:
   DataManager(QObject* parent = 0);
   void saveState();
   void restoreState();
+  QString getCurrentGamePath();
 
   QSettings* settings;
   GameListModel* gameListModel;

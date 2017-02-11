@@ -27,11 +27,12 @@ Controller::Controller(QObject* parent) : QObject(parent), workerThread(new QThr
 
 }
 
-void Controller::setWeiduPath(const QString& weiduPath)
+void Controller::setupWeidu(const QString& weiduPath, QString gamePath)
 {
-  qDebug() << "weiduPath is" << weiduPath;
+  qDebug() << "weidu path is" << weiduPath;
+  qDebug() << "Game path is" << gamePath;
   // We need some way of cleaning WeiduManager up if this function is called more than once
-  WeiduManager* weiduManager = new WeiduManager(weiduPath);
+  WeiduManager* weiduManager = new WeiduManager(weiduPath, gamePath);
   weiduManager->moveToThread(workerThread);
 
 

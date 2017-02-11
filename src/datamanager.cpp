@@ -117,3 +117,8 @@ void DataManager::refreshCurrentGame()
 {
   loadGame(currentGame->path);
 }
+
+QString DataManager::getCurrentGamePath()
+{
+  return currentGame->path;
+}

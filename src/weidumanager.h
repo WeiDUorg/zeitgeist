@@ -10,7 +10,7 @@ class WeiduManager : public QObject
   Q_OBJECT
 
 public:
-  WeiduManager(const QString& weiduPath);
+  WeiduManager(const QString& weiduPath, QString gamePath);
   bool valid() const;
 
 public slots:
@@ -21,6 +21,7 @@ signals:
 
 private:
   const QString weiduPath;
+  QString gamePath;
 
 };
 

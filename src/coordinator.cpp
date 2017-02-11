@@ -25,11 +25,11 @@ Coordinator::Coordinator(QObject* parent) :
   QObject(parent), dataManager(new DataManager(this)),
   controller(new Controller(this))
 {
-  connect(this, SIGNAL(setWeiduPath(const QString&)),
-          controller, SLOT(setWeiduPath(const QString&)));
+  connect(this, SIGNAL(setWeiduPath(const QString&, QString)),
+          controller, SLOT(setupWeidu(const QString&, QString)));
 }
 
 void Coordinator::weiduPath(const QString& path)
 {
-  emit setWeiduPath(path);
+  emit setWeiduPath(path, dataManager->getCurrentGamePath());
 }

@@ -16,7 +16,7 @@ public:
   Controller(QObject* parent = 0);
 
 public slots:
-  void setWeiduPath(const QString& weiduPath);
+  void setupWeidu(const QString& weiduPath, QString gamePath);
   void weiduVersion(const QString& version);
 
 signals:
