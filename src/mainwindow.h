@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 
 public:
-  MainWindow(Coordinator* coordinator, QWidget* parent = 0);
+  MainWindow(Coordinator* coordinator);
   ~MainWindow();
 
 protected:

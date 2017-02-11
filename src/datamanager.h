@@ -17,7 +17,7 @@ class DataManager : public QObject
   Q_OBJECT
 
 public:
-  DataManager(QObject* parent = 0);
+  DataManager(QObject* parent);
   void saveState();
   void restoreState();
   QString getCurrentGamePath();

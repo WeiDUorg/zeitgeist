@@ -15,7 +15,7 @@ class Game : public QObject
   Q_OBJECT
 
 public:
-  Game(const QString& path, QObject* parent = 0);
+  Game(QObject* parent, const QString& path);
   QList<QString> getModNames() const;
   QList<QString> getModPaths() const;
 

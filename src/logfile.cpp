@@ -27,7 +27,7 @@
 #include <QRegExp>
 #include <QtDebug>
 
-LogFile::LogFile(const QString& gamePath, QObject* parent) : QObject(parent)
+LogFile::LogFile(QObject* parent, const QString& gamePath) : QObject(parent)
 {
   QString logFile = gamePath + "/weidu.log";
   qDebug() << "Looking for log file:" << logFile;

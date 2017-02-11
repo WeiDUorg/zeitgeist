@@ -11,7 +11,7 @@ class Controller : public QObject
   Q_OBJECT
 
 public:
-  Controller(QObject* parent = 0);
+  Controller(QObject* parent);
 
 public slots:
   void setupWeidu(const QString& weiduPath, QString gamePath);

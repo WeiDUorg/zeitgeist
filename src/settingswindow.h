@@ -11,7 +11,7 @@ class SettingsWindow : public QWidget
   Q_OBJECT
 
 public:
-  SettingsWindow(const Coordinator* coordinator, QWidget* parent = 0);
+  SettingsWindow(QWidget* parent, const Coordinator* coordinator);
 
 private slots:
   void browseForWeidu();

@@ -33,7 +33,7 @@
 #include <QFileInfo>
 #include <QErrorMessage>
 
-SettingsWindow::SettingsWindow(const Coordinator* coordinator, QWidget* parent) :
+SettingsWindow::SettingsWindow(QWidget* parent, const Coordinator* coordinator) :
   QWidget(parent), coordinator(coordinator)
 {
   setWindowFlags(Qt::Window);

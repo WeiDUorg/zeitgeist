@@ -10,7 +10,7 @@ class Mod : public QObject
   Q_OBJECT
 
 public:
-  Mod(const QString& tp2Path, QObject* parent = 0);
+  Mod(QObject* parent, const QString& tp2Path);
   QString getName() const;
 
   const QString tp2Path;

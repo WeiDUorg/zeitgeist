@@ -35,8 +35,7 @@
 #include <QList>
 #include <QDebug>
 
-MainCentralWidget::MainCentralWidget(const DataManager* dataManager,
-                                     QWidget* parent) :
+MainCentralWidget::MainCentralWidget(QWidget* parent, const DataManager* dataManager) :
   QWidget(parent), dataManager(dataManager)
 {
   QLabel* availableModsLabel = new QLabel(tr("Available Mods"), this);

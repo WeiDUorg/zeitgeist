@@ -33,7 +33,7 @@
 #include <QAbstractItemView>
 #include <QDir>
 
-GameWindow::GameWindow(const DataManager* dataManager, QWidget* parent) :
+GameWindow::GameWindow(QWidget* parent, const DataManager* dataManager) :
   QWidget(parent), dataManager(dataManager)
 {
   resize(640, 400);

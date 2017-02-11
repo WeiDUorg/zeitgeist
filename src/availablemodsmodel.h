@@ -14,7 +14,7 @@ class AvailableModsModel : public QStringListModel
   Q_OBJECT
 
 public:
-  AvailableModsModel(QObject* parent = 0);
+  AvailableModsModel(QObject* parent);
   void populate(const Game* game);
 
 private:

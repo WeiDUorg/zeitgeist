@@ -19,7 +19,7 @@ class MainCentralWidget : public QWidget
   Q_OBJECT
 
 public:
-  MainCentralWidget(const DataManager* dataManager, QWidget* parent = 0);
+  MainCentralWidget(QWidget* parent, const DataManager* dataManager);
 
 private slots:
   void handleInstalledSelection(const QItemSelection& selected, const QItemSelection& deselected);

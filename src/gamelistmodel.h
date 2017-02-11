@@ -25,7 +25,7 @@ signals:
   void notAGameDirectory(const QString& path) const;
 
 public:
-  GameListModel(QObject* parent = 0);
+  GameListModel(QObject* parent);
   QList<GameListDataEntry> exportData() const;
   void importData(const QList<GameListDataEntry>& dataList);
   QString pathOfIndex(const QModelIndex& index) const;

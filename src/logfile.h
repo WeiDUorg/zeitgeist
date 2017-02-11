@@ -19,7 +19,7 @@ class LogFile : public QObject
   Q_OBJECT
 
 public:
-  LogFile(const QString& gamePath, QObject* parent = 0);
+  LogFile(QObject* parent, const QString& gamePath);
   QList<LogFileComponent> data;
 
 private:

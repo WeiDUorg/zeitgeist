@@ -16,7 +16,7 @@ class InstalledModsModel : public QStandardItemModel
   Q_OBJECT
 
 public:
-  InstalledModsModel(QObject*  parent = 0);
+  InstalledModsModel(QObject*  parent);
   void populate(const LogFile* logFile);
 
 private:

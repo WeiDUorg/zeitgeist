@@ -27,10 +27,10 @@
 #include <QDirIterator>
 #include <QtDebug>
 
-Game::Game(const QString& path, QObject* parent) :QObject(parent), path(path)
+Game::Game(QObject* parent, const QString& path) : QObject(parent), path(path)
 {
   availableMods = getModList(path);
-  installedMods = new LogFile(path, this);
+  installedMods = new LogFile(this, path);
 }
 
 QList<Mod*> Game::getModList(const QString& path)
@@ -41,7 +41,7 @@ QList<Mod*> Game::getModList(const QString& path)
   QList<Mod*> result;
   foreach (QString tp2Path, mods) {
     qDebug() << "Found mod at:" << tp2Path;
-    result << new Mod(tp2Path, this);
+    result << new Mod(this, tp2Path);
   }
   std::sort(result.begin(), result.end(), [](const Mod* l, const Mod* r) {
       return l->getName() < r->getName();

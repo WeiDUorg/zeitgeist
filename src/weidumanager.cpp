@@ -24,8 +24,6 @@
 //#include <QFileDevice> // Qt 5
 #include <QFileInfo>
 
-// We will also need gamePath
-
 WeiduManager::WeiduManager(const QString& weiduPath, QString gamePath) :
   weiduPath(weiduPath), gamePath(gamePath)
 {

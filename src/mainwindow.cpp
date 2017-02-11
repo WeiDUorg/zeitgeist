@@ -31,11 +31,11 @@
 #include <QMenuBar>
 #include <QMenu>
 
-MainWindow::MainWindow(Coordinator* coordinator, QWidget* parent) :
-  QMainWindow(parent), coordinator(coordinator),
+MainWindow::MainWindow(Coordinator* coordinator) :
+  coordinator(coordinator),
   dataManager(coordinator->dataManager), gameWindow(0), settingsWindow(0)
 {
-  setCentralWidget(new MainCentralWidget(dataManager));
+  setCentralWidget(new MainCentralWidget(this, dataManager));
 
   createActions();
 
@@ -121,7 +121,7 @@ void MainWindow::createMenus()
 void MainWindow::showGameWindow()
 {
   if (!gameWindow) {
-    gameWindow = new GameWindow(dataManager, this);
+    gameWindow = new GameWindow(this, dataManager);
   }
   if (gameWindow->isHidden()) {
     gameWindow->show();
@@ -133,7 +133,7 @@ void MainWindow::showGameWindow()
 void MainWindow::showSettingsWindow()
 {
   if (!settingsWindow) {
-    settingsWindow = new SettingsWindow(coordinator, this);
+    settingsWindow = new SettingsWindow(this, coordinator);
   }
   if (settingsWindow->isHidden()) {
     settingsWindow->show();

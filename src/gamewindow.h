@@ -15,7 +15,7 @@ class GameWindow : public QWidget
   Q_OBJECT
 
 public:
-  GameWindow(const DataManager* dataManager, QWidget* parent = 0);
+  GameWindow(QWidget* parent, const DataManager* dataManager);
 
 private slots:
   void browse();
