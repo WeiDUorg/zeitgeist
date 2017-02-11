@@ -4,8 +4,6 @@
 #include <QObject>
 #include <QThread>
 
-//class WeiduManager;
-
 class QString;
 
 class Controller : public QObject
@@ -20,12 +18,11 @@ public slots:
   void weiduVersion(const QString& version);
 
 signals:
+  void weiduFailedValidation(const QString& weiduPath);
   void getVersion();
 
 private:
   QThread* workerThread;
-
-  //bool valid(const WeiduManager* manager) const;
 
 };
 

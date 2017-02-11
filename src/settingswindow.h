@@ -16,6 +16,7 @@ public:
 private slots:
   void browseForWeidu();
   void initialWeiduValidation(const QString& path);
+  void weiduFailedValidation(const QString& weiduPath);
 
 signals:
   void weiduPassOff(const QString& weiduPath);

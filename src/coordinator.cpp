@@ -27,9 +27,16 @@ Coordinator::Coordinator(QObject* parent) :
 {
   connect(this, SIGNAL(setWeiduPath(const QString&, QString)),
           controller, SLOT(setupWeidu(const QString&, QString)));
+  connect(controller, SIGNAL(weiduFailedValidation(const QString&)),
+          this, SLOT(weiduFailedValidation(const QString&)));
 }
 
 void Coordinator::weiduPath(const QString& path)
 {
   emit setWeiduPath(path, dataManager->getCurrentGamePath());
+}
+
+void Coordinator::weiduFailedValidation(const QString& weiduPath)
+{
+  emit weiduFailedValidationSignal(weiduPath);
 }

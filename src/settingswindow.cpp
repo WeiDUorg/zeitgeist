@@ -31,6 +31,7 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QFileInfo>
+#include <QErrorMessage>
 
 SettingsWindow::SettingsWindow(const Coordinator* coordinator, QWidget* parent) :
   QWidget(parent), coordinator(coordinator)
@@ -46,6 +47,8 @@ SettingsWindow::SettingsWindow(const Coordinator* coordinator, QWidget* parent) 
           this, SLOT(initialWeiduValidation(const QString&)));
   connect(this, SIGNAL(weiduPassOff(const QString&)),
           coordinator, SLOT(weiduPath(const QString&)));
+  connect(coordinator, SIGNAL(weiduFailedValidationSignal(const QString&)),
+          this, SLOT(weiduFailedValidation(const QString&)));
   QPushButton* weiduBrowse = new QPushButton(tr("Browse"), this);
   weiduBrowse->setFocus();
   connect(weiduBrowse, SIGNAL(clicked()),
@@ -72,14 +75,27 @@ void SettingsWindow::browseForWeidu()
   }
 }
 
+/* This function verifies that the selected file is superficially a valid
+   WeiDU executable
+*/
 void SettingsWindow::initialWeiduValidation(const QString& path)
 {
   QFileInfo info(path);
   if (info.isFile() && info.fileName().compare(WEIDU_EXECUTABLE,
                                                Qt::CaseInsensitive) == 0) {
-    // there should be some visual indication that the file passes initial validation
-    // pass it off somewhere deeper into the program
-    qDebug() << "WeiDU at" << path << "checks out";
+    // There ought to be some kind of visual indication, so the user knows
+    // it's ok to close the settings window and proceed
+    qDebug() << "WeiDU at" << path << "passes initial inspection";
     emit weiduPassOff(path);
   }
+}
+
+/* This function is called if WeiduManager got a WeiDU that is not a runnable
+   WeiDU executable
+*/
+void SettingsWindow::weiduFailedValidation(const QString& weiduPath)
+{
+  QErrorMessage* error = new QErrorMessage(this);
+  error->showMessage(tr("The selected file is not an executable WeiDU binary: ") + weiduPath);
+  weiduTextField->clear();
 }

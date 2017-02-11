@@ -33,31 +33,20 @@ void Controller::setupWeidu(const QString& weiduPath, QString gamePath)
   qDebug() << "Game path is" << gamePath;
   // We need some way of cleaning WeiduManager up if this function is called more than once
   WeiduManager* weiduManager = new WeiduManager(weiduPath, gamePath);
-  weiduManager->moveToThread(workerThread);
-
-
-  connect(weiduManager, SIGNAL(versionSignal(const QString&)),
-          this, SLOT(weiduVersion(const QString&)));
-  connect(this, SIGNAL(getVersion()),
-          weiduManager, SLOT(version()));
-  workerThread->start();
-  emit getVersion();
-  /*
-  if (!valid(weiduManager)) {
-    // do something, like emitting a signal
-    qDebug() << "WeiduManager is not valid";
+  if (weiduManager->valid()) {
+    qDebug() << "WeiduManager succeeded validation";
+    weiduManager->moveToThread(workerThread);
+    connect(weiduManager, SIGNAL(versionSignal(const QString&)),
+            this, SLOT(weiduVersion(const QString&)));
+    connect(this, SIGNAL(getVersion()),
+            weiduManager, SLOT(version()));
+    workerThread->start();
+    emit getVersion();
+  } else {
+    qDebug() << "WeiduManager failed validation";
+    emit weiduFailedValidation(weiduPath);
   }
-  qDebug() << "WeiduManager appears legit";
-  */
 }
-/*
-bool Controller::valid(const WeiduManager* manager) const
-{
-  bool valid = manager->valid();
-  // also check the version
-  return valid;
-}
-*/
 
 void Controller::weiduVersion(const QString& version)
 {

@@ -18,9 +18,11 @@ public:
 
 public slots:
   void weiduPath(const QString& path);
+  void weiduFailedValidation(const QString& path);
 
 signals:
   void setWeiduPath(const QString& path, QString gamePath);
+  void weiduFailedValidationSignal(const QString& weiduPath);
 };
 
 #endif // COORDINATOR_H
