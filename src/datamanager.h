@@ -31,9 +31,11 @@ public slots:
   void saveState();
   void identifyCurrentGame() const;
   void refreshCurrentGame();
+  void gameRemoved(const QString& path);
 
 signals:
   void identityOfCurrentGame(const QString& name) const;
+  void clearModels();
 
 private:
   void restoreState();

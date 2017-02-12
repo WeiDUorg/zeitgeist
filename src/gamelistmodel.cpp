@@ -52,6 +52,7 @@ void GameListModel::removeGame(const QModelIndex& index)
 {
   int row = index.row();
   if (index.isValid() && row < rowCount()) {
+    emit gameRemoved(pathOfIndex(index));
     removeRows(row, 1);
   }
 }

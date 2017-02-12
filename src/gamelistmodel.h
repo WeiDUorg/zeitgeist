@@ -23,6 +23,7 @@ private slots:
 
 signals:
   void notAGameDirectory(const QString& path) const;
+  void gameRemoved(const QString& path) const;
 
 public:
   GameListModel(QObject* parent);

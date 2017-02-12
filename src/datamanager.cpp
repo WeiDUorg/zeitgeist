@@ -35,14 +35,23 @@ DataManager::DataManager(QObject* parent) :
   installedModsModel(new InstalledModsModel(this)),
   settings(new QSettings("zeitgeist", "zeitgeist", this)), currentGame(0)
 {
-  qDebug() << "Restoring state";
+  connect(gameListModel, SIGNAL(gameRemoved(const QString&)),
+          this, SLOT(gameRemoved(const QString&)));
+  connect(this, SIGNAL(clearModels()),
+          availableModsModel, SLOT(clear()));
+  connect(this, SIGNAL(clearModels()),
+          installedModsModel, SLOT(clear()));
+  qDebug() << "Attempting to restoring state";
   restoreState();
-  qDebug() << "Finished restoring state";
 }
 
 void DataManager::saveState()
 {
-  settings->setValue("currentGame", currentGame->path);
+  if (currentGame) {
+    settings->setValue("currentGame", currentGame->path);
+  } else {
+    settings->setValue("currentGame", QString());
+  }
   saveGameList();
 }
 
@@ -50,9 +59,10 @@ void DataManager::restoreState()
 {
   restoreGameList();
   QString settingsGame = settings->value("currentGame").toString();
-  if (QDir(settingsGame).exists()) {
+  if (!settingsGame.isEmpty() && QDir(settingsGame).exists()) {
     qDebug() << "Restoring game:" << settingsGame;
     useGame(settingsGame);
+    qDebug() << "Finished restoring state";
   }
 }
 
@@ -109,15 +119,39 @@ void DataManager::loadGame(const QString& path)
 
 void DataManager::identifyCurrentGame() const
 {
-  emit identityOfCurrentGame(gameListModel->identifierOfPath(currentGame->path));
+  QString path;
+  if (currentGame) {
+    path = currentGame->path;
+  } else {
+    path = QString();
+  }
+  emit identityOfCurrentGame(gameListModel->identifierOfPath(path));
 }
 
 void DataManager::refreshCurrentGame()
 {
-  loadGame(currentGame->path);
+  if (currentGame) {
+    loadGame(currentGame->path);
+  }
 }
 
 QString DataManager::getCurrentGamePath() const
 {
-  return currentGame->path;
+  QString path;
+  if (currentGame) {
+    path = currentGame->path;
+  } else {
+    path = QString();
+  }
+  return path;
+}
+
+void DataManager::gameRemoved(const QString& path)
+{
+  if (currentGame && path == currentGame->path) {
+    delete currentGame;
+    currentGame = 0;
+    emit clearModels();
+    emit identityOfCurrentGame(QString());
+  }
 }

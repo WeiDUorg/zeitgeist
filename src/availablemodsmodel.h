@@ -17,9 +17,10 @@ public:
   AvailableModsModel(QObject* parent);
   void populate(const Game* game);
 
-private:
+public slots:
   void clear();
 
+private:
   QList<QString> names;
   QList<QString> paths;
 };

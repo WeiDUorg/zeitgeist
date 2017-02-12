@@ -19,8 +19,10 @@ public:
   InstalledModsModel(QObject*  parent);
   void populate(const LogFile* logFile);
 
-private:
+public slots:
   void clear();
+
+private:
   QList<QList<LogFileComponent>> partitionData(const QList<LogFileComponent>& data) const;
   QList<LogFileComponent> getContiguousBlock(const QList<LogFileComponent>& data, const int& index, const QString& name) const;
   QList<QString> getPartitionNames(const QList<QList<LogFileComponent>>& partitionedData) const;
