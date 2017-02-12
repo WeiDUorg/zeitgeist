@@ -44,8 +44,8 @@ void Controller::setupWeidu(const QString& weiduPath, QString gamePath)
     weiduManager->moveToThread(workerThread);
     connect(this, SIGNAL(terminateManager()),
             weiduManager, SLOT(terminateManager()));
-    connect(weiduManager, SIGNAL(versionSignal(const QString&)),
-            this, SLOT(weiduVersion(const QString&)));
+    connect(weiduManager, SIGNAL(versionSignal(const int&)),
+            this, SLOT(weiduVersion(const int&)));
     connect(this, SIGNAL(getVersion()),
             weiduManager, SLOT(version()));
     workerThread->start();
@@ -57,7 +57,7 @@ void Controller::setupWeidu(const QString& weiduPath, QString gamePath)
   }
 }
 
-void Controller::weiduVersion(const QString& version)
+void Controller::weiduVersion(const int& version)
 {
   qDebug() << "Version is" << version;
 }

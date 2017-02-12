@@ -16,7 +16,7 @@ public:
 
 public slots:
   void setupWeidu(const QString& weiduPath, QString gamePath);
-  void weiduVersion(const QString& version);
+  void weiduVersion(const int& version);
 
 signals:
   void weiduFailedValidation(const QString& weiduPath);

@@ -21,7 +21,7 @@ public slots:
   void terminateManager();
 
 signals:
-  void versionSignal(const QString& version);
+  void versionSignal(const int& version);
 
 private:
   QByteArray run(const QStringList& arguments);

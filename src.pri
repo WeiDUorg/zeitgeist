@@ -15,6 +15,7 @@ HEADERS += \
         src/mod.h \
         src/platform.h \
         src/settingswindow.h \
+        src/weiduextractor.h \
         src/weidumanager.h
 
 SOURCES += \
@@ -32,4 +33,5 @@ SOURCES += \
         src/mainwindow.cpp \
         src/mod.cpp \
         src/settingswindow.cpp \
+        src/weiduextractor.cpp \
         src/weidumanager.cpp

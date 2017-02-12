@@ -17,6 +17,7 @@
  *
  */
 
+#include "weiduextractor.h"
 #include "weidumanager.h"
 
 #include <QByteArray>
@@ -69,6 +70,6 @@ void WeiduManager::version()
   qDebug() << "Attempting to get version";
   QStringList arguments;
   arguments << "--version";
-  QByteArray version = run(arguments);
-  emit versionSignal(QString(version));
+  QByteArray message = run(arguments);
+  emit versionSignal(WeiduExtractor::version(message));
 }
