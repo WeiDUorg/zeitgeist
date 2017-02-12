@@ -17,10 +17,12 @@ public:
   bool valid() const;
 
 public slots:
-  void version();
   void terminateManager();
+  void quack();
+  void version();
 
 signals:
+  void quacks(const bool& quacks);
   void versionSignal(const int& version);
 
 private:

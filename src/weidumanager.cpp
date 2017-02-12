@@ -46,6 +46,15 @@ bool WeiduManager::valid() const
   return true;
 }
 
+void WeiduManager::quack()
+{
+  QStringList arguments;
+  arguments << "--version";
+  QByteArray message = run(arguments);
+  QByteArray auth("WeiDU version");
+  emit quacks(message.contains(auth));
+}
+
 void WeiduManager::terminateManager()
 {
   deleteLater();

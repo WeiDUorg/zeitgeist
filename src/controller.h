@@ -16,16 +16,18 @@ public:
 
 public slots:
   void setupWeidu(const QString& weiduPath, QString gamePath);
+  void quacks(const bool& quacks);
   void weiduVersion(const int& version);
 
 signals:
   void weiduFailedValidation(const QString& weiduPath);
   void terminateManager();
+  void doesItQuack();
   void getVersion();
 
 private:
   QThread* workerThread;
-
+  QString currentWeidu;
 };
 
 #endif // CONTROLLER_H

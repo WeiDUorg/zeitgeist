@@ -38,22 +38,38 @@ void Controller::setupWeidu(const QString& weiduPath, QString gamePath)
   qDebug() << "Game path is" << gamePath;
   emit terminateManager();
   qDebug() << "Creating WeiduManager";
+  currentWeidu = weiduPath;
   WeiduManager* weiduManager = new WeiduManager(weiduPath, gamePath);
   if (weiduManager->valid()) {
     qDebug() << "WeiduManager succeeded validation";
     weiduManager->moveToThread(workerThread);
     connect(this, SIGNAL(terminateManager()),
             weiduManager, SLOT(terminateManager()));
+    connect(this, SIGNAL(doesItQuack()),
+            weiduManager, SLOT(quack()));
+    connect(weiduManager, SIGNAL(quacks(const bool&)),
+            this, SLOT(quacks(const bool&)));
     connect(weiduManager, SIGNAL(versionSignal(const int&)),
             this, SLOT(weiduVersion(const int&)));
     connect(this, SIGNAL(getVersion()),
             weiduManager, SLOT(version()));
     workerThread->start();
-    emit getVersion();
+    emit doesItQuack();
   } else {
     qDebug() << "WeiduManager failed validation";
     delete weiduManager;
     emit weiduFailedValidation(weiduPath);
+  }
+}
+
+void Controller::quacks(const bool& quacks)
+{
+  if (quacks) {
+    qDebug() << "File quacks like a WeiDU";
+    emit getVersion();
+  } else {
+    qDebug() << "File fails to quack like a WeiDU";
+    emit weiduFailedValidation(currentWeidu);
   }
 }
 
