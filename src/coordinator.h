@@ -13,8 +13,8 @@ class Coordinator : public QObject
 public:
   Coordinator(QObject* parent = 0);
 
-  DataManager* dataManager;
-  Controller* controller;
+  const DataManager* dataManager;
+  const Controller* controller;
 
 public slots:
   void weiduPath(const QString& path);

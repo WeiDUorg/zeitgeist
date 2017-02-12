@@ -28,13 +28,16 @@ private slots:
   void showSettingsWindow();
   void updateNameOfCurrentGame(const QString& name);
 
+signals:
+  void saveState();
+
 private:
   void createStatusBar();
   void createActions();
   void createMenus();
 
-  Coordinator* coordinator;
-  DataManager* dataManager;
+  const Coordinator* coordinator;
+  const DataManager* dataManager;
   QLabel* statusBarGameLabel;
   QLabel* statusBarCurrentGame;
   QAction* programAboutAction;

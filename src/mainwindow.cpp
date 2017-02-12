@@ -42,6 +42,8 @@ MainWindow::MainWindow(Coordinator* coordinator) :
   createStatusBar();
   createMenus();
 
+  connect(this, SIGNAL(saveState()),
+          dataManager, SLOT(saveState()));
   connect(dataManager, SIGNAL(identityOfCurrentGame(const QString&)),
           this, SLOT(updateNameOfCurrentGame(const QString&)));
   dataManager->identifyCurrentGame(); // Side-effect
@@ -149,6 +151,6 @@ void MainWindow::updateNameOfCurrentGame(const QString& name)
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-  dataManager->saveState();
+  emit saveState();
   QMainWindow::closeEvent(event);
 }

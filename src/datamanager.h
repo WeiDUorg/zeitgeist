@@ -18,11 +18,8 @@ class DataManager : public QObject
 
 public:
   DataManager(QObject* parent);
-  void saveState();
-  void restoreState();
-  QString getCurrentGamePath();
+  QString getCurrentGamePath() const;
 
-  QSettings* settings;
   GameListModel* gameListModel;
   AvailableModsModel* availableModsModel;
   InstalledModsModel* installedModsModel;
@@ -31,17 +28,20 @@ private slots:
   void useGame(const QString& path);
 
 public slots:
-  void identifyCurrentGame();
+  void saveState();
+  void identifyCurrentGame() const;
   void refreshCurrentGame();
 
 signals:
-  void identityOfCurrentGame(const QString& name);
+  void identityOfCurrentGame(const QString& name) const;
 
 private:
+  void restoreState();
   void saveGameList();
   void restoreGameList();
   void loadGame(const QString& path);
 
+  QSettings* settings;
   Game* currentGame;
 
   const QString gameListSettingsName = "gameList";

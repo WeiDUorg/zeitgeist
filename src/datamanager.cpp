@@ -29,13 +29,12 @@
 #include <QDir>
 #include <QtDebug>
 
-DataManager::DataManager(QObject* parent) : QObject(parent), currentGame(0)
+DataManager::DataManager(QObject* parent) :
+  QObject(parent), gameListModel(new GameListModel(this)),
+  availableModsModel(new AvailableModsModel(this)),
+  installedModsModel(new InstalledModsModel(this)),
+  settings(new QSettings("zeitgeist", "zeitgeist", this)), currentGame(0)
 {
-  settings = new QSettings("zeitgeist", "zeitgeist", this);
-  gameListModel = new GameListModel(this);
-  availableModsModel = new AvailableModsModel(this);
-  installedModsModel = new InstalledModsModel(this);
-
   qDebug() << "Restoring state";
   restoreState();
   qDebug() << "Finished restoring state";
@@ -108,7 +107,7 @@ void DataManager::loadGame(const QString& path)
   installedModsModel->populate(currentGame->installedMods);
 }
 
-void DataManager::identifyCurrentGame()
+void DataManager::identifyCurrentGame() const
 {
   emit identityOfCurrentGame(gameListModel->identifierOfPath(currentGame->path));
 }
@@ -118,7 +117,7 @@ void DataManager::refreshCurrentGame()
   loadGame(currentGame->path);
 }
 
-QString DataManager::getCurrentGamePath()
+QString DataManager::getCurrentGamePath() const
 {
   return currentGame->path;
 }
