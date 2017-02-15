@@ -24,6 +24,7 @@ signals:
   void terminateManager();
   void doesItQuack();
   void getVersion();
+  void weiduVersionSignal(const int& version);
 
 private:
   QThread* workerThread;

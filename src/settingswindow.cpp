@@ -19,6 +19,7 @@
 
 #include "settingswindow.h"
 #include "coordinator.h"
+#include "controller.h"
 #include "platform.h"
 
 #include <QDebug>
@@ -27,6 +28,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QString>
 #include <QFileDialog>
 #include <QDir>
@@ -39,8 +41,10 @@ SettingsWindow::SettingsWindow(QWidget* parent, const Coordinator* coordinator) 
   setWindowFlags(Qt::Window);
   setWindowTitle(tr("Edit Program Settings"));
 
-  const QString weidu = "WeiDU";
-  QLabel* weiduLabel = new QLabel(weidu, this);
+  weiduLabel = new QLabel(locateWeidu, this);
+  weiduLabel->setMinimumWidth(150); // Could probably be less fragile
+  connect(coordinator->controller, SIGNAL(weiduVersionSignal(const int&)),
+          this, SLOT(weiduVersion(const int&)));
   weiduTextField = new QLineEdit(this);
   weiduTextField->setMinimumWidth(100);
   connect(weiduTextField, SIGNAL(textChanged(const QString&)),
@@ -63,10 +67,9 @@ SettingsWindow::SettingsWindow(QWidget* parent, const Coordinator* coordinator) 
 
 void SettingsWindow::browseForWeidu()
 {
-  QString caption = tr("Locate WeiDU");
   QString filter = WEIDU_EXECUTABLE;
   QString* selectedFilter = 0;
-  QString path = QFileDialog::getOpenFileName(this, caption,
+  QString path = QFileDialog::getOpenFileName(this, locateWeidu,
                                               QDir::homePath(),
                                               filter, selectedFilter,
                                               QFileDialog::ReadOnly);
@@ -98,4 +101,10 @@ void SettingsWindow::weiduFailedValidation(const QString& weiduPath)
   QErrorMessage* error = new QErrorMessage(this);
   error->showMessage(tr("The selected file is not an executable WeiDU binary: ") + weiduPath);
   weiduTextField->clear();
+  weiduLabel->setText(locateWeidu);
+}
+
+void SettingsWindow::weiduVersion(const int& version)
+{
+  weiduLabel->setText(tr("WeiDU version: ") + QString::number(version));
 }

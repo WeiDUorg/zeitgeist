@@ -75,5 +75,5 @@ void Controller::quacks(const bool& quacks)
 
 void Controller::weiduVersion(const int& version)
 {
-  qDebug() << "Version is" << version;
+  emit weiduVersionSignal(version);
 }

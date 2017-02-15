@@ -4,6 +4,8 @@
 #include <QWidget>
 
 class Coordinator;
+
+class QLabel;
 class QLineEdit;
 
 class SettingsWindow : public QWidget
@@ -17,6 +19,7 @@ private slots:
   void browseForWeidu();
   void initialWeiduValidation(const QString& path);
   void weiduFailedValidation(const QString& weiduPath);
+  void weiduVersion(const int& version);
 
 signals:
   void weiduPassOff(const QString& weiduPath);
@@ -24,6 +27,8 @@ signals:
 private:
   const Coordinator* coordinator;
   QLineEdit* weiduTextField;
+  const QString locateWeidu = "Locate WeiDU";
+  QLabel* weiduLabel;
 };
 
 #endif // SETTINGSWINDOW_H
