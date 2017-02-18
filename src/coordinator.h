@@ -25,7 +25,7 @@ public slots:
   void restoreState();
 
 signals:
-  void setWeiduPath(const QString& path);
+  void weiduPathSignal(const QString& path);
   void weiduFailedValidationSignal(const QString& weiduPath);
   void restoreStateSignal();
 };
