@@ -45,6 +45,8 @@ GameWindow::GameWindow(QWidget* parent, const DataManager* dataManager) :
   gameList->setSelectionMode(QAbstractItemView::SingleSelection);
 
   model = dataManager->gameListModel;
+  connect(model, SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+          this, SLOT(rowsInserted(const QModelIndex&, int, int)));
   gameList->setModel(model);
   gameList->resizeColumnsToContents();
 
@@ -101,11 +103,26 @@ void GameWindow::remove()
 void GameWindow::select()
 {
   QModelIndex index = gameList->currentIndex();
+  select(index);
+}
+
+void GameWindow::select(const QModelIndex& index)
+{
   if (index.isValid()) {
     QString path = model->pathOfIndex(index);
     if (!path.isEmpty()) {
       emit useGame(path);
     } // else?
+  }
+}
+
+/* If the game list is empty and the user adds a game, automatically
+ * select that game
+ */
+void GameWindow::rowsInserted(const QModelIndex&, int, int)
+{
+  if (model->rowCount() == 1) {
+    select(model->index(0,0));
   }
 }
 
