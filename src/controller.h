@@ -20,6 +20,7 @@ public slots:
   void setupWeidu(const QString& weiduPath);
   void quacks(const bool& quacks);
   void weiduVersion(const int& version);
+  void weiduCheck() const;
 
 signals:
   void weiduFailedValidation(const QString& weiduPath);
@@ -27,11 +28,13 @@ signals:
   void doesItQuack();
   void newWeiduManager(const WeiduManager* manager);
   void getVersion();
-  void weiduVersionSignal(const int& version);
+  void weiduVersionSignal(const int& version) const;
+  void confirmedWeiduPath(const QString& path) const;
 
 private:
   QThread* workerThread;
   QString currentWeidu;
+  int currentWeiduVersion;
   WeiduManager* weiduManager;
 };
 

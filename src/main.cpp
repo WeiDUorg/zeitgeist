@@ -38,6 +38,9 @@ int main(int argc, char* argv[])
     Coordinator* coordinator = new Coordinator();
 
     MainWindow w(coordinator);
+
+    coordinator->restoreState();
+
     w.show();
 
     return app.exec();

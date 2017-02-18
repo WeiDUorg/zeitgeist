@@ -22,10 +22,12 @@ public slots:
   void weiduFailedValidation(const QString& path);
   void newWeiduManager(const WeiduManager* manager);
   void requestForGamePath();
+  void restoreState();
 
 signals:
   void setWeiduPath(const QString& path);
   void weiduFailedValidationSignal(const QString& weiduPath);
+  void restoreStateSignal();
 };
 
 #endif // COORDINATOR_H

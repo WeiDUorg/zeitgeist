@@ -27,20 +27,23 @@ public:
 
 private slots:
   void useGame(const QString& path);
+  void restoreState();
+
 
 public slots:
   void saveState();
   void identifyCurrentGame() const;
   void refreshCurrentGame();
   void gameRemoved(const QString& path);
+  void confirmedWeiduPath(const QString& path);
 
 signals:
   void identityOfCurrentGame(const QString& name) const;
   void clearModels();
   void newGamePath(const QString& gamePath) const;
+  void restoreWeidu(const QString& weiduPath) const;
 
 private:
-  void restoreState();
   void saveGameList();
   void restoreGameList();
   void loadGame(const QString& path);

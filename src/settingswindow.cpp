@@ -45,6 +45,10 @@ SettingsWindow::SettingsWindow(QWidget* parent, const Coordinator* coordinator) 
   weiduLabel->setMinimumWidth(150); // Could probably be less fragile
   connect(coordinator->controller, SIGNAL(weiduVersionSignal(const int&)),
           this, SLOT(weiduVersion(const int&)));
+  connect(coordinator->controller, SIGNAL(confirmedWeiduPath(const QString&)),
+          this, SLOT(weiduPath(const QString&)));
+  connect(this, SIGNAL(doesWeiduExist()),
+          coordinator->controller, SLOT(weiduCheck()));
   weiduTextField = new QLineEdit(this);
   weiduTextField->setMinimumWidth(100);
   connect(weiduTextField, SIGNAL(textChanged(const QString&)),
@@ -63,6 +67,8 @@ SettingsWindow::SettingsWindow(QWidget* parent, const Coordinator* coordinator) 
   weiduLayout->addWidget(weiduBrowse);
 
   setLayout(weiduLayout);
+
+  emit doesWeiduExist();
 }
 
 void SettingsWindow::browseForWeidu()
@@ -107,4 +113,11 @@ void SettingsWindow::weiduFailedValidation(const QString& weiduPath)
 void SettingsWindow::weiduVersion(const int& version)
 {
   weiduLabel->setText(tr("WeiDU version: ") + QString::number(version));
+}
+
+void SettingsWindow::weiduPath(const QString& path)
+{
+  weiduTextField->blockSignals(true);
+  weiduTextField->setText(path);
+  weiduTextField->blockSignals(false);
 }

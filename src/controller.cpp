@@ -59,6 +59,9 @@ void Controller::setupWeidu(const QString& weiduPath)
   } else {
     qDebug() << "WeiduManager failed validation";
     delete weiduManager;
+    weiduManager = 0;
+    currentWeidu = QString();
+    currentWeiduVersion = 0;
     emit weiduFailedValidation(weiduPath);
   }
 }
@@ -68,14 +71,29 @@ void Controller::quacks(const bool& quacks)
   if (quacks) {
     qDebug() << "File quacks like a WeiDU";
     emit newWeiduManager(weiduManager);
+    emit confirmedWeiduPath(currentWeidu);
     emit getVersion();
   } else {
     qDebug() << "File fails to quack like a WeiDU";
-    emit weiduFailedValidation(currentWeidu);
+    emit terminateManager();
+    weiduManager = 0;
+    QString tmpPath = currentWeidu;
+    currentWeidu = QString();
+    currentWeiduVersion = 0;
+    emit weiduFailedValidation(tmpPath);
   }
 }
 
 void Controller::weiduVersion(const int& version)
 {
+  currentWeiduVersion = version;
   emit weiduVersionSignal(version);
+}
+
+void Controller::weiduCheck() const
+{
+  if (weiduManager) {
+    emit confirmedWeiduPath(currentWeidu);
+    emit weiduVersionSignal(currentWeiduVersion);
+  }
 }

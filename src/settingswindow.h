@@ -20,9 +20,11 @@ private slots:
   void initialWeiduValidation(const QString& path);
   void weiduFailedValidation(const QString& weiduPath);
   void weiduVersion(const int& version);
+  void weiduPath(const QString& path);
 
 signals:
   void weiduPassOff(const QString& weiduPath);
+  void doesWeiduExist();
 
 private:
   const Coordinator* coordinator;

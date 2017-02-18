@@ -23,6 +23,7 @@
 #include "installedmodsmodel.h"
 #include "game.h"
 
+#include <QFileInfo>
 #include <QSettings>
 #include <QList>
 #include <QString>
@@ -41,8 +42,6 @@ DataManager::DataManager(QObject* parent) :
           availableModsModel, SLOT(clear()));
   connect(this, SIGNAL(clearModels()),
           installedModsModel, SLOT(clear()));
-  qDebug() << "Attempting to restoring state";
-  restoreState();
 }
 
 void DataManager::saveState()
@@ -62,8 +61,13 @@ void DataManager::restoreState()
   if (!settingsGame.isEmpty() && QDir(settingsGame).exists()) {
     qDebug() << "Restoring game:" << settingsGame;
     useGame(settingsGame);
-    qDebug() << "Finished restoring state";
   }
+  QString settingsWeidu = settings->value("weiduPath").toString();
+  if (!settingsWeidu.isEmpty() && QFileInfo(settingsWeidu).exists()) {
+    qDebug() << "Attempting to restore WeiDU path" << settingsWeidu;
+    emit restoreWeidu(settingsWeidu);
+  }
+  qDebug() << "Finished restoring state";
 }
 
 void DataManager::useGame(const QString& path)
@@ -166,4 +170,9 @@ void DataManager::gameRemoved(const QString& path)
     emit clearModels();
     emit identityOfCurrentGame(QString());
   }
+}
+
+void DataManager::confirmedWeiduPath(const QString& path)
+{
+  settings->setValue("weiduPath", path);
 }

@@ -32,6 +32,12 @@ Coordinator::Coordinator(QObject* parent) :
           this, SLOT(weiduFailedValidation(const QString&)));
   connect(controller, SIGNAL(newWeiduManager(const WeiduManager*)),
           this, SLOT(newWeiduManager(const WeiduManager*)));
+  connect(controller, SIGNAL(confirmedWeiduPath(const QString&)),
+          dataManager, SLOT(confirmedWeiduPath(const QString&)));
+  connect(dataManager, SIGNAL(restoreWeidu(const QString&)),
+          this, SLOT(weiduPath(const QString&)));
+  connect(this, SIGNAL(restoreStateSignal()),
+          dataManager, SLOT(restoreState()));
 }
 
 void Coordinator::weiduPath(const QString& path)
@@ -55,4 +61,9 @@ void Coordinator::newWeiduManager(const WeiduManager* manager)
 void Coordinator::requestForGamePath()
 {
   dataManager->emitCurrentGamePath();
+}
+
+void Coordinator::restoreState()
+{
+  emit restoreStateSignal();
 }
