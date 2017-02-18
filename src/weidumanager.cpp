@@ -28,10 +28,10 @@
 #include <QProcess>
 #include <QStringList>
 
-WeiduManager::WeiduManager(const QString& weiduPath, QString gamePath) :
-  weiduPath(weiduPath), gamePath(gamePath), process(new QProcess(this))
+WeiduManager::WeiduManager(const QString& weiduPath) :
+  weiduPath(weiduPath), gamePath(QString()), process(new QProcess(this))
 {
-  process->setWorkingDirectory(gamePath);
+
 }
 
 bool WeiduManager::valid() const
@@ -58,6 +58,21 @@ void WeiduManager::quack()
 void WeiduManager::terminateManager()
 {
   deleteLater();
+}
+
+void WeiduManager::newGamePath(const QString& path)
+{
+  qDebug() << "Got game path" << path;
+  if (!gamePath.isEmpty()) {
+    gamePath = path;
+    //process->setWorkingDirectory(path);
+  } else {
+    /* this is currently left unconnected because there is no code path that
+     * could trigger it (this triggers on the request path and requests can
+     * only be triggered from some currentGame)
+     */
+    emit emptyGamePath();
+  }
 }
 
 /* This implementation is not suitable for arguments which:

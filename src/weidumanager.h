@@ -13,17 +13,22 @@ class WeiduManager : public QObject
   Q_OBJECT
 
 public:
-  WeiduManager(const QString& weiduPath, QString gamePath);
+  WeiduManager(const QString& weiduPath);
   bool valid() const;
 
 public slots:
   void terminateManager();
   void quack();
   void version();
+  void newGamePath(const QString& path);
 
 signals:
   void quacks(const bool& quacks);
   void versionSignal(const int& version);
+  /* Emitted when a game path is needed but this has none */
+  void requestGamePath();
+  /* Emitted when a game path was requested but this got an empty one */
+  void emptyGamePath();
 
 private:
   QByteArray run(const QStringList& arguments);

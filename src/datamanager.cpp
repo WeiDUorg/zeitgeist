@@ -115,6 +115,7 @@ void DataManager::loadGame(const QString& path)
   identifyCurrentGame();
   availableModsModel->populate(currentGame);
   installedModsModel->populate(currentGame->installedMods);
+  emit newGamePath(new_path);
 }
 
 void DataManager::identifyCurrentGame() const
@@ -144,6 +145,17 @@ QString DataManager::getCurrentGamePath() const
     path = QString();
   }
   return path;
+}
+
+void DataManager::emitCurrentGamePath() const
+{
+  QString path;
+  if (currentGame) {
+    path = currentGame->path;
+  } else {
+    path = QString();
+  }
+  emit newGamePath(path);
 }
 
 void DataManager::gameRemoved(const QString& path)

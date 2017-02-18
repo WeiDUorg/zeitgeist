@@ -22,7 +22,9 @@
 
 #include <QDebug>
 
-Controller::Controller(QObject* parent) : QObject(parent), workerThread(new QThread(this))
+Controller::Controller(QObject* parent) :
+  QObject(parent), workerThread(new QThread(this)), currentWeidu(QString()),
+  weiduManager(0)
 {
 
 }
@@ -32,14 +34,13 @@ Controller::~Controller()
   emit terminateManager();
 }
 
-void Controller::setupWeidu(const QString& weiduPath, QString gamePath)
+void Controller::setupWeidu(const QString& weiduPath)
 {
   qDebug() << "weidu path is" << weiduPath;
-  qDebug() << "Game path is" << gamePath;
   emit terminateManager();
   qDebug() << "Creating WeiduManager";
   currentWeidu = weiduPath;
-  WeiduManager* weiduManager = new WeiduManager(weiduPath, gamePath);
+  weiduManager = new WeiduManager(weiduPath);
   if (weiduManager->valid()) {
     qDebug() << "WeiduManager succeeded validation";
     weiduManager->moveToThread(workerThread);
@@ -66,6 +67,7 @@ void Controller::quacks(const bool& quacks)
 {
   if (quacks) {
     qDebug() << "File quacks like a WeiDU";
+    emit newWeiduManager(weiduManager);
     emit getVersion();
   } else {
     qDebug() << "File fails to quack like a WeiDU";

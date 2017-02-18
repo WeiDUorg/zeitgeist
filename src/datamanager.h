@@ -19,6 +19,7 @@ class DataManager : public QObject
 public:
   DataManager(QObject* parent);
   QString getCurrentGamePath() const;
+  void emitCurrentGamePath() const;
 
   GameListModel* gameListModel;
   AvailableModsModel* availableModsModel;
@@ -36,6 +37,7 @@ public slots:
 signals:
   void identityOfCurrentGame(const QString& name) const;
   void clearModels();
+  void newGamePath(const QString& gamePath) const;
 
 private:
   void restoreState();

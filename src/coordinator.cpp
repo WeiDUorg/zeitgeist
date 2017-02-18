@@ -20,23 +20,39 @@
 #include "coordinator.h"
 #include "controller.h"
 #include "datamanager.h"
+#include "weidumanager.h"
 
 Coordinator::Coordinator(QObject* parent) :
   QObject(parent), dataManager(new DataManager(this)),
   controller(new Controller(this))
 {
-  connect(this, SIGNAL(setWeiduPath(const QString&, QString)),
-          controller, SLOT(setupWeidu(const QString&, QString)));
+  connect(this, SIGNAL(setWeiduPath(const QString&)),
+          controller, SLOT(setupWeidu(const QString&)));
   connect(controller, SIGNAL(weiduFailedValidation(const QString&)),
           this, SLOT(weiduFailedValidation(const QString&)));
+  connect(controller, SIGNAL(newWeiduManager(const WeiduManager*)),
+          this, SLOT(newWeiduManager(const WeiduManager*)));
 }
 
 void Coordinator::weiduPath(const QString& path)
 {
-  emit setWeiduPath(path, dataManager->getCurrentGamePath());
+  emit setWeiduPath(path);
 }
 
 void Coordinator::weiduFailedValidation(const QString& weiduPath)
 {
   emit weiduFailedValidationSignal(weiduPath);
+}
+
+void Coordinator::newWeiduManager(const WeiduManager* manager)
+{
+  connect(dataManager, SIGNAL(newGamePath(const QString&)),
+          manager, SLOT(newGamePath(const QString&)));
+  connect(manager, SIGNAL(requestGamePath()),
+          this, SLOT(requestForGamePath()));
+}
+
+void Coordinator::requestForGamePath()
+{
+  dataManager->emitCurrentGamePath();
 }
