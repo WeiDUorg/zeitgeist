@@ -16,11 +16,12 @@ public:
   WeiduManager(const QString& weiduPath);
   bool valid() const;
 
-public slots:
+private slots:
   void terminateManager();
   void quack();
-  void version();
   void newGamePath(const QString& path);
+
+  void version();
 
 signals:
   void quacks(const bool& quacks);

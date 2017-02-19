@@ -17,7 +17,7 @@ public:
   AvailableModsModel(QObject* parent);
   void populate(const Game* game);
 
-public slots:
+private slots:
   void clear();
 
 private:

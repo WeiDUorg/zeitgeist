@@ -17,11 +17,13 @@ public:
   const DataManager* dataManager;
   const Controller* controller;
 
-public slots:
+private slots:
   void weiduPath(const QString& path);
   void weiduFailedValidation(const QString& path);
   void newWeiduManager(const WeiduManager* manager);
   void requestForGamePath();
+
+public slots:
   void restoreState();
 
 signals:

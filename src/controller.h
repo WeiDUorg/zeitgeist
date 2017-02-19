@@ -16,7 +16,7 @@ public:
   Controller(QObject* parent);
   ~Controller();
 
-public slots:
+private slots:
   void setupWeidu(const QString& weiduPath);
   void quacks(const bool& quacks);
   void weiduVersion(const int& version);

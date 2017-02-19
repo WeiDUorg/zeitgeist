@@ -19,7 +19,7 @@ public:
   InstalledModsModel(QObject*  parent);
   void populate(const LogFile* logFile);
 
-public slots:
+private slots:
   void clear();
 
 private:

@@ -28,14 +28,13 @@ public:
 private slots:
   void useGame(const QString& path);
   void restoreState();
-
-
-public slots:
   void saveState();
-  void identifyCurrentGame() const;
   void refreshCurrentGame();
   void gameRemoved(const QString& path);
   void confirmedWeiduPath(const QString& path);
+
+public slots:
+  void identifyCurrentGame() const;
 
 signals:
   void identityOfCurrentGame(const QString& name) const;
