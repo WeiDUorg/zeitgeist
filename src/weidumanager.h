@@ -14,7 +14,7 @@ class WeiduManager : public QObject
 
 public:
   WeiduManager(const QString& weiduPath);
-  bool valid() const;
+  bool executable() const;
 
 private slots:
   void terminateManager();

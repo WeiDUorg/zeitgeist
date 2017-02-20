@@ -36,13 +36,11 @@ Controller::~Controller()
 
 void Controller::setupWeidu(const QString& weiduPath)
 {
-  qDebug() << "weidu path is" << weiduPath;
   emit terminateManager();
-  qDebug() << "Creating WeiduManager";
   currentWeidu = weiduPath;
   weiduManager = new WeiduManager(weiduPath);
-  if (weiduManager->valid()) {
-    qDebug() << "WeiduManager succeeded validation";
+  if (weiduManager->executable()) {
+    qDebug() << "File" << weiduPath << "is executable";
     weiduManager->moveToThread(workerThread);
     connect(this, SIGNAL(terminateManager()),
             weiduManager, SLOT(terminateManager()));
@@ -57,7 +55,7 @@ void Controller::setupWeidu(const QString& weiduPath)
     workerThread->start();
     emit doesItQuack();
   } else {
-    qDebug() << "WeiduManager failed validation";
+    qDebug() << "File" << weiduPath << "is not executable";
     delete weiduManager;
     weiduManager = 0;
     currentWeidu = QString();

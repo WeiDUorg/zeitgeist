@@ -34,16 +34,14 @@ WeiduManager::WeiduManager(const QString& weiduPath) :
 
 }
 
-bool WeiduManager::valid() const
+bool WeiduManager::executable() const
 {
   QFileInfo info(weiduPath);
-  if (!info.isExecutable() &&
-      //      !QFile::setPermissions(path, QFileDevice::ExeOther)) // Qt 5
-      !QFile::setPermissions(weiduPath, QFile::ExeOther))
-    {
-      return false;
-    }
-  return true;
+  return info.isExecutable() ||
+    QFile::setPermissions(weiduPath,
+                          QFile::permissions(weiduPath) |
+                          QFile::ExeOwner | QFile::ExeUser |
+                          QFile::ExeGroup | QFile::ExeOther);
 }
 
 void WeiduManager::quack()
