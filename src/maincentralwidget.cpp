@@ -18,6 +18,7 @@
  */
 
 #include "maincentralwidget.h"
+#include "coordinator.h"
 #include "datamanager.h"
 #include "availablemodsmodel.h"
 #include "installedmodsmodel.h"
@@ -35,8 +36,8 @@
 #include <QList>
 #include <QDebug>
 
-MainCentralWidget::MainCentralWidget(QWidget* parent, const DataManager* dataManager) :
-  QWidget(parent), dataManager(dataManager)
+MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordinator) :
+  QWidget(parent), coordinator(coordinator)
 {
   QLabel* availableModsLabel = new QLabel(tr("Available Mods"), this);
   QLabel* queueLabel = new QLabel(tr("Queue"), this);
@@ -52,8 +53,8 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const DataManager* dataMan
   installedModsView->setSelectionMode(QAbstractItemView::MultiSelection);
   installedModsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-  availableModsView->setModel(dataManager->availableModsModel);
-  installedModsView->setModel(dataManager->installedModsModel);
+  availableModsView->setModel(coordinator->dataManager->availableModsModel);
+  installedModsView->setModel(coordinator->dataManager->installedModsModel);
   connect(installedModsView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
                                                                        const QItemSelection&)),
           this, SLOT(handleInstalledSelection(const QItemSelection&, const QItemSelection&)));

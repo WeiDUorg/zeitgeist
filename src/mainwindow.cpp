@@ -33,9 +33,11 @@
 
 MainWindow::MainWindow(Coordinator* coordinator) :
   coordinator(coordinator),
-  dataManager(coordinator->dataManager), gameWindow(0), settingsWindow(0)
+  dataManager(coordinator->dataManager),
+  mainCentralWidget(new MainCentralWidget(this, coordinator)),
+  gameWindow(0), settingsWindow(0)
 {
-  setCentralWidget(new MainCentralWidget(this, dataManager));
+  setCentralWidget(mainCentralWidget);
 
   createActions();
 

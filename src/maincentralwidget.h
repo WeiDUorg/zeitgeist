@@ -10,7 +10,7 @@ class QListView;
 class QModelIndex;
 class QTreeView;
 
-class DataManager;
+class Coordinator;
 class AvailableModsModel;
 class InstalledModsModel;
 
@@ -19,13 +19,13 @@ class MainCentralWidget : public QWidget
   Q_OBJECT
 
 public:
-  MainCentralWidget(QWidget* parent, const DataManager* dataManager);
+  MainCentralWidget(QWidget* parent, const Coordinator* coordinator);
 
 private slots:
   void handleInstalledSelection(const QItemSelection& selected, const QItemSelection& deselected);
 
 private:
-  const DataManager* dataManager;
+  const Coordinator* coordinator;
   QListView* availableModsView;
   QTreeView* queueView;
   QTreeView* installedModsView;

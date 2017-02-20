@@ -7,6 +7,8 @@ class Coordinator;
 class DataManager;
 class GameWindow;
 class SettingsWindow;
+class MainCentralWidget;
+
 class QCloseEvent;
 class QLabel;
 class QAction;
@@ -38,6 +40,7 @@ private:
 
   const Coordinator* coordinator;
   const DataManager* dataManager;
+  MainCentralWidget* mainCentralWidget;
   QLabel* statusBarGameLabel;
   QLabel* statusBarCurrentGame;
   QAction* programAboutAction;
