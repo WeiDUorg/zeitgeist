@@ -23,6 +23,7 @@ private slots:
 
   void version();
   void getLanguageList(const QString& tp2);
+  void getComponentList(const QString& tp2, const int& index);
 
 signals:
   void quacks(const bool& quacks);
@@ -31,6 +32,7 @@ signals:
 
   void versionSignal(const int& version);
   void languageList(const QStringList& languageList);
+  void componentList();
 
 private:
   QByteArray run(const QStringList& arguments);

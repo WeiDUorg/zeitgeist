@@ -24,6 +24,7 @@ private slots:
 
   void weiduVersion(const int& version);
   void getLanguageList(const QString& tp2);
+  void getComponentList(const QString& tp2, const int& index);
 
 signals:
   void weiduFailedValidation(const QString& weiduPath);
@@ -36,6 +37,8 @@ signals:
   void weiduVersionSignal(const int& version) const;
   void weiduListLanguages(const QString& tp2);
   void languageList(const QStringList& list);
+  void weiduListComponents(const QString& tp2, const int& index);
+  void componentList();
 
 private:
   QThread* workerThread;

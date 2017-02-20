@@ -5,6 +5,7 @@
 
 class Coordinator;
 
+class QItemSelection;
 class QListWidget;
 class QListView;
 class QString;
@@ -20,9 +21,11 @@ public:
 
 private slots:
   void languageList(const QStringList& list);
+  void handleLanguageSelection(const QItemSelection& selected, const QItemSelection&);
 
 signals:
   void getLanguageList(const QString& tp2);
+  void getComponentList(const QString& tp2, const int& index);
 
 private:
   const Coordinator* coordinator;

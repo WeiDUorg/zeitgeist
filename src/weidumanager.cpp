@@ -98,3 +98,12 @@ void WeiduManager::getLanguageList(const QString& tp2)
   QByteArray message = run(arguments);
   emit languageList(WeiduExtractor::languageList(message));
 }
+
+void WeiduManager::getComponentList(const QString& tp2, const int& index)
+{
+  qDebug() << "Attempting to list components in" << tp2 << "for language" << index;
+  QStringList arguments;
+  arguments << "--list-components" << tp2 << QString::number(index);
+  QByteArray message = run(arguments);
+  qDebug() << message;
+}

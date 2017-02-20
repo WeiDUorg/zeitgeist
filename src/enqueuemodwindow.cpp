@@ -24,10 +24,12 @@
 #include <QAbstractItemView>
 #include <QDebug>
 #include <QGridLayout>
+#include <QItemSelectionModel>
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QListView>
 #include <QLabel>
+#include <QModelIndex>
 #include <QStringListModel>
 
 EnqueueModWindow::EnqueueModWindow(QWidget* parent,
@@ -50,6 +52,11 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
           coordinator->controller, SLOT(getLanguageList(const QString&)));
   connect(coordinator->controller, SIGNAL(languageList(const QStringList&)),
           this, SLOT(languageList(const QStringList&)));
+  connect(languageListView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
+                                                                      const QItemSelection&)),
+          this, SLOT(handleLanguageSelection(const QItemSelection&, const QItemSelection)));
+  connect(this, SIGNAL(getComponentList(const QString&, const int&)),
+          coordinator->controller, SLOT(getComponentList(const QString&, const int&)));
 
   QLabel* componentLabel = new QLabel(tr("Components"), this);
   componentListView = new QListWidget(this);
@@ -73,5 +80,14 @@ void EnqueueModWindow::languageList(const QStringList& list)
 {
   if (!list.isEmpty()) {
     languageListModel->setStringList(list);
-  } // else proceed with language-index 0
+  } else {
+    emit getComponentList(tp2, 0); // If the mod does not include any languages, 0 is default
+  }
+}
+
+void EnqueueModWindow::handleLanguageSelection(const QItemSelection& selected, const QItemSelection&)
+{
+  if (!selected.isEmpty()) {
+    emit getComponentList(tp2, languageListView->selectionModel()->currentIndex().row());
+  }
 }
