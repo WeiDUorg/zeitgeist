@@ -28,8 +28,6 @@ signals:
   void versionSignal(const int& version);
   /* Emitted when a game path is needed but this has none */
   void requestGamePath();
-  /* Emitted when a game path was requested but this got an empty one */
-  void emptyGamePath();
 
 private:
   QByteArray run(const QStringList& arguments);

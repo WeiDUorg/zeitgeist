@@ -54,11 +54,10 @@ void Coordinator::newWeiduManager(const WeiduManager* manager)
 {
   connect(dataManager, SIGNAL(newGamePath(const QString&)),
           manager, SLOT(newGamePath(const QString&)));
-  connect(manager, SIGNAL(requestGamePath()),
-          this, SLOT(requestForGamePath()));
+  provideGamePath();
 }
 
-void Coordinator::requestForGamePath()
+void Coordinator::provideGamePath()
 {
   dataManager->emitCurrentGamePath();
 }

@@ -21,7 +21,7 @@ private slots:
   void weiduPath(const QString& path);
   void weiduFailedValidation(const QString& path);
   void newWeiduManager(const WeiduManager* manager);
-  void requestForGamePath();
+  void provideGamePath();
 
 public slots:
   void restoreState();
