@@ -103,3 +103,8 @@ QList<QString> Game::getModPaths() const
   }
   return result;
 }
+
+LogFile* Game::getInstalledMods() const
+{
+  return installedMods;
+}

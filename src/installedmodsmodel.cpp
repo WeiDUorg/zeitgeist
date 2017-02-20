@@ -42,7 +42,7 @@ void InstalledModsModel::clear()
 void InstalledModsModel::populate(const LogFile* logFile)
 {
   clear();
-  QList<LogFileComponent> data = logFile->data;
+  QList<LogFileComponent> data = logFile->getData();
   QList<QList<LogFileComponent>> partitionedData = partitionData(data);
   QList<QString> partitionNames = getPartitionNames(partitionedData);
   QList<QStandardItem*> parentItems;

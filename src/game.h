@@ -18,9 +18,9 @@ public:
   Game(QObject* parent, const QString& path);
   QList<QString> getModNames() const;
   QList<QString> getModPaths() const;
+  LogFile* getInstalledMods() const;
 
   const QString path;
-  LogFile* installedMods;
 
 private:
   QList<Mod*> getModList(const QString& path);
@@ -28,6 +28,7 @@ private:
   QStringList getSubLevelMods(const QString& path) const;
 
   QList<Mod*> availableMods;
+  LogFile* installedMods;
 };
 
 #endif // GAME_H

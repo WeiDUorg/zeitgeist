@@ -118,7 +118,7 @@ void DataManager::loadGame(const QString& path)
 
   identifyCurrentGame();
   availableModsModel->populate(currentGame);
-  installedModsModel->populate(currentGame->installedMods);
+  installedModsModel->populate(currentGame->getInstalledMods());
   emit newGamePath(newPath);
 }
 

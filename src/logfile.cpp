@@ -100,3 +100,8 @@ LogFileComponent LogFile::parseLine(const QString& line) const
   c.comment = comment;
   return c;
 }
+
+QList<LogFileComponent> LogFile::getData() const
+{
+  return data;
+}
