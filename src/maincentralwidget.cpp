@@ -54,6 +54,9 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
   installedModsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
   availableModsView->setModel(coordinator->dataManager->availableModsModel);
+  connect(availableModsView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
+                                                                       const QItemSelection&)),
+          this, SLOT(handleAvailableSelection(const QItemSelection&, const QItemSelection&)));
   installedModsView->setModel(coordinator->dataManager->installedModsModel);
   connect(installedModsView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
                                                                        const QItemSelection&)),
@@ -147,3 +150,19 @@ void MainCentralWidget::handleInstalledSelection(const QItemSelection& selected,
   }
 }
 
+void MainCentralWidget::handleAvailableSelection(const QItemSelection& selected,
+                                                 const QItemSelection&)
+{
+  if (!selected.isEmpty()) {
+    emit availableModSelected(true);
+  } else {
+    emit availableModSelected(false);
+  }
+}
+
+void MainCentralWidget::getSelectedAvailableMod()
+{
+  QModelIndex index = availableModsView->selectionModel()->currentIndex();
+  QString tp2 = coordinator->dataManager->availableModsModel->data(index, Qt::DisplayRole).toString();
+  emit selectedAvailableMod(tp2);
+}

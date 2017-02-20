@@ -21,6 +21,7 @@
 #include "maincentralwidget.h"
 #include "gamewindow.h"
 #include "settingswindow.h"
+#include "enqueuemodwindow.h"
 #include "coordinator.h"
 #include "datamanager.h"
 
@@ -30,6 +31,7 @@
 #include <QAction>
 #include <QMenuBar>
 #include <QMenu>
+#include <QDebug>
 
 MainWindow::MainWindow(Coordinator* coordinator) :
   coordinator(coordinator),
@@ -38,6 +40,9 @@ MainWindow::MainWindow(Coordinator* coordinator) :
   gameWindow(0), settingsWindow(0)
 {
   setCentralWidget(mainCentralWidget);
+  connect(mainCentralWidget, SIGNAL(availableModSelected(const bool&)),
+          this, SLOT(availableModSelected(const bool&)));
+
 
   createActions();
 
@@ -87,20 +92,32 @@ void MainWindow::createActions()
   connect(gameEditAction, SIGNAL(triggered()),
           this, SLOT(showGameWindow()));
 
+  /* Should only be enabled while there is a currentGame */
   gameRefreshAction = new QAction(tr("Refresh"), this);
   gameRefreshAction->setStatusTip(tr("Refresh game"));
   connect(gameRefreshAction, SIGNAL(triggered()),
           dataManager, SLOT(refreshCurrentGame()));
 
-  gameInstallAction = new QAction(tr("Install"), this);
-  gameInstallAction->setStatusTip(tr("Queue a mod for installation"));
+  /* Should only be enabled while there is a selection in availableModsView
+   * Default: disabled (no available mod is selected)
+   */
+  gameInstallAction = new QAction(tr("Enqueue"), this);
+  gameInstallAction->setStatusTip(gameInstallActionDisabled);
+  gameInstallAction->setEnabled(false);
+  connect(gameInstallAction, SIGNAL(triggered()),
+          mainCentralWidget, SLOT(getSelectedAvailableMod()));
+  connect(mainCentralWidget, SIGNAL(selectedAvailableMod(const QString&)),
+          this, SLOT(createEnqueueModWindow(const QString&)));
 
+  /* Should only be enabled while there is a selection in queueView */
   gameUnqueueAction = new QAction(tr("Unqueue"), this);
   gameUnqueueAction->setStatusTip(tr("Remove a mod from the queue"));
 
+  /* Should only be enabled while there is a selection in installedModsView */
   gameUninstallAction = new QAction(tr("Uninstall"), this);
   gameUninstallAction->setStatusTip(tr("Queue a mod for uninstallation"));
 
+  /* Should only be enabled while there is some data in queueView */
   gameProcessAction = new QAction(tr("Process"), this);
   gameProcessAction->setStatusTip(tr("Process queue"));
 }
@@ -146,6 +163,12 @@ void MainWindow::showSettingsWindow()
   }
 }
 
+void MainWindow::createEnqueueModWindow(const QString& tp2)
+{
+  EnqueueModWindow* enqueueModWindow = new EnqueueModWindow(this, coordinator, tp2);
+  enqueueModWindow->show();
+}
+
 void MainWindow::updateNameOfCurrentGame(const QString& name)
 {
   statusBarCurrentGame->setText(name);
@@ -155,4 +178,15 @@ void MainWindow::closeEvent(QCloseEvent* event)
 {
   emit saveState();
   QMainWindow::closeEvent(event);
+}
+
+void MainWindow::availableModSelected(const bool& selected)
+{
+  if (selected) {
+    gameInstallAction->setEnabled(true);
+    gameInstallAction->setStatusTip(gameInstallActionEnabled);
+  } else {
+    gameInstallAction->setEnabled(false);
+    gameInstallAction->setStatusTip(gameInstallActionDisabled);
+  }
 }

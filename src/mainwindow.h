@@ -28,7 +28,9 @@ protected:
 private slots:
   void showGameWindow();
   void showSettingsWindow();
+  void createEnqueueModWindow(const QString& tp2);
   void updateNameOfCurrentGame(const QString& name);
+  void availableModSelected(const bool& selected);
 
 signals:
   void saveState();
@@ -56,6 +58,10 @@ private:
   QMenu* gameMenu;
   GameWindow* gameWindow;
   SettingsWindow* settingsWindow;
+
+  const QString gameInstallActionEnabled = tr("Queue a mod for installation");
+  const QString gameInstallActionDisabled =
+    tr("You must select an available mod before you can enqueue it");
 };
 
 #endif // MAINWINDOW_H

@@ -5,6 +5,7 @@ HEADERS += \
         src/controller.h \
         src/coordinator.h \
         src/datamanager.h \
+        src/enqueuemodwindow.h \
         src/game.h \
         src/gamelistmodel.h \
         src/gamewindow.h \
@@ -23,6 +24,7 @@ SOURCES += \
         src/controller.cpp \
         src/coordinator.cpp \
         src/datamanager.cpp \
+        src/enqueuemodwindow.cpp \
         src/game.cpp \
         src/gamelistmodel.cpp \
         src/gamewindow.cpp \

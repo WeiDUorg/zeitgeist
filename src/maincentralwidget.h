@@ -23,6 +23,12 @@ public:
 
 private slots:
   void handleInstalledSelection(const QItemSelection& selected, const QItemSelection& deselected);
+  void handleAvailableSelection(const QItemSelection& selected, const QItemSelection&);
+  void getSelectedAvailableMod();
+
+signals:
+  void availableModSelected(const bool& selected);
+  void selectedAvailableMod(const QString&);
 
 private:
   const Coordinator* coordinator;
