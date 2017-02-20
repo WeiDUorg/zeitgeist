@@ -19,12 +19,16 @@
 
 #include "enqueuemodwindow.h"
 #include "coordinator.h"
+#include "controller.h"
 
+#include <QAbstractItemView>
 #include <QDebug>
 #include <QGridLayout>
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QListView>
+#include <QLabel>
+#include <QStringListModel>
 
 EnqueueModWindow::EnqueueModWindow(QWidget* parent,
                                    const Coordinator* coordinator,
@@ -37,17 +41,37 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
   setAttribute(Qt::WA_DeleteOnClose);
   setWindowTitle(windowTitle + ": " + tp2);
 
+  QLabel* languageLabel = new QLabel(tr("Languages"), this);
+  languageListModel = new QStringListModel(this);
   languageListView = new QListView(this);
+  languageListView->setSelectionMode(QAbstractItemView::SingleSelection);
+  languageListView->setModel(languageListModel);
+  connect(this, SIGNAL(getLanguageList(const QString&)),
+          coordinator->controller, SLOT(getLanguageList(const QString&)));
+  connect(coordinator->controller, SIGNAL(languageList(const QStringList&)),
+          this, SLOT(languageList(const QStringList&)));
 
+  QLabel* componentLabel = new QLabel(tr("Components"), this);
   componentListView = new QListWidget(this);
 
   QGridLayout* layout = new QGridLayout(this);
-  layout->addWidget(languageListView, 0, 0);
-  layout->addWidget(componentListView, 0, 1);
+  layout->addWidget(languageLabel, 0, 0);
+  layout->addWidget(languageListView, 1, 0);
+  layout->addWidget(componentLabel, 0, 1);
+  layout->addWidget(componentListView, 1, 1);
   setLayout(layout);
+
+  emit getLanguageList(tp2);
 }
 
 EnqueueModWindow::~EnqueueModWindow()
 {
 
+}
+
+void EnqueueModWindow::languageList(const QStringList& list)
+{
+  if (!list.isEmpty()) {
+    languageListModel->setStringList(list);
+  } // else proceed with language-index 0
 }

@@ -21,6 +21,8 @@
 
 #include <QByteArray>
 #include <QDebug>
+#include <QRegExp>
+#include <QStringList>
 
 int WeiduExtractor::version(const QByteArray& message)
 {
@@ -29,4 +31,18 @@ int WeiduExtractor::version(const QByteArray& message)
   QByteArray version = message.mid(index + weiduVersion.size() + 1, 3);
   qDebug() << "Version is" << version;
   return version.toInt();
+}
+
+QStringList WeiduExtractor::languageList(const QByteArray& message)
+{
+  QStringList raw = QString(message).split("\n");
+  QStringList list;
+  while (!raw.isEmpty()) {
+    QRegExp regexp("^[0-9]+:(.+)$");
+    if (regexp.exactMatch(raw.takeFirst())) {
+      list.append(regexp.capturedTexts()[1]);
+    }
+  }
+  qDebug() << "Languages obtained were" << list;
+  return list;
 }

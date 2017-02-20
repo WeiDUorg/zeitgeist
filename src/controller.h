@@ -7,6 +7,7 @@
 class WeiduManager;
 
 class QString;
+class QStringList;
 
 class Controller : public QObject
 {
@@ -19,17 +20,22 @@ public:
 private slots:
   void setupWeidu(const QString& weiduPath);
   void quacks(const bool& quacks);
-  void weiduVersion(const int& version);
   void weiduCheck() const;
+
+  void weiduVersion(const int& version);
+  void getLanguageList(const QString& tp2);
 
 signals:
   void weiduFailedValidation(const QString& weiduPath);
   void terminateManager();
   void doesItQuack();
   void newWeiduManager(const WeiduManager* manager);
+  void confirmedWeiduPath(const QString& path) const;
+
   void getVersion();
   void weiduVersionSignal(const int& version) const;
-  void confirmedWeiduPath(const QString& path) const;
+  void weiduListLanguages(const QString& tp2);
+  void languageList(const QStringList& list);
 
 private:
   QThread* workerThread;

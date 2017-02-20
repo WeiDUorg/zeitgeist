@@ -22,12 +22,15 @@ private slots:
   void newGamePath(const QString& path);
 
   void version();
+  void getLanguageList(const QString& tp2);
 
 signals:
   void quacks(const bool& quacks);
-  void versionSignal(const int& version);
   /* Emitted when a game path is needed but this has none */
   void requestGamePath();
+
+  void versionSignal(const int& version);
+  void languageList(const QStringList& languageList);
 
 private:
   QByteArray run(const QStringList& arguments);
@@ -35,7 +38,6 @@ private:
   const QString weiduPath;
   QString gamePath;
   QProcess* process;
-
 };
 
 #endif // WEIDUMANAGER_H

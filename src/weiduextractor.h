@@ -4,6 +4,7 @@
 #include <QObject>
 
 class QByteArray;
+class QStringList;
 
 class WeiduExtractor : public QObject
 {
@@ -11,7 +12,7 @@ class WeiduExtractor : public QObject
 
 public:
   static int version(const QByteArray& message);
-
+  static QStringList languageList(const QByteArray& message);
 };
 
 #endif // WEIDUEXTRACTOR_H

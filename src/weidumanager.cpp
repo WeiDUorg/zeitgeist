@@ -61,7 +61,7 @@ void WeiduManager::terminateManager()
 void WeiduManager::newGamePath(const QString& path)
 {
   qDebug() << "WeiduManager got game path" << path;
-  if (!gamePath.isEmpty()) {
+  if (!path.isEmpty()) {
     gamePath = path;
     process->setWorkingDirectory(path);
   }
@@ -88,4 +88,13 @@ void WeiduManager::version()
   arguments << "--version";
   QByteArray message = run(arguments);
   emit versionSignal(WeiduExtractor::version(message));
+}
+
+void WeiduManager::getLanguageList(const QString& tp2)
+{
+  qDebug() << "Attempting to list languages in" << tp2;
+  QStringList arguments;
+  arguments << "--list-languages" << tp2;
+  QByteArray message = run(arguments);
+  emit languageList(WeiduExtractor::languageList(message));
 }

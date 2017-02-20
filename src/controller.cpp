@@ -48,10 +48,16 @@ void Controller::setupWeidu(const QString& weiduPath)
             weiduManager, SLOT(quack()));
     connect(weiduManager, SIGNAL(quacks(const bool&)),
             this, SLOT(quacks(const bool&)));
+
     connect(weiduManager, SIGNAL(versionSignal(const int&)),
             this, SLOT(weiduVersion(const int&)));
     connect(this, SIGNAL(getVersion()),
             weiduManager, SLOT(version()));
+    connect(weiduManager, SIGNAL(languageList(const QStringList&)),
+            this, SIGNAL(languageList(const QStringList&)));
+    connect(this, SIGNAL(weiduListLanguages(const QString&)),
+            weiduManager, SLOT(getLanguageList(const QString&)));
+
     workerThread->start();
     emit doesItQuack();
   } else {
@@ -94,4 +100,9 @@ void Controller::weiduCheck() const
     emit confirmedWeiduPath(currentWeidu);
     emit weiduVersionSignal(currentWeiduVersion);
   }
+}
+
+void Controller::getLanguageList(const QString& tp2)
+{
+  emit weiduListLanguages(tp2);
 }
