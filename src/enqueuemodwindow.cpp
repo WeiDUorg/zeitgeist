@@ -27,24 +27,30 @@
 #include <QAbstractItemView>
 #include <QDebug>
 #include <QGridLayout>
+#include <QHBoxLayout>
 #include <QItemSelectionModel>
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QListView>
 #include <QLabel>
 #include <QModelIndex>
+#include <QModelIndexList>
+#include <QPushButton>
 #include <QStringListModel>
+#include <QVBoxLayout>
 
 EnqueueModWindow::EnqueueModWindow(QWidget* parent,
                                    const Coordinator* coordinator,
                                    const QString& tp2) :
   QWidget(parent), coordinator(coordinator), tp2(tp2), currentComponentList(0)
 {
-  resize (640, 480); // Should ideally assume a size depending on parent's size
+  resize (640, 520); // Should ideally assume a size depending on parent's size
   setWindowFlags(Qt::Dialog);
   setWindowModality(Qt::WindowModal);
   setAttribute(Qt::WA_DeleteOnClose);
   setWindowTitle(windowTitle + ": " + tp2);
+  connect(this, SIGNAL(enqueueComponents(WeiduLog*)),
+          coordinator->dataManager, SLOT(enqueueComponents(WeiduLog*)));
 
   QLabel* languageLabel = new QLabel(tr("Languages"), this);
   languageListModel = new QStringListModel(this);
@@ -66,11 +72,23 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
   QLabel* componentLabel = new QLabel(tr("Components"), this);
   componentListView = new QListWidget(this);
 
-  QGridLayout* layout = new QGridLayout(this);
-  layout->addWidget(languageLabel, 0, 0);
-  layout->addWidget(languageListView, 1, 0);
-  layout->addWidget(componentLabel, 0, 1);
-  layout->addWidget(componentListView, 1, 1);
+  QGridLayout* paneLayout = new QGridLayout;
+  paneLayout->addWidget(languageLabel, 0, 0);
+  paneLayout->addWidget(languageListView, 1, 0);
+  paneLayout->addWidget(componentLabel, 0, 1);
+  paneLayout->addWidget(componentListView, 1, 1);
+
+  proceedButton = new QPushButton(tr("Proceed"), this);
+  connect(proceedButton, SIGNAL(clicked()),
+          this, SLOT(handleProceed()));
+
+  QHBoxLayout* buttonLayout = new QHBoxLayout;
+  buttonLayout->setAlignment(Qt::AlignRight);
+  buttonLayout->addWidget(proceedButton);
+
+  QVBoxLayout* layout = new QVBoxLayout;
+  layout->addLayout(paneLayout);
+  layout->addLayout(buttonLayout);
   setLayout(layout);
 
   emit getLanguageList(tp2);
@@ -112,6 +130,7 @@ void EnqueueModWindow::componentList(WeiduLog* list)
     coordinator->dataManager->installedModsModel->installedComponents(tp2);
   int count = 0;
   foreach (WeiduLogComponent comp, list->data) {
+    // Can't preserve index because setHidden() does nothing
     if (!installedComponents.contains(comp.number)) {
       QListWidgetItem* item = new QListWidgetItem;
       item->setText(comp.comment);
@@ -120,4 +139,21 @@ void EnqueueModWindow::componentList(WeiduLog* list)
       count++;
     }
   }
+}
+
+void EnqueueModWindow::handleProceed() {
+  // QListWidget preclude doing this by index (vide supra)
+  QList<WeiduLogComponent> list;
+  for (int i = 0; i < componentListView->count(); i++) {
+    QListWidgetItem* item = componentListView->item(i);
+    if (item->checkState()) {
+      foreach (WeiduLogComponent comp, currentComponentList->data) {
+        if (comp.comment.compare(item->text()) == 0) {
+          list.append(comp);
+        }
+      }
+    }
+  }
+  emit enqueueComponents(new WeiduLog(0, list));
+  this->close();
 }

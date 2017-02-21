@@ -18,10 +18,11 @@
  */
 
 #include "datamanager.h"
-#include "gamelistmodel.h"
 #include "availablemodsmodel.h"
-#include "installedmodsmodel.h"
 #include "game.h"
+#include "gamelistmodel.h"
+#include "installedmodsmodel.h"
+#include "weidulog.h"
 
 #include <QFileInfo>
 #include <QSettings>
@@ -175,4 +176,12 @@ void DataManager::gameRemoved(const QString& path)
 void DataManager::confirmedWeiduPath(const QString& path)
 {
   settings->setValue("weiduPath", path);
+}
+
+void DataManager::enqueueComponents(WeiduLog* componentList)
+{
+  qDebug() << "Enqueuing components:";
+  foreach (WeiduLogComponent comp, componentList->data) {
+    qDebug() << comp.comment;
+  }
 }

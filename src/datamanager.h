@@ -4,13 +4,14 @@
 #include <QObject>
 #include <QHash>
 
+class AvailableModsModel;
+class Game;
+class GameListModel;
+class InstalledModsModel;
+class WeiduLog;
+
 class QSettings;
 class QString;
-
-class GameListModel;
-class AvailableModsModel;
-class InstalledModsModel;
-class Game;
 
 class DataManager : public QObject
 {
@@ -32,6 +33,7 @@ private slots:
   void refreshCurrentGame();
   void gameRemoved(const QString& path);
   void confirmedWeiduPath(const QString& path);
+  void enqueueComponents(WeiduLog* componentList);
 
 public slots:
   void identifyCurrentGame() const;

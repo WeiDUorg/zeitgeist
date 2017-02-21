@@ -9,6 +9,7 @@ class WeiduLog;
 class QItemSelection;
 class QListWidget;
 class QListView;
+class QPushButton;
 class QString;
 class QStringListModel;
 
@@ -24,10 +25,12 @@ private slots:
   void languageList(const QStringList& list);
   void handleLanguageSelection(const QItemSelection& selected, const QItemSelection&);
   void componentList(WeiduLog* list);
+  void handleProceed();
 
 signals:
   void getLanguageList(const QString& tp2);
   void getComponentList(const QString& tp2, const int& index);
+  void enqueueComponents(WeiduLog* componentList);
 
 private:
   const Coordinator* coordinator;
@@ -37,6 +40,7 @@ private:
   QListView* languageListView;
   QStringListModel* languageListModel;
   QListWidget* componentListView;
+  QPushButton* proceedButton;
 
   WeiduLog* currentComponentList;
 };
