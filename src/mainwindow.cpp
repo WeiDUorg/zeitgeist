@@ -53,7 +53,6 @@ MainWindow::MainWindow(Coordinator* coordinator) :
           dataManager, SLOT(saveState()));
   connect(dataManager, SIGNAL(identityOfCurrentGame(const QString&)),
           this, SLOT(updateNameOfCurrentGame(const QString&)));
-  dataManager->identifyCurrentGame(); // Side-effect
 
   setMinimumSize(800, 600);
   setWindowTitle("Zeitgeist");
