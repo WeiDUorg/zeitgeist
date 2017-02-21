@@ -72,14 +72,6 @@ QList<QList<WeiduLogComponent>> InstalledModsModel::partitionData(const QList<We
     partitionedData.append(block);
     i += (block.length() - 1);
   }
-  qDebug() << "Playing back read log entries:";
-  foreach (QList<WeiduLogComponent> list, partitionedData) {
-    qDebug() << "New block";
-    foreach (WeiduLogComponent comp, list) {
-      qDebug() << comp.modName;
-    }
-  }
-  qDebug() << "End of log entries";
   return partitionedData;
 }
 
