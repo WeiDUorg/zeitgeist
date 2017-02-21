@@ -20,6 +20,7 @@
 #include "enqueuemodwindow.h"
 #include "coordinator.h"
 #include "controller.h"
+#include "weidulog.h"
 
 #include <QAbstractItemView>
 #include <QDebug>
@@ -35,7 +36,7 @@
 EnqueueModWindow::EnqueueModWindow(QWidget* parent,
                                    const Coordinator* coordinator,
                                    const QString& tp2) :
-  QWidget(parent), coordinator(coordinator), tp2(tp2)
+  QWidget(parent), coordinator(coordinator), tp2(tp2), currentComponentList(0)
 {
   resize (640, 480); // Should ideally assume a size depending on parent's size
   setWindowFlags(Qt::Dialog);
@@ -57,6 +58,8 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
           this, SLOT(handleLanguageSelection(const QItemSelection&, const QItemSelection)));
   connect(this, SIGNAL(getComponentList(const QString&, const int&)),
           coordinator->controller, SLOT(getComponentList(const QString&, const int&)));
+  connect(coordinator->controller, SIGNAL(componentList(WeiduLog*)),
+          this, SLOT(componentList(WeiduLog*)));
 
   QLabel* componentLabel = new QLabel(tr("Components"), this);
   componentListView = new QListWidget(this);
@@ -73,7 +76,10 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
 
 EnqueueModWindow::~EnqueueModWindow()
 {
-
+  if (currentComponentList) {
+    delete currentComponentList;
+    currentComponentList = 0;
+  }
 }
 
 void EnqueueModWindow::languageList(const QStringList& list)
@@ -88,6 +94,24 @@ void EnqueueModWindow::languageList(const QStringList& list)
 void EnqueueModWindow::handleLanguageSelection(const QItemSelection& selected, const QItemSelection&)
 {
   if (!selected.isEmpty()) {
+    if (currentComponentList) {
+      delete currentComponentList;
+      currentComponentList = 0;
+    }
     emit getComponentList(tp2, languageListView->selectionModel()->currentIndex().row());
+  }
+}
+
+void EnqueueModWindow::componentList(WeiduLog* list)
+{
+  currentComponentList = list;
+  componentListView->clear();
+  int count = 0;
+  foreach (WeiduLogComponent comp, list->data) {
+    QListWidgetItem* item = new QListWidgetItem;
+    item->setText(comp.comment);
+    item->setCheckState(Qt::Unchecked);
+    componentListView->insertItem(count, item);
+    count++;
   }
 }

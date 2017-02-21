@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class Coordinator;
+class WeiduLog;
 
 class QItemSelection;
 class QListWidget;
@@ -22,6 +23,7 @@ public:
 private slots:
   void languageList(const QStringList& list);
   void handleLanguageSelection(const QItemSelection& selected, const QItemSelection&);
+  void componentList(WeiduLog* list);
 
 signals:
   void getLanguageList(const QString& tp2);
@@ -35,6 +37,8 @@ private:
   QListView* languageListView;
   QStringListModel* languageListModel;
   QListWidget* componentListView;
+
+  WeiduLog* currentComponentList;
 };
 
 #endif // ENQUEUEMODWINDOW_H

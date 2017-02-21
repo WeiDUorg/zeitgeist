@@ -59,8 +59,8 @@ void Controller::setupWeidu(const QString& weiduPath)
             weiduManager, SLOT(getLanguageList(const QString&)));
     connect(this, SIGNAL(weiduListComponents(const QString&, const int&)),
             weiduManager, SLOT(getComponentList(const QString&, const int&)));
-    connect(weiduManager, SIGNAL(componentList()),
-            this, SIGNAL(componentList()));
+    connect(weiduManager, SIGNAL(componentList(WeiduLog*)),
+            this, SIGNAL(componentList(WeiduLog*)));
 
     workerThread->start();
     emit doesItQuack();

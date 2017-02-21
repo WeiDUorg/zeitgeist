@@ -105,5 +105,5 @@ void WeiduManager::getComponentList(const QString& tp2, const int& index)
   QStringList arguments;
   arguments << "--list-components" << tp2 << QString::number(index);
   QByteArray message = run(arguments);
-  qDebug() << message;
+  emit componentList(WeiduExtractor::componentList(message));
 }

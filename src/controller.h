@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QThread>
 
+class WeiduLog;
 class WeiduManager;
 
 class QString;
@@ -38,7 +39,7 @@ signals:
   void weiduListLanguages(const QString& tp2);
   void languageList(const QStringList& list);
   void weiduListComponents(const QString& tp2, const int& index);
-  void componentList();
+  void componentList(WeiduLog* componentList);
 
 private:
   QThread* workerThread;

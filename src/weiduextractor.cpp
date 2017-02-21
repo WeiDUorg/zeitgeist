@@ -17,6 +17,7 @@
  *
  */
 
+#include "logreader.h"
 #include "weiduextractor.h"
 
 #include <QByteArray>
@@ -45,4 +46,9 @@ QStringList WeiduExtractor::languageList(const QByteArray& message)
   }
   qDebug() << "Languages obtained were" << list;
   return list;
+}
+
+WeiduLog* WeiduExtractor::componentList(const QByteArray& message)
+{
+  return LogReader::read(0, message);
 }

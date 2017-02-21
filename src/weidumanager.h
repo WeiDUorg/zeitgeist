@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+class WeiduLog;
+
 class QByteArray;
 class QProcess;
 class QString;
@@ -32,7 +34,7 @@ signals:
 
   void versionSignal(const int& version);
   void languageList(const QStringList& languageList);
-  void componentList();
+  void componentList(WeiduLog* componentList);
 
 private:
   QByteArray run(const QStringList& arguments);
