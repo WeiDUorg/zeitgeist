@@ -9,6 +9,11 @@ class WeiduLogComponent;
 class QByteArray;
 class QString;
 
+/*
+ * This class is stupid and the functions herein should obviously be
+ * part of the WeiduLog class
+ */
+
 class LogReader : QObject
 {
   Q_OBJECT
