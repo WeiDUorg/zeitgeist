@@ -18,8 +18,10 @@
  */
 
 #include "enqueuemodwindow.h"
+#include "datamanager.h"
 #include "coordinator.h"
 #include "controller.h"
+#include "installedmodsmodel.h"
 #include "weidulog.h"
 
 #include <QAbstractItemView>
@@ -106,12 +108,16 @@ void EnqueueModWindow::componentList(WeiduLog* list)
 {
   currentComponentList = list;
   componentListView->clear();
+  QList<int> installedComponents =
+    coordinator->dataManager->installedModsModel->installedComponents(tp2);
   int count = 0;
   foreach (WeiduLogComponent comp, list->data) {
-    QListWidgetItem* item = new QListWidgetItem;
-    item->setText(comp.comment);
-    item->setCheckState(Qt::Unchecked);
-    componentListView->insertItem(count, item);
-    count++;
+    if (!installedComponents.contains(comp.number)) {
+      QListWidgetItem* item = new QListWidgetItem;
+      item->setText(comp.comment);
+      item->setCheckState(Qt::Unchecked);
+      componentListView->insertItem(count, item);
+      count++;
+    }
   }
 }

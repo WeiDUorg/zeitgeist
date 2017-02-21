@@ -22,6 +22,7 @@
 
 #include <QList>
 #include <QListIterator>
+#include <QSet>
 #include <QStandardItem>
 #include <QString>
 #include <QtDebug>
@@ -58,6 +59,7 @@ void InstalledModsModel::populate(const WeiduLog* logFile)
     QList<QStandardItem*> children = getChildList(*i);
     parent->appendColumn(children);
   }
+  lookup = populateLookup(data);
 }
 
 QList<QList<WeiduLogComponent>> InstalledModsModel::partitionData(const QList<WeiduLogComponent>& data) const
@@ -108,4 +110,21 @@ QList<QStandardItem*> InstalledModsModel::getChildList(const QList<WeiduLogCompo
     childList.append(new QStandardItem(component.comment));
   }
   return childList;
+}
+
+QHash<QString, QList<int>> InstalledModsModel::populateLookup(const QList<WeiduLogComponent>& data)
+{
+  QHash<QString, QList<int>> result;
+  foreach (const WeiduLogComponent c, data) {
+    QString modName = c.modName.toUpper();
+    QList<int> components = result.value(modName);
+    components.append(c.number);
+    result.insert(modName, components);
+  }
+  return result;
+}
+
+QList<int> InstalledModsModel::installedComponents(const QString& tp2) const
+{
+  return lookup.value(tp2.toUpper());
 }
