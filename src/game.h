@@ -4,11 +4,11 @@
 #include <QObject>
 #include <QList>
 
+class Mod;
+class WeiduLog;
+
 class QString;
 class QStringList;
-
-class LogFile;
-class Mod;
 
 class Game : public QObject
 {
@@ -18,7 +18,7 @@ public:
   Game(QObject* parent, const QString& path);
   QList<QString> getModNames() const;
   QList<QString> getModPaths() const;
-  LogFile* getInstalledMods() const;
+  WeiduLog* getInstalledMods() const;
 
   const QString path;
 
@@ -28,7 +28,7 @@ private:
   QStringList getSubLevelMods(const QString& path) const;
 
   QList<Mod*> availableMods;
-  LogFile* installedMods;
+  WeiduLog* installedMods;
 };
 
 #endif // GAME_H

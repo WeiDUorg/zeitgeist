@@ -4,12 +4,12 @@
 #include <QStandardItemModel>
 #include <QList>
 
+class WeiduLog;
+struct WeiduLogComponent;
+
 class QObject;
 class QString;
 class QStandardItem;
-
-class LogFile;
-struct LogFileComponent;
 
 class InstalledModsModel : public QStandardItemModel
 {
@@ -17,16 +17,16 @@ class InstalledModsModel : public QStandardItemModel
 
 public:
   InstalledModsModel(QObject*  parent);
-  void populate(const LogFile* logFile);
+  void populate(const WeiduLog* logFile);
 
 private slots:
   void clear();
 
 private:
-  QList<QList<LogFileComponent>> partitionData(const QList<LogFileComponent>& data) const;
-  QList<LogFileComponent> getContiguousBlock(const QList<LogFileComponent>& data, const int& index, const QString& name) const;
-  QList<QString> getPartitionNames(const QList<QList<LogFileComponent>>& partitionedData) const;
-  QList<QStandardItem*> getChildList(const QList<LogFileComponent>& componentList) const;
+  QList<QList<WeiduLogComponent>> partitionData(const QList<WeiduLogComponent>& data) const;
+  QList<WeiduLogComponent> getContiguousBlock(const QList<WeiduLogComponent>& data, const int& index, const QString& name) const;
+  QList<QString> getPartitionNames(const QList<QList<WeiduLogComponent>>& partitionedData) const;
+  QList<QStandardItem*> getChildList(const QList<WeiduLogComponent>& componentList) const;
 };
 
 #endif // INSTALLEDMODSMODEL_H

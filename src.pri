@@ -11,12 +11,14 @@ HEADERS += \
         src/gamewindow.h \
         src/installedmodsmodel.h \
         src/logfile.h \
+        src/logreader.h \
         src/maincentralwidget.h \
         src/mainwindow.h \
         src/mod.h \
         src/platform.h \
         src/settingswindow.h \
         src/weiduextractor.h \
+        src/weidulog.h \
         src/weidumanager.h
 
 SOURCES += \
@@ -30,10 +32,12 @@ SOURCES += \
         src/gamewindow.cpp \
         src/installedmodsmodel.cpp \
         src/logfile.cpp \
+        src/logreader.cpp \
         src/main.cpp \
         src/maincentralwidget.cpp \
         src/mainwindow.cpp \
         src/mod.cpp \
         src/settingswindow.cpp \
         src/weiduextractor.cpp \
+        src/weidulog.cpp \
         src/weidumanager.cpp

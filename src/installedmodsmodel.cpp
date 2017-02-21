@@ -18,7 +18,7 @@
  */
 
 #include "installedmodsmodel.h"
-#include "logfile.h"
+#include "weidulog.h"
 
 #include <QList>
 #include <QListIterator>
@@ -39,11 +39,11 @@ void InstalledModsModel::clear()
   endResetModel();
 }
 
-void InstalledModsModel::populate(const LogFile* logFile)
+void InstalledModsModel::populate(const WeiduLog* logFile)
 {
   clear();
-  QList<LogFileComponent> data = logFile->getData();
-  QList<QList<LogFileComponent>> partitionedData = partitionData(data);
+  QList<WeiduLogComponent> data = logFile->data;
+  QList<QList<WeiduLogComponent>> partitionedData = partitionData(data);
   QList<QString> partitionNames = getPartitionNames(partitionedData);
   QList<QStandardItem*> parentItems;
   parentItems.reserve(partitionNames.size());
@@ -51,7 +51,7 @@ void InstalledModsModel::populate(const LogFile* logFile)
     parentItems.append(new QStandardItem(name));
   }
   appendColumn(parentItems);
-  QList<QList<LogFileComponent>>::const_iterator i;
+  QList<QList<WeiduLogComponent>>::const_iterator i;
   for (i = partitionedData.constBegin(); i != partitionedData.constEnd(); ++i) {
     int index = i - partitionedData.constBegin();
     QStandardItem* parent = parentItems.at(index);
@@ -60,20 +60,20 @@ void InstalledModsModel::populate(const LogFile* logFile)
   }
 }
 
-QList<QList<LogFileComponent>> InstalledModsModel::partitionData(const QList<LogFileComponent>& data) const
+QList<QList<WeiduLogComponent>> InstalledModsModel::partitionData(const QList<WeiduLogComponent>& data) const
 {
-  QList<QList<LogFileComponent>> partitionedData;
-  QList<LogFileComponent>::const_iterator i;
+  QList<QList<WeiduLogComponent>> partitionedData;
+  QList<WeiduLogComponent>::const_iterator i;
   for (i = data.constBegin(); i != data.constEnd(); ++i) {
     int distance = i - data.constBegin();
-    QList<LogFileComponent> block = getContiguousBlock(data, distance, (*i).modName);
+    QList<WeiduLogComponent> block = getContiguousBlock(data, distance, (*i).modName);
     partitionedData.append(block);
     i += (block.length() - 1);
   }
   qDebug() << "Playing back read log entries:";
-  foreach (QList<LogFileComponent> list, partitionedData) {
+  foreach (QList<WeiduLogComponent> list, partitionedData) {
     qDebug() << "New block";
-    foreach (LogFileComponent comp, list) {
+    foreach (WeiduLogComponent comp, list) {
       qDebug() << comp.modName;
     }
   }
@@ -81,30 +81,30 @@ QList<QList<LogFileComponent>> InstalledModsModel::partitionData(const QList<Log
   return partitionedData;
 }
 
-QList<LogFileComponent> InstalledModsModel::getContiguousBlock(const QList<LogFileComponent>& data, const int& index, const QString& name) const
+QList<WeiduLogComponent> InstalledModsModel::getContiguousBlock(const QList<WeiduLogComponent>& data, const int& index, const QString& name) const
 {
-  QList<LogFileComponent> block;
-  QList<LogFileComponent>::const_iterator i;
+  QList<WeiduLogComponent> block;
+  QList<WeiduLogComponent>::const_iterator i;
   for (i = data.constBegin() + index; i != data.constEnd() && (*i).modName.compare(name) == 0; ++i) {
     block.append(*i);
   }
   return block;
 }
 
-QList<QString> InstalledModsModel::getPartitionNames(const QList<QList<LogFileComponent>>& partitionedData) const
+QList<QString> InstalledModsModel::getPartitionNames(const QList<QList<WeiduLogComponent>>& partitionedData) const
 {
   QList<QString> names;
   names.reserve(partitionedData.size());
-  foreach (QList<LogFileComponent> list, partitionedData) {
+  foreach (QList<WeiduLogComponent> list, partitionedData) {
     names.append(list.first().modName);
   }
   return names;
 }
 
-QList<QStandardItem*> InstalledModsModel::getChildList(const QList<LogFileComponent>& componentList) const
+QList<QStandardItem*> InstalledModsModel::getChildList(const QList<WeiduLogComponent>& componentList) const
 {
   QList<QStandardItem*> childList;
-  foreach (LogFileComponent component, componentList) {
+  foreach (WeiduLogComponent component, componentList) {
     childList.append(new QStandardItem(component.comment));
   }
   return childList;

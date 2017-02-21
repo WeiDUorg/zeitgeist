@@ -18,8 +18,9 @@
  */
 
 #include "game.h"
+#include "logreader.h"
 #include "mod.h"
-#include "logfile.h"
+#include "weidulog.h"
 
 #include <algorithm>
 #include <QString>
@@ -30,7 +31,7 @@
 Game::Game(QObject* parent, const QString& path) : QObject(parent), path(path)
 {
   availableMods = getModList(path);
-  installedMods = new LogFile(this, path);
+  installedMods = LogReader::read(this, WeiduLog::logPath(path));
 }
 
 QList<Mod*> Game::getModList(const QString& path)
@@ -104,7 +105,7 @@ QList<QString> Game::getModPaths() const
   return result;
 }
 
-LogFile* Game::getInstalledMods() const
+WeiduLog* Game::getInstalledMods() const
 {
   return installedMods;
 }
