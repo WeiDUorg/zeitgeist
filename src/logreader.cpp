@@ -73,7 +73,6 @@ bool LogReader::validLine(const QString& line)
   if (pattern.exactMatch(line)) {
     return true;
   }
-  qDebug() << "Unmatched log line:" << line;
   return false;
 }
 
