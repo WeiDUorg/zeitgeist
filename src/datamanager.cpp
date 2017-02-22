@@ -36,7 +36,8 @@ DataManager::DataManager(QObject* parent) :
   QObject(parent), gameListModel(new GameListModel(this)),
   availableModsModel(new AvailableModsModel(this)),
   installedModsModel(new InstalledModsModel(this)),
-  queuedModsModel(new QueuedModsModel(this)),
+  inQueuedModsModel(new QueuedModsModel(this)),
+  outQueuedModsModel(new QueuedModsModel(this)),
   settings(new QSettings("zeitgeist", "zeitgeist", this)), currentGame(0)
 {
   connect(gameListModel, SIGNAL(gameRemoved(const QString&)),
@@ -46,7 +47,9 @@ DataManager::DataManager(QObject* parent) :
   connect(this, SIGNAL(clearModels()),
           installedModsModel, SLOT(clear()));
   connect(this, SIGNAL(clearModels()),
-          queuedModsModel, SLOT(clear()));
+          inQueuedModsModel, SLOT(clear()));
+  connect(this, SIGNAL(clearModels()),
+          outQueuedModsModel, SLOT(clear()));
 }
 
 void DataManager::saveState()
@@ -184,10 +187,8 @@ void DataManager::confirmedWeiduPath(const QString& path)
 
 void DataManager::enqueueComponents(WeiduLog* componentList)
 {
-  if (!componentList.isEmpty()) {
-    qDebug() << "Enqueuing components:";
-    foreach (WeiduLogComponent comp, componentList->data) {
-      qDebug() << comp.comment;
-    }
-  }
+  if (!componentList->isEmpty()) {
+    componentList->setParent(inQueuedModsModel);
+    inQueuedModsModel->add(componentList);
+  } else { delete componentList; }
 }

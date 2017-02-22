@@ -33,7 +33,8 @@ signals:
 private:
   const Coordinator* coordinator;
   QListView* availableModsView;
-  QTreeView* queueView;
+  QTreeView* installQueueView;
+  QTreeView* uninstallQueueView;
   QTreeView* installedModsView;
 };
 

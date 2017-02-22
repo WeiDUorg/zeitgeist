@@ -26,7 +26,8 @@ public:
   GameListModel* gameListModel;
   AvailableModsModel* availableModsModel;
   InstalledModsModel* installedModsModel;
-  QueuedModsModel* queuedModsModel;
+  QueuedModsModel* inQueuedModsModel;
+  QueuedModsModel* outQueuedModsModel;
 
 private slots:
   void useGame(const QString& path);

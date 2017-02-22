@@ -1,9 +1,10 @@
 #ifndef QUEUEDMODSMODEL_H
 #define QUEUEDMODSMODEL_H
 
+#include <QList>
 #include <QStandardItemModel>
 
-enum Queue { Install, Uninstall };
+class WeiduLog;
 
 class QueuedModsModel : public QStandardItemModel
 {
@@ -12,8 +13,14 @@ class QueuedModsModel : public QStandardItemModel
 public:
   QueuedModsModel(QObject* parent);
 
+public slots:
+  void add(WeiduLog* componentList);
+
 private slots:
   void clear();
+
+private:
+  QList<WeiduLog*> queue;
 };
 
 #endif // QUEUEDMODSMODEL_H

@@ -41,15 +41,25 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
   QWidget(parent), coordinator(coordinator)
 {
   QLabel* availableModsLabel = new QLabel(tr("Available Mods"), this);
-  QLabel* queueLabel = new QLabel(tr("Queue"), this);
+  QLabel* installQueueLabel = new QLabel(tr("Installation Queue"), this);
+  QLabel* uninstallQueueLabel = new QLabel(tr("Uninstallation Queue"), this);
   QLabel* installedModsLabel = new QLabel(tr("Installed Mods"), this);
 
   availableModsView = new QListView(this);
   availableModsView->setSelectionMode(QAbstractItemView::SingleSelection);
   availableModsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-  queueView = new QTreeView(this);
-  queueView->setModel(coordinator->dataManager->queuedModsModel);
+  installQueueView = new QTreeView(this);
+  installQueueView->setModel(coordinator->dataManager->inQueuedModsModel);
+  installQueueView->setHeaderHidden(true);
+  installQueueView->setSelectionMode(QAbstractItemView::MultiSelection);
+  installQueueView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+  uninstallQueueView = new QTreeView(this);
+  uninstallQueueView->setModel(coordinator->dataManager->outQueuedModsModel);
+  uninstallQueueView->setHeaderHidden(true);
+  uninstallQueueView->setSelectionMode(QAbstractItemView::MultiSelection);
+  uninstallQueueView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
   installedModsView = new QTreeView(this);
   installedModsView->setHeaderHidden(true);
@@ -69,8 +79,10 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
   availableModsLayout->addWidget(availableModsLabel);
   availableModsLayout->addWidget(availableModsView);
   QVBoxLayout* queueLayout = new QVBoxLayout;
-  queueLayout->addWidget(queueLabel);
-  queueLayout->addWidget(queueView);
+  queueLayout->addWidget(installQueueLabel);
+  queueLayout->addWidget(installQueueView);
+  queueLayout->addWidget(uninstallQueueLabel);
+  queueLayout->addWidget(uninstallQueueView);
   QVBoxLayout* installedModsLayout = new QVBoxLayout;
   installedModsLayout->addWidget(installedModsLabel);
   installedModsLayout->addWidget(installedModsView);

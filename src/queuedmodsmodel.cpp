@@ -18,6 +18,11 @@
  */
 
 #include "queuedmodsmodel.h"
+#include "weidulog.h"
+
+#include <QDebug>
+#include <QStandardItem>
+#include <QString>
 
 QueuedModsModel::QueuedModsModel(QObject* parent) :
   QStandardItemModel(parent)
@@ -30,4 +35,18 @@ void QueuedModsModel::clear()
   beginResetModel();
   removeColumns(0, columnCount());
   endResetModel();
+}
+
+void QueuedModsModel::add(WeiduLog* componentList)
+{
+  queue.append(componentList);
+  QStandardItem* parentItem = new QStandardItem(componentList->data[0].modName);
+  QList<QStandardItem*> childItems;
+  foreach (WeiduLogComponent comp, componentList->data) {
+    childItems.append(new QStandardItem(comp.comment));
+  }
+  parentItem->appendColumn(childItems);
+  QList<QStandardItem*> parent;
+  parent << parentItem;
+  appendColumn(parent);
 }
