@@ -8,6 +8,7 @@ class AvailableModsModel;
 class Game;
 class GameListModel;
 class InstalledModsModel;
+class QueuedModsModel;
 class WeiduLog;
 
 class QSettings;
@@ -25,6 +26,7 @@ public:
   GameListModel* gameListModel;
   AvailableModsModel* availableModsModel;
   InstalledModsModel* installedModsModel;
+  QueuedModsModel* queuedModsModel;
 
 private slots:
   void useGame(const QString& path);

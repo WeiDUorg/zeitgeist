@@ -18,10 +18,11 @@
  */
 
 #include "maincentralwidget.h"
+#include "availablemodsmodel.h"
 #include "coordinator.h"
 #include "datamanager.h"
-#include "availablemodsmodel.h"
 #include "installedmodsmodel.h"
+#include "queuedmodsmodel.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -46,7 +47,9 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
   availableModsView = new QListView(this);
   availableModsView->setSelectionMode(QAbstractItemView::SingleSelection);
   availableModsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
   queueView = new QTreeView(this);
+  queueView->setModel(coordinator->dataManager->queuedModsModel);
 
   installedModsView = new QTreeView(this);
   installedModsView->setHeaderHidden(true);

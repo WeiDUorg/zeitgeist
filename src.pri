@@ -15,6 +15,7 @@ HEADERS += \
         src/mainwindow.h \
         src/mod.h \
         src/platform.h \
+        src/queuedmodsmodel.h \
         src/settingswindow.h \
         src/weiduextractor.h \
         src/weidulog.h \
@@ -35,6 +36,7 @@ SOURCES += \
         src/maincentralwidget.cpp \
         src/mainwindow.cpp \
         src/mod.cpp \
+        src/queuedmodsmodel.cpp \
         src/settingswindow.cpp \
         src/weiduextractor.cpp \
         src/weidulog.cpp \

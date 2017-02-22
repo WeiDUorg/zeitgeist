@@ -22,6 +22,7 @@
 #include "game.h"
 #include "gamelistmodel.h"
 #include "installedmodsmodel.h"
+#include "queuedmodsmodel.h"
 #include "weidulog.h"
 
 #include <QFileInfo>
@@ -35,6 +36,7 @@ DataManager::DataManager(QObject* parent) :
   QObject(parent), gameListModel(new GameListModel(this)),
   availableModsModel(new AvailableModsModel(this)),
   installedModsModel(new InstalledModsModel(this)),
+  queuedModsModel(new QueuedModsModel(this)),
   settings(new QSettings("zeitgeist", "zeitgeist", this)), currentGame(0)
 {
   connect(gameListModel, SIGNAL(gameRemoved(const QString&)),
@@ -43,6 +45,8 @@ DataManager::DataManager(QObject* parent) :
           availableModsModel, SLOT(clear()));
   connect(this, SIGNAL(clearModels()),
           installedModsModel, SLOT(clear()));
+  connect(this, SIGNAL(clearModels()),
+          queuedModsModel, SLOT(clear()));
 }
 
 void DataManager::saveState()
@@ -180,8 +184,10 @@ void DataManager::confirmedWeiduPath(const QString& path)
 
 void DataManager::enqueueComponents(WeiduLog* componentList)
 {
-  qDebug() << "Enqueuing components:";
-  foreach (WeiduLogComponent comp, componentList->data) {
-    qDebug() << comp.comment;
+  if (!componentList.isEmpty()) {
+    qDebug() << "Enqueuing components:";
+    foreach (WeiduLogComponent comp, componentList->data) {
+      qDebug() << comp.comment;
+    }
   }
 }
