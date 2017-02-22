@@ -42,7 +42,8 @@ MainWindow::MainWindow(Coordinator* coordinator) :
   setCentralWidget(mainCentralWidget);
   connect(mainCentralWidget, SIGNAL(availableModSelected(const bool&)),
           this, SLOT(availableModSelected(const bool&)));
-
+  connect(mainCentralWidget, SIGNAL(installedModSelected(const bool&)),
+          this, SLOT(installedModSelected(const bool&)));
 
   createActions();
 
@@ -112,9 +113,16 @@ void MainWindow::createActions()
   gameUnqueueAction = new QAction(tr("Unqueue"), this);
   gameUnqueueAction->setStatusTip(tr("Remove a mod from the queue"));
 
-  /* Should only be enabled while there is a selection in installedModsView */
+  /* Should only be enabled while there is a selection in installedModsView
+   * Default: disabled (no installed mod is selected)
+   */
   gameUninstallAction = new QAction(tr("Uninstall"), this);
-  gameUninstallAction->setStatusTip(tr("Queue a mod for uninstallation"));
+  gameUninstallAction->setStatusTip(gameUninstallActionDisabled);
+  gameUninstallAction->setEnabled(false);
+  connect(gameUninstallAction, SIGNAL(triggered()),
+          mainCentralWidget, SLOT(getSelectedInstalledMods()));
+  connect(mainCentralWidget, SIGNAL(selectedInstalledMods(WeiduLog*)),
+          dataManager, SLOT(uninstallComponents(WeiduLog*)));
 
   /* Should only be enabled while there is some data in queueView */
   gameProcessAction = new QAction(tr("Process"), this);
@@ -187,5 +195,16 @@ void MainWindow::availableModSelected(const bool& selected)
   } else {
     gameInstallAction->setEnabled(false);
     gameInstallAction->setStatusTip(gameInstallActionDisabled);
+  }
+}
+
+void MainWindow::installedModSelected(const bool& selected)
+{
+  if (selected) {
+    gameUninstallAction->setEnabled(true);
+    gameUninstallAction->setStatusTip(gameUninstallActionEnabled);
+  } else {
+    gameUninstallAction->setEnabled(false);
+    gameUninstallAction->setStatusTip(gameUninstallActionDisabled);
   }
 }

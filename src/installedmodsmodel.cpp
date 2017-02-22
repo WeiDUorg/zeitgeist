@@ -20,11 +20,14 @@
 #include "installedmodsmodel.h"
 #include "weidulog.h"
 
+#include <algorithm>
+#include <QDebug>
 #include <QList>
 #include <QListIterator>
+#include <QModelIndex>
+#include <QModelIndexList>
 #include <QStandardItem>
 #include <QString>
-#include <QtDebug>
 
 InstalledModsModel::InstalledModsModel(QObject* parent) :
   QStandardItemModel(parent)
@@ -42,8 +45,7 @@ void InstalledModsModel::clear()
 void InstalledModsModel::populate(const WeiduLog* logFile)
 {
   clear();
-  QList<WeiduLogComponent> data = logFile->data;
-  QList<QList<WeiduLogComponent>> partitionedData = partitionData(data);
+  partitionedData = partitionData(logFile->data);
   QList<QString> partitionNames = getPartitionNames(partitionedData);
   QList<QStandardItem*> parentItems;
   parentItems.reserve(partitionNames.size());
@@ -58,7 +60,7 @@ void InstalledModsModel::populate(const WeiduLog* logFile)
     QList<QStandardItem*> children = getChildList(*i);
     parent->appendColumn(children);
   }
-  lookup = populateLookup(data);
+  lookup = populateLookup(logFile->data);
 }
 
 QList<QList<WeiduLogComponent>> InstalledModsModel::partitionData(const QList<WeiduLogComponent>& data) const
@@ -118,4 +120,42 @@ QHash<QString, QList<int>> InstalledModsModel::populateLookup(const QList<WeiduL
 QList<int> InstalledModsModel::installedComponents(const QString& tp2) const
 {
   return lookup.value(tp2.toUpper());
+}
+
+WeiduLog* InstalledModsModel::selectedComponents(const QModelIndexList& indexList) const
+{
+  // Accumulate the component indices by block (parent index)
+  QHash<int, QList<int>> acc;
+  foreach (QModelIndex index, indexList) {
+    QModelIndex parent = index.parent();
+    if (parent.isValid()) {
+      int i = parent.row();
+      QList<int> block = acc.value(i);
+      block.append(index.row());
+      acc.insert(i, block);
+    }
+  }
+  // Sort the component indices
+  QHash<int, QList<int>>::const_iterator i;
+  for (i = acc.constBegin(); i != acc.constEnd(); ++i) {
+    QList<int> list = i.value();
+    std::sort(list.begin(), list.end(), [](const int i, const int j) {
+        return i < j;
+      });
+    acc.insert(i.key(), list);
+  }
+  // Sort the mod indices
+  QList<int> modIndices = acc.keys();
+  std::sort(modIndices.begin(), modIndices.end(), [](const int i, const int j) {
+      return i < j;
+    });
+  // Build the result
+  QList<WeiduLogComponent> result;
+  foreach (int modIndex, modIndices) {
+    QList<WeiduLogComponent> components = partitionedData[modIndex];
+    foreach (int componentIndex, acc.value(modIndex)) {
+      result.append(components.at(componentIndex));
+    }
+  }
+  return new WeiduLog(0, result);
 }

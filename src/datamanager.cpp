@@ -192,3 +192,11 @@ void DataManager::enqueueComponents(WeiduLog* componentList)
     inQueuedModsModel->add(componentList);
   } else { delete componentList; }
 }
+
+void DataManager::uninstallComponents(WeiduLog* componentList)
+{
+  if (!componentList->isEmpty()) {
+    componentList->setParent(outQueuedModsModel);
+    outQueuedModsModel->add(componentList);
+  } else { delete componentList; }
+}

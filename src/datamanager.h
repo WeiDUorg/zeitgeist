@@ -37,6 +37,7 @@ private slots:
   void gameRemoved(const QString& path);
   void confirmedWeiduPath(const QString& path);
   void enqueueComponents(WeiduLog* componentList);
+  void uninstallComponents(WeiduLog* componentList);
 
 public slots:
   void identifyCurrentGame() const;

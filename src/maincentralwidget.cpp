@@ -34,6 +34,7 @@
 #include <QItemSelection>
 #include <QItemSelectionModel>
 #include <QModelIndex>
+#include <QModelIndexList>
 #include <QList>
 #include <QDebug>
 
@@ -163,6 +164,11 @@ void MainCentralWidget::handleInstalledSelection(const QItemSelection& selected,
     selection.merge(deselectParent, QItemSelectionModel::Select);
     selectionModel->select(selection, QItemSelectionModel::Deselect);
   }
+  if (selectionModel->hasSelection()) {
+    emit installedModSelected(true);
+  } else {
+    emit installedModSelected(false);
+  }
 }
 
 void MainCentralWidget::handleAvailableSelection(const QItemSelection& selected,
@@ -180,4 +186,11 @@ void MainCentralWidget::getSelectedAvailableMod()
   QModelIndex index = availableModsView->selectionModel()->currentIndex();
   QString tp2 = coordinator->dataManager->availableModsModel->data(index, Qt::DisplayRole).toString();
   emit selectedAvailableMod(tp2);
+}
+
+void MainCentralWidget::getSelectedInstalledMods()
+{
+  QModelIndexList list = installedModsView->selectionModel()->selectedIndexes();
+  WeiduLog* componentList = coordinator->dataManager->installedModsModel->selectedComponents(list);
+  emit selectedInstalledMods(componentList);
 }

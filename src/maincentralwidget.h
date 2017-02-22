@@ -4,15 +4,16 @@
 #include <QList>
 #include <QWidget>
 
+class AvailableModsModel;
+class Coordinator;
+class InstalledModsModel;
+class WeiduLog;
+
 class QItemSelection;
 class QItemSelectionModel;
 class QListView;
 class QModelIndex;
 class QTreeView;
-
-class Coordinator;
-class AvailableModsModel;
-class InstalledModsModel;
 
 class MainCentralWidget : public QWidget
 {
@@ -25,10 +26,13 @@ private slots:
   void handleInstalledSelection(const QItemSelection& selected, const QItemSelection& deselected);
   void handleAvailableSelection(const QItemSelection& selected, const QItemSelection&);
   void getSelectedAvailableMod();
+  void getSelectedInstalledMods();
 
 signals:
   void availableModSelected(const bool& selected);
   void selectedAvailableMod(const QString&);
+  void installedModSelected(const bool& selected);
+  void selectedInstalledMods(WeiduLog* selection);
 
 private:
   const Coordinator* coordinator;
