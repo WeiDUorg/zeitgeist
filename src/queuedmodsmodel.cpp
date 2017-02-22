@@ -47,8 +47,20 @@ void QueuedModsModel::add(WeiduLog* componentList)
     foreach (WeiduLogComponent comp, list) {
       childItems.append(new QStandardItem(comp.comment));
     }
-    parentItem->appendColumn(childItems);
-    parentList << parentItem;
+    bool merged = false;
+    if (!parentList.isEmpty()) {
+      QStandardItem* lastParent = parentList.last();
+      if (parentItem->text().compare(lastParent->text()) == 0) {
+        QList<QStandardItem*> children = lastParent->takeColumn(0);
+        children.append(childItems);
+        lastParent->appendColumn(children);
+        merged = true;
+      }
+    }
+    if (!merged) {
+      parentItem->appendColumn(childItems);
+      parentList << parentItem;
+    }
   }
   appendColumn(parentList);
 }
