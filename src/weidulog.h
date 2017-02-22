@@ -14,7 +14,7 @@ struct WeiduLogComponent
   QString comment;
 };
 
-class WeiduLog : QObject // There's also inheriting QList<WeiduLogComponent>, but it seems bothersome
+class WeiduLog : public QObject // There's also inheriting QList<WeiduLogComponent>, but it seems bothersome
 {
   Q_OBJECT
 
