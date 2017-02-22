@@ -21,7 +21,7 @@
 
 #include <QString>
 
-WeiduLog::WeiduLog(QObject* parent, QList<WeiduLogComponent> data) :
+WeiduLog::WeiduLog(QObject* parent, QList<QList<WeiduLogComponent>> data) :
   QObject(parent), data(data)
 {
 
@@ -34,4 +34,14 @@ bool WeiduLog::isEmpty() {
 QString WeiduLog::logPath(const QString& gamePath)
 {
   return gamePath + "/weidu.log";
+}
+
+QList<QString> WeiduLog::getPartitionNames() const
+{
+  QList<QString> names;
+  names.reserve(data.size());
+  foreach (QList<WeiduLogComponent> list, data) {
+    names.append(list.first().modName);
+  }
+  return names;
 }

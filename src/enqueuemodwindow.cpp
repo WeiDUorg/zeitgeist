@@ -129,31 +129,37 @@ void EnqueueModWindow::componentList(WeiduLog* list)
   QList<int> installedComponents =
     coordinator->dataManager->installedModsModel->installedComponents(tp2);
   int count = 0;
-  foreach (WeiduLogComponent comp, list->data) {
-    // Can't preserve index because setHidden() does nothing
-    if (!installedComponents.contains(comp.number)) {
-      QListWidgetItem* item = new QListWidgetItem;
-      item->setText(comp.comment);
-      item->setCheckState(Qt::Unchecked);
-      componentListView->insertItem(count, item);
-      count++;
+  foreach (QList<WeiduLogComponent> compList, list->data) {
+    foreach (WeiduLogComponent comp, compList) {
+      // Can't preserve index because setHidden() does nothing
+      if (!installedComponents.contains(comp.number)) {
+        QListWidgetItem* item = new QListWidgetItem;
+        item->setText(comp.comment);
+        item->setCheckState(Qt::Unchecked);
+        componentListView->insertItem(count, item);
+        count++;
+      }
     }
   }
 }
 
 void EnqueueModWindow::handleProceed() {
   // QListWidget preclude doing this by index (vide supra)
-  QList<WeiduLogComponent> list;
+  QList<WeiduLogComponent> acc;
   for (int i = 0; i < componentListView->count(); i++) {
     QListWidgetItem* item = componentListView->item(i);
     if (item->checkState()) {
-      foreach (WeiduLogComponent comp, currentComponentList->data) {
-        if (comp.comment.compare(item->text()) == 0) {
-          list.append(comp);
+      foreach (QList<WeiduLogComponent> list, currentComponentList->data) {
+        foreach (WeiduLogComponent comp, list) {
+          if (comp.comment.compare(item->text()) == 0) {
+            acc.append(comp);
+          }
         }
       }
     }
   }
-  emit enqueueComponents(new WeiduLog(0, list));
+  QList<QList<WeiduLogComponent>> result;
+  result << acc;
+  emit enqueueComponents(new WeiduLog(0, result));
   this->close();
 }

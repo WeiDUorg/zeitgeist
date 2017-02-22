@@ -45,8 +45,8 @@ void InstalledModsModel::clear()
 void InstalledModsModel::populate(const WeiduLog* logFile)
 {
   clear();
-  partitionedData = partitionData(logFile->data);
-  QList<QString> partitionNames = getPartitionNames(partitionedData);
+  partitionedData = logFile->data;
+  QList<QString> partitionNames = logFile->getPartitionNames();
   QList<QStandardItem*> parentItems;
   parentItems.reserve(partitionNames.size());
   foreach (QString name, partitionNames) {
@@ -60,40 +60,7 @@ void InstalledModsModel::populate(const WeiduLog* logFile)
     QList<QStandardItem*> children = getChildList(*i);
     parent->appendColumn(children);
   }
-  lookup = populateLookup(logFile->data);
-}
-
-QList<QList<WeiduLogComponent>> InstalledModsModel::partitionData(const QList<WeiduLogComponent>& data) const
-{
-  QList<QList<WeiduLogComponent>> partitionedData;
-  QList<WeiduLogComponent>::const_iterator i;
-  for (i = data.constBegin(); i != data.constEnd(); ++i) {
-    int distance = i - data.constBegin();
-    QList<WeiduLogComponent> block = getContiguousBlock(data, distance, (*i).modName);
-    partitionedData.append(block);
-    i += (block.length() - 1);
-  }
-  return partitionedData;
-}
-
-QList<WeiduLogComponent> InstalledModsModel::getContiguousBlock(const QList<WeiduLogComponent>& data, const int& index, const QString& name) const
-{
-  QList<WeiduLogComponent> block;
-  QList<WeiduLogComponent>::const_iterator i;
-  for (i = data.constBegin() + index; i != data.constEnd() && (*i).modName.compare(name) == 0; ++i) {
-    block.append(*i);
-  }
-  return block;
-}
-
-QList<QString> InstalledModsModel::getPartitionNames(const QList<QList<WeiduLogComponent>>& partitionedData) const
-{
-  QList<QString> names;
-  names.reserve(partitionedData.size());
-  foreach (QList<WeiduLogComponent> list, partitionedData) {
-    names.append(list.first().modName);
-  }
-  return names;
+  lookup = populateLookup();
 }
 
 QList<QStandardItem*> InstalledModsModel::getChildList(const QList<WeiduLogComponent>& componentList) const
@@ -105,14 +72,16 @@ QList<QStandardItem*> InstalledModsModel::getChildList(const QList<WeiduLogCompo
   return childList;
 }
 
-QHash<QString, QList<int>> InstalledModsModel::populateLookup(const QList<WeiduLogComponent>& data)
+QHash<QString, QList<int>> InstalledModsModel::populateLookup()
 {
   QHash<QString, QList<int>> result;
-  foreach (const WeiduLogComponent c, data) {
-    QString modName = c.modName.toUpper();
-    QList<int> components = result.value(modName);
-    components.append(c.number);
-    result.insert(modName, components);
+  foreach (const QList<WeiduLogComponent> data, partitionedData) {
+    foreach (const WeiduLogComponent c, data) {
+      QString modName = c.modName.toUpper();
+      QList<int> components = result.value(modName);
+      components.append(c.number);
+      result.insert(modName, components);
+    }
   }
   return result;
 }
@@ -150,12 +119,14 @@ WeiduLog* InstalledModsModel::selectedComponents(const QModelIndexList& indexLis
       return i < j;
     });
   // Build the result
-  QList<WeiduLogComponent> result;
+  QList<QList<WeiduLogComponent>> result;
   foreach (int modIndex, modIndices) {
     QList<WeiduLogComponent> components = partitionedData[modIndex];
+    QList<WeiduLogComponent> innerResult;
     foreach (int componentIndex, acc.value(modIndex)) {
-      result.append(components.at(componentIndex));
+      innerResult.append(components.at(componentIndex));
     }
+    result.append(innerResult);
   }
   return new WeiduLog(0, result);
 }

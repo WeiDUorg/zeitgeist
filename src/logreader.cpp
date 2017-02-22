@@ -30,7 +30,7 @@
 WeiduLog* LogReader::read(QObject* parent, const QString& path)
 {
   qDebug() << "Attempting to read log" << path;
-  QList<WeiduLogComponent> dummy;
+  QList<QList<WeiduLogComponent>> dummy;
   QFile file(path);
   if (file.exists()) {
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -57,7 +57,7 @@ WeiduLog* LogReader::read(QObject* parent, const QByteArray& data)
       list << comp;
     }
   }
-  return new WeiduLog(parent, list);
+  return new WeiduLog(parent, partitionData(list));
 }
 
 bool LogReader::validLine(const QString& line)
@@ -95,4 +95,28 @@ WeiduLogComponent LogReader::parseLine(const QString& line)
   const WeiduLogComponent c = {tp2Name, languageNumber.toInt(),
                                componentNumber.toInt(), comment};
   return c;
+}
+
+QList<QList<WeiduLogComponent>> LogReader::partitionData(const QList<WeiduLogComponent>& data)
+{
+  QList<QList<WeiduLogComponent>> partitionedData;
+  QList<WeiduLogComponent>::const_iterator i;
+  for (i = data.constBegin(); i != data.constEnd(); ++i) {
+    int distance = i - data.constBegin();
+    QList<WeiduLogComponent> block = getContiguousBlock(data, distance, (*i).modName);
+    partitionedData.append(block);
+    i += (block.length() - 1);
+  }
+  return partitionedData;
+}
+
+QList<WeiduLogComponent> LogReader::getContiguousBlock(const QList<WeiduLogComponent>& data,
+                                                       const int& index, const QString& name)
+{
+  QList<WeiduLogComponent> block;
+  QList<WeiduLogComponent>::const_iterator i;
+  for (i = data.constBegin() + index; i != data.constEnd() && (*i).modName.compare(name) == 0; ++i) {
+    block.append(*i);
+  }
+  return block;
 }

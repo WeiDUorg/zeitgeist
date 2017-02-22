@@ -19,11 +19,12 @@ class WeiduLog : public QObject // There's also inheriting QList<WeiduLogCompone
   Q_OBJECT
 
 public:
-  WeiduLog(QObject* parent, QList<WeiduLogComponent> data);
+  WeiduLog(QObject* parent, QList<QList<WeiduLogComponent>> data);
   bool isEmpty();
-  const QList<WeiduLogComponent> data;
+  const QList<QList<WeiduLogComponent>> data;
 
   static QString logPath(const QString& gamePath);
+  QList<QString> getPartitionNames() const;
 };
 
 #endif // WEIDULOG_H

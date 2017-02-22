@@ -40,13 +40,15 @@ void QueuedModsModel::clear()
 void QueuedModsModel::add(WeiduLog* componentList)
 {
   queue.append(componentList);
-  QStandardItem* parentItem = new QStandardItem(componentList->data[0].modName);
-  QList<QStandardItem*> childItems;
-  foreach (WeiduLogComponent comp, componentList->data) {
-    childItems.append(new QStandardItem(comp.comment));
+  QList<QStandardItem*> parentList = takeColumn(0);
+  foreach (QList<WeiduLogComponent> list, componentList->data) {
+    QStandardItem* parentItem = new QStandardItem(list.first().modName);
+    QList<QStandardItem*> childItems;
+    foreach (WeiduLogComponent comp, list) {
+      childItems.append(new QStandardItem(comp.comment));
+    }
+    parentItem->appendColumn(childItems);
+    parentList << parentItem;
   }
-  parentItem->appendColumn(childItems);
-  QList<QStandardItem*> parent;
-  parent << parentItem;
-  appendColumn(parent);
+  appendColumn(parentList);
 }

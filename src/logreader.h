@@ -2,9 +2,10 @@
 #define LOGREADER_H
 
 #include <QObject>
+#include <QList>
 
 class WeiduLog;
-class WeiduLogComponent;
+struct WeiduLogComponent;
 
 class QByteArray;
 class QString;
@@ -25,6 +26,9 @@ public:
 private:
   static bool validLine(const QString& line);
   static WeiduLogComponent parseLine(const QString& line);
+  static QList<QList<WeiduLogComponent>> partitionData(const QList<WeiduLogComponent>& data);
+  static QList<WeiduLogComponent> getContiguousBlock(const QList<WeiduLogComponent>& data,
+                                              const int& index, const QString& name);
 };
 
 #endif // LOGREADER_H

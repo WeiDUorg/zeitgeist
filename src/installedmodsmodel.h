@@ -32,11 +32,8 @@ private slots:
   void clear();
 
 private:
-  QList<QList<WeiduLogComponent>> partitionData(const QList<WeiduLogComponent>& data) const;
-  QList<WeiduLogComponent> getContiguousBlock(const QList<WeiduLogComponent>& data, const int& index, const QString& name) const;
-  QList<QString> getPartitionNames(const QList<QList<WeiduLogComponent>>& partitionedData) const;
   QList<QStandardItem*> getChildList(const QList<WeiduLogComponent>& componentList) const;
-  QHash<QString, QList<int>> populateLookup(const QList<WeiduLogComponent>& data);
+  QHash<QString, QList<int>> populateLookup();
 
   QList<QList<WeiduLogComponent>> partitionedData;
   QHash<QString, QList<int>> lookup;
