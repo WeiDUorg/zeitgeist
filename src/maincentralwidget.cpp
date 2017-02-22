@@ -194,3 +194,8 @@ void MainCentralWidget::getSelectedInstalledMods()
   WeiduLog* componentList = coordinator->dataManager->installedModsModel->selectedComponents(list);
   emit selectedInstalledMods(componentList);
 }
+
+void MainCentralWidget::clearInstalledSelection()
+{
+  installedModsView->clearSelection();
+}

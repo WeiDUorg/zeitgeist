@@ -121,6 +121,8 @@ void MainWindow::createActions()
   gameUninstallAction->setEnabled(false);
   connect(gameUninstallAction, SIGNAL(triggered()),
           mainCentralWidget, SLOT(getSelectedInstalledMods()));
+  connect(gameUninstallAction, SIGNAL(triggered()),
+          mainCentralWidget, SLOT(clearInstalledSelection()));
   connect(mainCentralWidget, SIGNAL(selectedInstalledMods(WeiduLog*)),
           dataManager, SLOT(uninstallComponents(WeiduLog*)));
 

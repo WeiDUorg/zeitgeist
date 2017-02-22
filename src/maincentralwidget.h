@@ -27,6 +27,7 @@ private slots:
   void handleAvailableSelection(const QItemSelection& selected, const QItemSelection&);
   void getSelectedAvailableMod();
   void getSelectedInstalledMods();
+  void clearInstalledSelection();
 
 signals:
   void availableModSelected(const bool& selected);
