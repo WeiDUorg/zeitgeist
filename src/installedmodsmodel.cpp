@@ -22,7 +22,6 @@
 
 #include <QList>
 #include <QListIterator>
-#include <QSet>
 #include <QStandardItem>
 #include <QString>
 #include <QtDebug>
