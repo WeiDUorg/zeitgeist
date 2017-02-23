@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QStandardItem>
 #include <QString>
+#include <QVariant>
 
 QueuedModsModel::QueuedModsModel(QObject* parent) :
   QStandardItemModel(parent)
@@ -39,13 +40,15 @@ void QueuedModsModel::clear()
 
 void QueuedModsModel::add(WeiduLog* componentList)
 {
-  queue.append(componentList);
   QList<QStandardItem*> parentList = takeColumn(0);
   foreach (QList<WeiduLogComponent> list, componentList->data) {
     QStandardItem* parentItem = new QStandardItem(list.first().modName);
     QList<QStandardItem*> childItems;
     foreach (WeiduLogComponent comp, list) {
-      childItems.append(new QStandardItem(comp.comment));
+      QStandardItem* child = new QStandardItem(comp.comment);
+      child->setData(QVariant(comp.number), Number);
+      child->setData(QVariant(comp.language), Language);
+      childItems.append(child);
     }
     bool merged = false;
     if (!parentList.isEmpty()) {
@@ -68,12 +71,13 @@ void QueuedModsModel::add(WeiduLog* componentList)
 QList<int> QueuedModsModel::queuedComponents(const QString& tp2) const
 {
   QList<int> result;
-  foreach (WeiduLog* modList, queue) {
-    foreach (QList<WeiduLogComponent> compList, modList->data) {
-      foreach (WeiduLogComponent comp, compList) {
-        if (comp.modName.toUpper().compare(tp2, Qt::CaseInsensitive) == 0) {
-          result.append(comp.number);
-        }
+  QStandardItem* root = invisibleRootItem();
+  for (int i = 0; i < root->rowCount(); ++i) {
+    QStandardItem* block = root->child(i);
+    if (block->text().compare(tp2, Qt::CaseInsensitive) == 0) {
+      for (int j = 0; j < block->rowCount(); ++j) {
+        QStandardItem* component = block->child(j);
+        result.append(component->data(Number).toInt());
       }
     }
   }

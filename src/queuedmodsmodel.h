@@ -6,6 +6,8 @@
 
 class WeiduLog;
 
+enum dataRole { Number = Qt::UserRole + 1, Language };
+
 class QueuedModsModel : public QStandardItemModel
 {
   Q_OBJECT
@@ -22,7 +24,6 @@ private slots:
   void clear();
 
 private:
-  QList<WeiduLog*> queue;
 };
 
 #endif // QUEUEDMODSMODEL_H
