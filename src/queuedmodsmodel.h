@@ -12,6 +12,7 @@ class QueuedModsModel : public QStandardItemModel
 
 public:
   QueuedModsModel(QObject* parent);
+  QList<int> queuedComponents(const QString& tp2) const;
 
 public slots:
   void add(WeiduLog* componentList);

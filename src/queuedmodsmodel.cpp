@@ -64,3 +64,18 @@ void QueuedModsModel::add(WeiduLog* componentList)
   }
   appendColumn(parentList);
 }
+
+QList<int> QueuedModsModel::queuedComponents(const QString& tp2) const
+{
+  QList<int> result;
+  foreach (WeiduLog* modList, queue) {
+    foreach (QList<WeiduLogComponent> compList, modList->data) {
+      foreach (WeiduLogComponent comp, compList) {
+        if (comp.modName.toUpper().compare(tp2, Qt::CaseInsensitive) == 0) {
+          result.append(comp.number);
+        }
+      }
+    }
+  }
+  return result;
+}
