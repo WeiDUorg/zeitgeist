@@ -50,5 +50,5 @@ QStringList WeiduExtractor::languageList(const QByteArray& message)
 
 WeiduLog* WeiduExtractor::componentList(const QByteArray& message)
 {
-  return LogReader::read(0, message);
+  return LogReader::read(0, message); // WeiduLog intended for EnqueueModWindow
 }

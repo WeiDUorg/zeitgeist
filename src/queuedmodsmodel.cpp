@@ -147,5 +147,5 @@ WeiduLog* QueuedModsModel::queue()
       result << compList;
     }
   }
-  return new WeiduLog(0, result);
+  return new WeiduLog(0, result); // WeiduLog intended for Controller
 }

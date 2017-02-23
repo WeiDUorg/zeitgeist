@@ -129,5 +129,5 @@ WeiduLog* InstalledModsModel::selectedComponents(const QModelIndexList& indexLis
     }
     result.append(innerResult);
   }
-  return new WeiduLog(0, result);
+  return new WeiduLog(0, result); // WeiduLog intended for QueuedModsModel
 }
