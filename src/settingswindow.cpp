@@ -74,7 +74,7 @@ SettingsWindow::SettingsWindow(QWidget* parent, const Coordinator* coordinator) 
 void SettingsWindow::browseForWeidu()
 {
   QString filter = WEIDU_EXECUTABLE;
-  QString* selectedFilter = 0;
+  QString* selectedFilter = nullptr;
   QString path = QFileDialog::getOpenFileName(this, locateWeidu,
                                               QDir::homePath(),
                                               filter, selectedFilter,

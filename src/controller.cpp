@@ -24,7 +24,7 @@
 
 Controller::Controller(QObject* parent) :
   QObject(parent), workerThread(new QThread(this)), currentWeidu(QString()),
-  weiduManager(0)
+  weiduManager(nullptr)
 {
 
 }
@@ -67,7 +67,7 @@ void Controller::setupWeidu(const QString& weiduPath)
   } else {
     qDebug() << "File" << weiduPath << "is not executable";
     delete weiduManager;
-    weiduManager = 0;
+    weiduManager = nullptr;
     currentWeidu = QString();
     currentWeiduVersion = 0;
     emit weiduFailedValidation(weiduPath);
@@ -84,7 +84,7 @@ void Controller::quacks(const bool& quacks)
   } else {
     qDebug() << "File fails to quack like a WeiDU";
     emit terminateManager();
-    weiduManager = 0;
+    weiduManager = nullptr;
     QString tmpPath = currentWeidu;
     currentWeidu = QString();
     currentWeiduVersion = 0;

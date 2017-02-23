@@ -12,7 +12,7 @@ class Coordinator : public QObject
   Q_OBJECT
 
 public:
-  Coordinator(QObject* parent = 0);
+  Coordinator(QObject* parent = nullptr);
 
   const DataManager* dataManager;
   const Controller* controller;

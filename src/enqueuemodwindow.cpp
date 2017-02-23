@@ -43,7 +43,7 @@
 EnqueueModWindow::EnqueueModWindow(QWidget* parent,
                                    const Coordinator* coordinator,
                                    const QString& tp2) :
-  QWidget(parent), coordinator(coordinator), tp2(tp2), currentComponentList(0)
+  QWidget(parent), coordinator(coordinator), tp2(tp2), currentComponentList(nullptr)
 {
   resize (640, 520); // Should ideally assume a size depending on parent's size
   setWindowFlags(Qt::Dialog);

@@ -37,7 +37,7 @@ MainWindow::MainWindow(Coordinator* coordinator) :
   coordinator(coordinator),
   dataManager(coordinator->dataManager),
   mainCentralWidget(new MainCentralWidget(this, coordinator)),
-  gameWindow(0), settingsWindow(0)
+  gameWindow(nullptr), settingsWindow(nullptr)
 {
   setCentralWidget(mainCentralWidget);
   connect(mainCentralWidget, SIGNAL(availableModSelected(const bool&)),

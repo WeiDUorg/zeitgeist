@@ -38,7 +38,7 @@ DataManager::DataManager(QObject* parent) :
   installedModsModel(new InstalledModsModel(this)),
   inQueuedModsModel(new QueuedModsModel(this)),
   outQueuedModsModel(new QueuedModsModel(this)),
-  settings(new QSettings("zeitgeist", "zeitgeist", this)), currentGame(0)
+  settings(new QSettings("zeitgeist", "zeitgeist", this)), currentGame(nullptr)
 {
   connect(gameListModel, SIGNAL(gameRemoved(const QString&)),
           this, SLOT(gameRemoved(const QString&)));
@@ -178,7 +178,7 @@ void DataManager::gameRemoved(const QString& path)
 {
   if (currentGame && path == currentGame->path) {
     delete currentGame;
-    currentGame = 0;
+    currentGame = nullptr;
     emit clearModels();
     emit identityOfCurrentGame(QString());
   }
