@@ -24,10 +24,13 @@ public:
   MainCentralWidget(QWidget* parent, const Coordinator* coordinator);
 
 private slots:
-  void handleInstalledSelection(const QItemSelection& selected, const QItemSelection& deselected);
+  void handleInstalledSelection(const QItemSelection& selected,
+                                const QItemSelection& deselected);
   void handleAvailableSelection(const QItemSelection& selected, const QItemSelection&);
-  void handleInstallQueueSelection(const QItemSelection& selected, const QItemSelection&);
-  void handleUninstallQueueSelection(const QItemSelection& selected, const QItemSelection&);
+  void handleInstallQueueSelection(const QItemSelection& selected,
+                                   const QItemSelection& deselected);
+  void handleUninstallQueueSelection(const QItemSelection& selected,
+                                     const QItemSelection& deselected);
   void getSelectedAvailableMod();
   void getSelectedInstalledMods();
   void clearInstalledSelection();
@@ -44,6 +47,9 @@ signals:
   void selectedUninstallQueuedMods(const QModelIndexList& indices);
 
 private:
+  void handleTreeSelection(QItemSelectionModel* selectionModel,
+                           const QItemSelection& selected,
+                           const QItemSelection& deselected);
   const Coordinator* coordinator;
   QListView* availableModsView;
   QTreeView* installQueueView;

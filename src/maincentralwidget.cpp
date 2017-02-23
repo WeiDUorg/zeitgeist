@@ -56,7 +56,7 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
   installQueueView->setSelectionMode(QAbstractItemView::MultiSelection);
   installQueueView->setEditTriggers(QAbstractItemView::NoEditTriggers);
   connect(installQueueView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
-                                                    const QItemSelection&)),
+                                                                      const QItemSelection&)),
           this, SLOT(handleInstallQueueSelection(const QItemSelection&,
                                                  const QItemSelection&)));
 
@@ -66,7 +66,7 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
   uninstallQueueView->setSelectionMode(QAbstractItemView::MultiSelection);
   uninstallQueueView->setEditTriggers(QAbstractItemView::NoEditTriggers);
   connect(uninstallQueueView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
-                                                      const QItemSelection&)),
+                                                                        const QItemSelection&)),
           this, SLOT(handleUninstallQueueSelection(const QItemSelection&,
                                                    const QItemSelection&)));
 
@@ -104,10 +104,9 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
   setLayout(layout);
 }
 
-void MainCentralWidget::handleInstalledSelection(const QItemSelection& selected,
-                                                 const QItemSelection& deselected)
+void MainCentralWidget::handleTreeSelection(QItemSelectionModel* selectionModel, const QItemSelection& selected,
+                         const QItemSelection& deselected)
 {
-  QItemSelectionModel* selectionModel = installedModsView->selectionModel();
   QModelIndex current = selectionModel->currentIndex();
   QItemSelection selectChildren;
   QItemSelection selectParent;
@@ -118,13 +117,11 @@ void MainCentralWidget::handleInstalledSelection(const QItemSelection& selected,
       const QAbstractItemModel* model = index.model();
       if (model->hasChildren(index)) {
         if (current.isValid() && current == index) {
-          qDebug() << "Selecting all children";
           selectChildren.select(model->index(0, 0, index),
                                 model->index(model->rowCount(index) - 1, 0, index));
         }
       } else {
         if (!selectionModel->isSelected(index.parent())) {
-          qDebug() << "Selecting the parent";
           QModelIndex parent = index.parent();
           selectParent.select(parent, parent);
         }
@@ -135,13 +132,11 @@ void MainCentralWidget::handleInstalledSelection(const QItemSelection& selected,
     if (index.isValid()) {
       const QAbstractItemModel* model = index.model();
       if (model->hasChildren(index)) {
-        qDebug() << "Deselecting all children";
         QItemSelection selection;
         deselectChildren.select(model->index(0, 0, index),
                                 model->index(model->rowCount(index) - 1, 0, index));
       } else {
         if (selectionModel->isSelected(index.parent())) {
-          qDebug() << "Maybe deselecting the parent";
           QModelIndex parent = index.parent();
           bool deselect = true;
           for (int i = 0; i < model->rowCount(parent); ++i) {
@@ -152,7 +147,6 @@ void MainCentralWidget::handleInstalledSelection(const QItemSelection& selected,
             }
           }
           if (deselect) {
-            qDebug() << "Deselecting the parent";
             deselectParent.select(parent, parent);
           }
         }
@@ -161,18 +155,23 @@ void MainCentralWidget::handleInstalledSelection(const QItemSelection& selected,
   }
   QItemSelection selection;
   if (!selected.isEmpty()) {
-    qDebug() << "Merging selection";
     selection.merge(selectChildren, QItemSelectionModel::Select);
     selection.merge(selectParent, QItemSelectionModel::Select);
     selectionModel->select(selection, QItemSelectionModel::Select);
   } else
   if (!deselected.isEmpty()) {
-    qDebug() << "Merging deselection";
     selection.merge(deselectChildren, QItemSelectionModel::Select);
     selection.merge(deselectParent, QItemSelectionModel::Select);
     selectionModel->select(selection, QItemSelectionModel::Deselect);
   }
-  if (selectionModel->hasSelection()) {
+}
+
+void MainCentralWidget::handleInstalledSelection(const QItemSelection& selected,
+                                                 const QItemSelection& deselected)
+{
+  QItemSelectionModel* model = installedModsView->selectionModel();
+  handleTreeSelection(model, selected, deselected);
+  if (model->hasSelection()) {
     emit installedModSelected(true);
   } else {
     emit installedModSelected(false);
@@ -190,9 +189,11 @@ void MainCentralWidget::handleAvailableSelection(const QItemSelection& selected,
 }
 
 void MainCentralWidget::handleInstallQueueSelection(const QItemSelection& selected,
-                                                    const QItemSelection&)
+                                                    const QItemSelection& deselected)
 {
-  if (!selected.isEmpty()) {
+  QItemSelectionModel* model = installQueueView->selectionModel();
+  handleTreeSelection(model, selected, deselected);
+  if (model->hasSelection()) {
     emit queuedModSelected(true);
   } else if (!uninstallQueueView->selectionModel()->hasSelection()) {
     emit queuedModSelected(false);
@@ -200,9 +201,11 @@ void MainCentralWidget::handleInstallQueueSelection(const QItemSelection& select
 }
 
 void MainCentralWidget::handleUninstallQueueSelection(const QItemSelection& selected,
-                                                      const QItemSelection&)
+                                                      const QItemSelection& deselected)
 {
-  if (!selected.isEmpty()) {
+  QItemSelectionModel* model = uninstallQueueView->selectionModel();
+  handleTreeSelection(model, selected, deselected);
+  if (model->hasSelection()) {
     emit queuedModSelected(true);
   } else if (!installQueueView->selectionModel()->hasSelection()) {
     emit queuedModSelected(false);
