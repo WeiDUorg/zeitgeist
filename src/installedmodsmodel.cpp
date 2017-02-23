@@ -44,6 +44,7 @@ void InstalledModsModel::clear()
 
 void InstalledModsModel::populate(const WeiduLog* logFile)
 {
+  /* logFile belongs to currentGame */
   clear();
   partitionedData = logFile->data;
   QList<QString> partitionNames = logFile->getPartitionNames();

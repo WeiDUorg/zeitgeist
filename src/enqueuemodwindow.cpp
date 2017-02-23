@@ -125,14 +125,20 @@ void EnqueueModWindow::handleLanguageSelection(const QItemSelection& selected, c
 
 void EnqueueModWindow::componentList(WeiduLog* list)
 {
-  currentComponentList = list;
+  /* list originally comes from WeiduManager (other thread)
+   * make a copy in this thread and delete the old object
+   * new object is parented by this object
+   */
+  currentComponentList = new WeiduLog(this, list->data);
+  delete list;
+  list = nullptr;
   componentListView->clear();
   QList<int> installedComponents =
     coordinator->dataManager->installedModsModel->installedComponents(tp2);
   QList<int> queuedComponents =
     coordinator->dataManager->inQueuedModsModel->queuedComponents(tp2);
   int count = 0;
-  foreach (QList<WeiduLogComponent> compList, list->data) {
+  foreach (QList<WeiduLogComponent> compList, currentComponentList->data) {
     foreach (WeiduLogComponent comp, compList) {
       // Can't preserve index because setHidden() does nothing
       if (!installedComponents.contains(comp.number) &&

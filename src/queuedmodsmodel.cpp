@@ -69,6 +69,7 @@ void QueuedModsModel::add(WeiduLog* componentList)
     }
   }
   appendColumn(parentList);
+  delete componentList;
 }
 
 QList<int> QueuedModsModel::queuedComponents(const QString& tp2) const
