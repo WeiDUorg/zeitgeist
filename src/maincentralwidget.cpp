@@ -237,6 +237,11 @@ void MainCentralWidget::getSelectedAvailableMod()
   emit selectedAvailableMod(tp2);
 }
 
+void MainCentralWidget::clearAvailableSelection()
+{
+  availableModsView->clearSelection();
+}
+
 /* Ditto */
 void MainCentralWidget::getSelectedInstalledMods()
 {

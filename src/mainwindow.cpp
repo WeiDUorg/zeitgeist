@@ -110,6 +110,8 @@ void MainWindow::createActions()
   gameInstallAction->setEnabled(false);
   connect(gameInstallAction, SIGNAL(triggered()),
           mainCentralWidget, SLOT(getSelectedAvailableMod()));
+  connect(gameInstallAction, SIGNAL(triggered()),
+          mainCentralWidget, SLOT(clearAvailableSelection()));
   connect(mainCentralWidget, SIGNAL(selectedAvailableMod(const QString&)),
           this, SLOT(createEnqueueModWindow(const QString&)));
 

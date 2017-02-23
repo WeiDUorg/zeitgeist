@@ -33,6 +33,7 @@ private slots:
                                      const QItemSelection& deselected);
   void handleQueueAvailability(const QModelIndex&, int, int);
   void getSelectedAvailableMod();
+  void clearAvailableSelection();
   void getSelectedInstalledMods();
   void clearInstalledSelection();
   void getSelectedQueuedMods();
