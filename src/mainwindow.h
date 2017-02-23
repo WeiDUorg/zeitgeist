@@ -33,6 +33,7 @@ private slots:
   void availableModSelected(const bool& selected);
   void installedModSelected(const bool& selected);
   void queuedModSelected(const bool& selected);
+  void queuedModAvailable(const bool& available);
 
 signals:
   void saveState();
@@ -70,6 +71,9 @@ private:
   const QString gameUninstallActionEnabled = tr("Queue a mod for uninstallation");
   const QString gameUninstallActionDisabled =
     tr("You must select an installed mod before you can uninstall it");
+  const QString gameProcessActionEnabled = tr("Process queue");
+  const QString gameProcessActionDisabled =
+    tr("There is no queue to process");
 };
 
 #endif // MAINWINDOW_H

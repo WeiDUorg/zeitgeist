@@ -41,6 +41,7 @@ private slots:
   void uninstallComponents(WeiduLog* componentList);
   void unqueueInstallComponents(const QModelIndexList& indices);
   void unqueueUninstallComponents(const QModelIndexList& indices);
+  void processQueues();
 
 public slots:
   void identifyCurrentGame() const;

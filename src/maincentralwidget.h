@@ -31,6 +31,7 @@ private slots:
                                    const QItemSelection& deselected);
   void handleUninstallQueueSelection(const QItemSelection& selected,
                                      const QItemSelection& deselected);
+  void handleQueueAvailability(const QModelIndex&, int, int);
   void getSelectedAvailableMod();
   void getSelectedInstalledMods();
   void clearInstalledSelection();
@@ -45,6 +46,7 @@ signals:
   void queuedModSelected(const bool& selected);
   void selectedInstallQueuedMods(const QModelIndexList& indices);
   void selectedUninstallQueuedMods(const QModelIndexList& indices);
+  void queuedModAvailable(const bool& available);
 
 private:
   void handleTreeSelection(QItemSelectionModel* selectionModel,

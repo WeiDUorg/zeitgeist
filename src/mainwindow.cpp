@@ -46,6 +46,8 @@ MainWindow::MainWindow(Coordinator* coordinator) :
           this, SLOT(installedModSelected(const bool&)));
   connect(mainCentralWidget, SIGNAL(queuedModSelected(const bool&)),
           this, SLOT(queuedModSelected(const bool&)));
+  connect(mainCentralWidget, SIGNAL(queuedModAvailable(const bool&)),
+          this, SLOT(queuedModAvailable(const bool&)));
 
   createActions();
 
@@ -140,9 +142,16 @@ void MainWindow::createActions()
   connect(mainCentralWidget, SIGNAL(selectedInstalledMods(WeiduLog*)),
           dataManager, SLOT(uninstallComponents(WeiduLog*)));
 
-  /* Should only be enabled while there is some data in queueView */
+  /* Should only be enabled while there are mods in either queue
+   * Default: disabled (no mods in either queue)
+   */
   gameProcessAction = new QAction(tr("Process"), this);
-  gameProcessAction->setStatusTip(tr("Process queue"));
+  gameProcessAction->setStatusTip(gameProcessActionDisabled);
+  gameProcessAction->setEnabled(false);
+  connect(gameProcessAction, SIGNAL(triggered()),
+          dataManager, SLOT(processQueues()));
+  connect(gameProcessAction, SIGNAL(triggered()),
+          mainCentralWidget, SLOT(clearQueuedSelection()));
 }
 
 void MainWindow::createMenus()
@@ -233,5 +242,16 @@ void MainWindow::queuedModSelected(const bool& selected)
   } else {
     gameUnqueueAction->setEnabled(false);
     gameUnqueueAction->setStatusTip(gameUnqueueActionDisabled);
+  }
+}
+
+void MainWindow::queuedModAvailable(const bool& available)
+{
+  if (available) {
+    gameProcessAction->setEnabled(true);
+    gameProcessAction->setStatusTip(gameProcessActionEnabled);
+  } else {
+    gameProcessAction->setEnabled(false);
+    gameProcessAction->setStatusTip(gameProcessActionDisabled);
   }
 }

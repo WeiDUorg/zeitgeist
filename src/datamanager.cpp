@@ -214,3 +214,8 @@ void DataManager::unqueueUninstallComponents(const QModelIndexList& indices)
     outQueuedModsModel->unqueue(indices);
   }
 }
+
+void DataManager::processQueues()
+{
+  qDebug() << "Processing queues";
+}

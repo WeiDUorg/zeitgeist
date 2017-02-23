@@ -59,6 +59,10 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
                                                                       const QItemSelection&)),
           this, SLOT(handleInstallQueueSelection(const QItemSelection&,
                                                  const QItemSelection&)));
+  connect(installQueueView->model(), SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+          this, SLOT(handleQueueAvailability(const QModelIndex, int, int)));
+  connect(installQueueView->model(), SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
+          this, SLOT(handleQueueAvailability(const QModelIndex, int, int)));
 
   uninstallQueueView = new QTreeView(this);
   uninstallQueueView->setModel(coordinator->dataManager->outQueuedModsModel);
@@ -69,6 +73,10 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
                                                                         const QItemSelection&)),
           this, SLOT(handleUninstallQueueSelection(const QItemSelection&,
                                                    const QItemSelection&)));
+  connect(uninstallQueueView->model(), SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+          this, SLOT(handleQueueAvailability(const QModelIndex, int, int)));
+  connect(uninstallQueueView->model(), SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
+          this, SLOT(handleQueueAvailability(const QModelIndex, int, int)));
 
   installedModsView = new QTreeView(this);
   installedModsView->setHeaderHidden(true);
@@ -210,6 +218,12 @@ void MainCentralWidget::handleUninstallQueueSelection(const QItemSelection& sele
   } else if (!installQueueView->selectionModel()->hasSelection()) {
     emit queuedModSelected(false);
   }
+}
+
+void MainCentralWidget::handleQueueAvailability(const QModelIndex&, int, int)
+{
+  emit queuedModAvailable((installQueueView->model()->rowCount() > 0) ||
+                          (uninstallQueueView->model()->rowCount() > 0));
 }
 
 /*
