@@ -20,7 +20,10 @@
 #include "queuedmodsmodel.h"
 #include "weidulog.h"
 
+#include <algorithm>
 #include <QDebug>
+#include <QHash>
+#include <QModelIndex>
 #include <QStandardItem>
 #include <QString>
 #include <QVariant>
@@ -86,5 +89,42 @@ QList<int> QueuedModsModel::queuedComponents(const QString& tp2) const
 
 void QueuedModsModel::unqueue(const QModelIndexList& indices)
 {
-  qDebug() << "Unqueuing" << indices;
+  // Accumulate component indices by block (parent index)
+  QHash<int, QList<int>> acc;
+  foreach (QModelIndex index, indices) {
+    QModelIndex parent = index.parent();
+    if (parent.isValid()) {
+      int i = parent.row();
+      QList<int> block = acc.value(i);
+      block.append(index.row());
+      acc.insert(i, block);
+    }
+  }
+  // Sort and reverse the component indices
+  QHash<int, QList<int>>::const_iterator i;
+  for (i = acc.constBegin(); i != acc.constEnd(); ++i) {
+    QList<int> list = i.value();
+    std::sort(list.begin(), list.end(), [](const int i, const int j) {
+        return i < j;
+      });
+    std::reverse(list.begin(), list.end());
+    acc.insert(i.key(), list);
+  }
+  // Sort and reverse the mod indices
+  QList<int> modIndices = acc.keys();
+  std::sort(modIndices.begin(), modIndices.end(), [](const int i, const int j) {
+      return i < j;
+    });
+  std::reverse(modIndices.begin(), modIndices.end());
+  // Remove the rows (in the reverse order to not invalidate any indices)
+  foreach(int modIndex, modIndices) {
+    QList<int> compList = acc.value(modIndex);
+    QModelIndex parent = index(modIndex, 0);
+    foreach (int compIndex, compList) {
+      removeRow(compIndex, parent);
+    }
+    if (!parent.child(0, 0).isValid()) {
+      removeRow(modIndex);
+    }
+  }
 }
