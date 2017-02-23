@@ -38,7 +38,7 @@ InstalledModsModel::InstalledModsModel(QObject* parent) :
 void InstalledModsModel::clear()
 {
   beginResetModel();
-  removeColumns(0, columnCount());
+  removeRows(0, rowCount());
   endResetModel();
 }
 
