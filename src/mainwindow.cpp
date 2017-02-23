@@ -44,6 +44,8 @@ MainWindow::MainWindow(Coordinator* coordinator) :
           this, SLOT(availableModSelected(const bool&)));
   connect(mainCentralWidget, SIGNAL(installedModSelected(const bool&)),
           this, SLOT(installedModSelected(const bool&)));
+  connect(mainCentralWidget, SIGNAL(queuedModSelected(const bool&)),
+          this, SLOT(queuedModSelected(const bool&)));
 
   createActions();
 
@@ -109,9 +111,21 @@ void MainWindow::createActions()
   connect(mainCentralWidget, SIGNAL(selectedAvailableMod(const QString&)),
           this, SLOT(createEnqueueModWindow(const QString&)));
 
-  /* Should only be enabled while there is a selection in queueView */
+  /* Should only be enabled while there are selections in installQueueView
+   * or uninstallQueueView
+   * Default: disabled (no queued mod is selected)
+   */
   gameUnqueueAction = new QAction(tr("Unqueue"), this);
-  gameUnqueueAction->setStatusTip(tr("Remove a mod from the queue"));
+  gameUnqueueAction->setStatusTip(gameUnqueueActionDisabled);
+  gameUnqueueAction->setEnabled(false);
+  connect(gameUnqueueAction, SIGNAL(triggered()),
+          mainCentralWidget, SLOT(getSelectedQueuedMods()));
+  connect(gameUnqueueAction, SIGNAL(triggered()),
+          mainCentralWidget, SLOT(clearQueuedSelection()));
+  connect(mainCentralWidget, SIGNAL(selectedInstallQueuedMods(const QModelIndexList&)),
+          dataManager, SLOT(unqueueInstallComponents(const QModelIndexList&)));
+  connect(mainCentralWidget, SIGNAL(selectedUninstallQueuedMods(const QModelIndexList&)),
+          dataManager, SLOT(unqueueUninstallComponents(const QModelIndexList&)));
 
   /* Should only be enabled while there is a selection in installedModsView
    * Default: disabled (no installed mod is selected)
@@ -208,5 +222,16 @@ void MainWindow::installedModSelected(const bool& selected)
   } else {
     gameUninstallAction->setEnabled(false);
     gameUninstallAction->setStatusTip(gameUninstallActionDisabled);
+  }
+}
+
+void MainWindow::queuedModSelected(const bool& selected)
+{
+  if (selected) {
+    gameUnqueueAction->setEnabled(true);
+    gameUnqueueAction->setStatusTip(gameUnqueueActionEnabled);
+  } else {
+    gameUnqueueAction->setEnabled(false);
+    gameUnqueueAction->setStatusTip(gameUnqueueActionDisabled);
   }
 }

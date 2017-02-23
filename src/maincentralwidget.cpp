@@ -55,12 +55,20 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
   installQueueView->setHeaderHidden(true);
   installQueueView->setSelectionMode(QAbstractItemView::MultiSelection);
   installQueueView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  connect(installQueueView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
+                                                    const QItemSelection&)),
+          this, SLOT(handleInstallQueueSelection(const QItemSelection&,
+                                                 const QItemSelection&)));
 
   uninstallQueueView = new QTreeView(this);
   uninstallQueueView->setModel(coordinator->dataManager->outQueuedModsModel);
   uninstallQueueView->setHeaderHidden(true);
   uninstallQueueView->setSelectionMode(QAbstractItemView::MultiSelection);
   uninstallQueueView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  connect(uninstallQueueView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
+                                                      const QItemSelection&)),
+          this, SLOT(handleUninstallQueueSelection(const QItemSelection&,
+                                                   const QItemSelection&)));
 
   installedModsView = new QTreeView(this);
   installedModsView->setHeaderHidden(true);
@@ -181,6 +189,30 @@ void MainCentralWidget::handleAvailableSelection(const QItemSelection& selected,
   }
 }
 
+void MainCentralWidget::handleInstallQueueSelection(const QItemSelection& selected,
+                                                    const QItemSelection&)
+{
+  if (!selected.isEmpty()) {
+    emit queuedModSelected(true);
+  } else if (!uninstallQueueView->selectionModel()->hasSelection()) {
+    emit queuedModSelected(false);
+  }
+}
+
+void MainCentralWidget::handleUninstallQueueSelection(const QItemSelection& selected,
+                                                      const QItemSelection&)
+{
+  if (!selected.isEmpty()) {
+    emit queuedModSelected(true);
+  } else if (!installQueueView->selectionModel()->hasSelection()) {
+    emit queuedModSelected(false);
+  }
+}
+
+/*
+ * Should really have sent a signal to dataManager with the index and
+ * let things be handled there
+ */
 void MainCentralWidget::getSelectedAvailableMod()
 {
   QModelIndex index = availableModsView->selectionModel()->currentIndex();
@@ -188,6 +220,7 @@ void MainCentralWidget::getSelectedAvailableMod()
   emit selectedAvailableMod(tp2);
 }
 
+/* Ditto */
 void MainCentralWidget::getSelectedInstalledMods()
 {
   QModelIndexList list = installedModsView->selectionModel()->selectedIndexes();
@@ -198,4 +231,18 @@ void MainCentralWidget::getSelectedInstalledMods()
 void MainCentralWidget::clearInstalledSelection()
 {
   installedModsView->clearSelection();
+}
+
+void MainCentralWidget::getSelectedQueuedMods()
+{
+  QModelIndexList installQueue = installQueueView->selectionModel()->selectedIndexes();
+  QModelIndexList uninstallQueue = uninstallQueueView->selectionModel()->selectedIndexes();
+  emit selectedInstallQueuedMods(installQueue);
+  emit selectedUninstallQueuedMods(uninstallQueue);
+}
+
+void MainCentralWidget::clearQueuedSelection()
+{
+  installQueueView->clearSelection();
+  uninstallQueueView->clearSelection();
 }

@@ -2,6 +2,7 @@
 #define MAINCENTRALWIDGET_H
 
 #include <QList>
+#include <QModelIndex>
 #include <QWidget>
 
 class AvailableModsModel;
@@ -25,15 +26,22 @@ public:
 private slots:
   void handleInstalledSelection(const QItemSelection& selected, const QItemSelection& deselected);
   void handleAvailableSelection(const QItemSelection& selected, const QItemSelection&);
+  void handleInstallQueueSelection(const QItemSelection& selected, const QItemSelection&);
+  void handleUninstallQueueSelection(const QItemSelection& selected, const QItemSelection&);
   void getSelectedAvailableMod();
   void getSelectedInstalledMods();
   void clearInstalledSelection();
+  void getSelectedQueuedMods();
+  void clearQueuedSelection();
 
 signals:
   void availableModSelected(const bool& selected);
   void selectedAvailableMod(const QString&);
   void installedModSelected(const bool& selected);
   void selectedInstalledMods(WeiduLog* selection);
+  void queuedModSelected(const bool& selected);
+  void selectedInstallQueuedMods(const QModelIndexList& indices);
+  void selectedUninstallQueuedMods(const QModelIndexList& indices);
 
 private:
   const Coordinator* coordinator;

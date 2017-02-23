@@ -32,6 +32,7 @@ private slots:
   void updateNameOfCurrentGame(const QString& name);
   void availableModSelected(const bool& selected);
   void installedModSelected(const bool& selected);
+  void queuedModSelected(const bool& selected);
 
 signals:
   void saveState();
@@ -63,6 +64,9 @@ private:
   const QString gameInstallActionEnabled = tr("Queue a mod for installation");
   const QString gameInstallActionDisabled =
     tr("You must select an available mod before you can enqueue it");
+  const QString gameUnqueueActionEnabled = tr("Remove components from the queue");
+  const QString gameUnqueueActionDisabled =
+    tr("You can only unqueue selected components in the queues");
   const QString gameUninstallActionEnabled = tr("Queue a mod for uninstallation");
   const QString gameUninstallActionDisabled =
     tr("You must select an installed mod before you can uninstall it");

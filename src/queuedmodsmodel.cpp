@@ -79,3 +79,8 @@ QList<int> QueuedModsModel::queuedComponents(const QString& tp2) const
   }
   return result;
 }
+
+void QueuedModsModel::unqueue(const QModelIndexList& indices)
+{
+  qDebug() << "Unqueuing" << indices;
+}

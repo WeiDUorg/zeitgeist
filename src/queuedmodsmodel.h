@@ -16,6 +16,7 @@ public:
 
 public slots:
   void add(WeiduLog* componentList);
+  void unqueue(const QModelIndexList& indices);
 
 private slots:
   void clear();

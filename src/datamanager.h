@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QHash>
+#include <QModelIndex>
 
 class AvailableModsModel;
 class Game;
@@ -38,6 +39,8 @@ private slots:
   void confirmedWeiduPath(const QString& path);
   void enqueueComponents(WeiduLog* componentList);
   void uninstallComponents(WeiduLog* componentList);
+  void unqueueInstallComponents(const QModelIndexList& indices);
+  void unqueueUninstallComponents(const QModelIndexList& indices);
 
 public slots:
   void identifyCurrentGame() const;

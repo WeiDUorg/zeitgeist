@@ -200,3 +200,17 @@ void DataManager::uninstallComponents(WeiduLog* componentList)
     outQueuedModsModel->add(componentList);
   } else { delete componentList; }
 }
+
+void DataManager::unqueueInstallComponents(const QModelIndexList& indices)
+{
+  if (!indices.isEmpty()) {
+    inQueuedModsModel->unqueue(indices);
+  }
+}
+
+void DataManager::unqueueUninstallComponents(const QModelIndexList& indices)
+{
+  if (!indices.isEmpty()) {
+    outQueuedModsModel->unqueue(indices);
+  }
+}
