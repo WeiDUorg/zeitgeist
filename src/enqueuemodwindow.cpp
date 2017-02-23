@@ -163,7 +163,9 @@ void EnqueueModWindow::handleProceed() {
     }
   }
   QList<QList<WeiduLogComponent>> result;
-  result << acc;
+  if (!acc.isEmpty()) {
+    result << acc;
+  }
   emit enqueueComponents(new WeiduLog(0, result));
   this->close();
 }

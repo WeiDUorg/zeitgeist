@@ -28,7 +28,14 @@ WeiduLog::WeiduLog(QObject* parent, QList<QList<WeiduLogComponent>> data) :
 }
 
 bool WeiduLog::isEmpty() {
-  return data.isEmpty();
+  if (!data.isEmpty()) {
+    foreach (QList<WeiduLogComponent> compList, data) {
+      if (compList.isEmpty()) {
+        return true;
+      }
+    }
+  } else { return true; }
+  return false;
 }
 
 QString WeiduLog::logPath(const QString& gamePath)
