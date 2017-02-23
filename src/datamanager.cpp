@@ -50,6 +50,10 @@ DataManager::DataManager(QObject* parent) :
           inQueuedModsModel, SLOT(clear()));
   connect(this, SIGNAL(clearModels()),
           outQueuedModsModel, SLOT(clear()));
+  connect(this, SIGNAL(clearQueues()),
+          inQueuedModsModel, SLOT(clear()));
+  connect(this, SIGNAL(clearQueues()),
+          outQueuedModsModel, SLOT(clear()));
 }
 
 void DataManager::saveState()
@@ -215,7 +219,10 @@ void DataManager::unqueueUninstallComponents(const QModelIndexList& indices)
   }
 }
 
-void DataManager::processQueues()
+void DataManager::getQueues()
 {
-  qDebug() << "Processing queues";
+  WeiduLog* installQueue = inQueuedModsModel->queue();
+  WeiduLog* uninstallQueue = outQueuedModsModel->queue();
+  emit clearQueues();
+  emit processQueues(installQueue, uninstallQueue);
 }

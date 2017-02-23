@@ -41,7 +41,7 @@ private slots:
   void uninstallComponents(WeiduLog* componentList);
   void unqueueInstallComponents(const QModelIndexList& indices);
   void unqueueUninstallComponents(const QModelIndexList& indices);
-  void processQueues();
+  void getQueues();
 
 public slots:
   void identifyCurrentGame() const;
@@ -51,6 +51,9 @@ signals:
   void clearModels();
   void newGamePath(const QString& gamePath) const;
   void restoreWeidu(const QString& weiduPath) const;
+  void clearQueues();
+  void processQueues(WeiduLog* installQueue,
+                     WeiduLog* uninstallQueue);
 
 private:
   void saveGameList();

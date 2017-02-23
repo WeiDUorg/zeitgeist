@@ -151,7 +151,7 @@ void MainWindow::createActions()
   gameProcessAction->setStatusTip(gameProcessActionDisabled);
   gameProcessAction->setEnabled(false);
   connect(gameProcessAction, SIGNAL(triggered()),
-          dataManager, SLOT(processQueues()));
+          dataManager, SLOT(getQueues()));
   connect(gameProcessAction, SIGNAL(triggered()),
           mainCentralWidget, SLOT(clearQueuedSelection()));
 }

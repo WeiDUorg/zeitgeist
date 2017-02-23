@@ -37,7 +37,7 @@ QueuedModsModel::QueuedModsModel(QObject* parent) :
 void QueuedModsModel::clear()
 {
   beginResetModel();
-  removeColumns(0, columnCount());
+  removeRows(0, rowCount());
   endResetModel();
 }
 
@@ -127,4 +127,24 @@ void QueuedModsModel::unqueue(const QModelIndexList& indices)
       removeRow(modIndex);
     }
   }
+}
+
+WeiduLog* QueuedModsModel::queue()
+{
+  QList<QList<WeiduLogComponent>> result;
+  QStandardItem* root = invisibleRootItem();
+  for (int i = 0; i < root->rowCount(); ++i) {
+    QStandardItem* mod = root->child(i);
+    QList<WeiduLogComponent> compList;
+    for (int j = 0; j < mod->rowCount(); ++j) {
+      QStandardItem* comp = mod->child(j);
+      WeiduLogComponent c = { mod->text(), comp->data(Number).toInt(),
+                              comp->data(Language).toInt(), comp->text() };
+      compList << c;
+    }
+    if (!compList.isEmpty()) {
+      result << compList;
+    }
+  }
+  return new WeiduLog(0, result);
 }
