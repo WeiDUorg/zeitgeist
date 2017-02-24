@@ -17,21 +17,22 @@
  *
  */
 
-#include "weiduextractor.h"
 #include "weidumanager.h"
+#include "weiduextractor.h"
 
 #include <QByteArray>
 #include <QDebug>
 #include <QFile>
 //#include <QFileDevice> // Qt 5
 #include <QFileInfo>
-#include <QProcess>
 #include <QStringList>
 
 WeiduManager::WeiduManager(const QString& weiduPath) :
   weiduPath(weiduPath), gamePath(QString()), process(new QProcess(this))
 {
-
+  connect(process, SIGNAL(finished(int, QProcess::ExitStatus)),
+          this, SLOT(endTask(int, QProcess::ExitStatus)));
+  // should also monitor the error() signal
 }
 
 bool WeiduManager::executable() const
@@ -58,22 +59,206 @@ void WeiduManager::terminateManager()
   deleteLater();
 }
 
-void WeiduManager::newGamePath(const QString& path)
+void WeiduManager::doTask()
 {
-  qDebug() << "WeiduManager got game path" << path;
-  if (!path.isEmpty()) {
-    gamePath = path;
-    process->setWorkingDirectory(path);
+  if (!busy && !taskQueue.isEmpty()) {
+    busy = true;
+    const Task task = taskQueue.head();
+    switch (task) {
+    case Task::VERSION:
+      qDebug() << "Starting VERSION task";
+      versionTask();
+      break;
+
+    case Task::GAMEPATH:
+      qDebug() << "Starting GAMEPATH task";
+      qDebug() << "Setting working directory to" << gamePath;
+      process->setWorkingDirectory(gamePath);
+      endTask(0, QProcess::NormalExit); // I'm not so sure about this
+      break;
+
+    case Task::LISTLANGUAGES:
+      qDebug() << "Starting LISTLANGUAGES task";
+      listLanguagesTask();
+      break;
+
+    case Task::LISTCOMPONENTS:
+      qDebug() << "Starting LISTCOMPONENTS task";
+      listComponentsTask();
+      break;
+
+    case Task::INSTALL:
+      qDebug() << "Starting INSTALL task";
+      //installTask();
+      endTask(0, QProcess::NormalExit); // tmp
+      break;
+
+    case Task::UNINSTALL:
+      qDebug() << "Starting UNINSTALL task";
+      //uninstallTask();
+      endTask(0, QProcess::NormalExit); // tmp
+      break;
+    }
   }
 }
 
-/* This implementation is not suitable for arguments which:
-     may run WeiDU interactively
-     may cause WeiDU to run for a long time (due to the time-out)
-   We need to hook stdout up to a widget and allow for writing to stdin
-   But perhaps only for select arguments, so it would be an alternate way
-   of running WeiDU, rather than a replacement one
-*/
+void WeiduManager::startTask(const QStringList& arguments)
+{
+  process->start(weiduPath, arguments);
+  bool started = process->waitForStarted();
+  if (!started) {
+    qDebug() << "Process did not start";
+    // escalate
+    // don't forget to dequeue
+    // don't forget to unset busy
+  }
+}
+
+void WeiduManager::endTask(int exitCode, QProcess::ExitStatus exitStatus)
+{
+  if (!exitCode == 0 || !exitStatus == 0) {
+    qDebug() << "Abnormal return values from process";
+    // escalate
+    // don't forget to dequeue
+    // don't forget to unset busy
+  }
+  /* Only do stuff if we started stuff (finished() is emitted by quack()) */
+  if (busy) {
+    const Task task = taskQueue.head();
+    switch (task) {
+    case Task::VERSION:
+      qDebug() << "Ending VERSION task";
+      dequeue();
+      emit versionSignal(WeiduExtractor::version(readStdOut()));
+      break;
+
+    case Task::GAMEPATH:
+      qDebug() << "Ending GAMEPATH task";
+      dequeue();
+      break;
+
+    case Task::LISTLANGUAGES:
+      qDebug() << "Ending LISTLANGUAGES task";
+      dequeue();
+      emit languageList(WeiduExtractor::languageList(readStdOut()));
+      break;
+
+    case Task::LISTCOMPONENTS:
+      qDebug() << "Ending LISTCOMPONENTS task";
+      dequeue();
+      emit componentList(WeiduExtractor::componentList(readStdOut()));
+      break;
+
+    case Task::INSTALL:
+      qDebug() << "Ending INSTALL task";
+      dequeue();
+      break;
+
+    case Task::UNINSTALL:
+      qDebug() << "Ending UNINSTALL task";
+      dequeue();
+      break;
+    }
+  }
+  busy = false;
+  doTask();
+}
+
+void WeiduManager::dequeue()
+{
+  const Task task = taskQueue.dequeue();
+  switch (task) {
+  case Task::VERSION:
+    qDebug() << "Dequeuing VERSION task";
+    break;
+
+  case Task::GAMEPATH:
+    qDebug() << "Dequeuing GAMEPATH task";
+    gamePathQueue.dequeue();
+    break;
+
+  case Task::LISTLANGUAGES:
+    qDebug() << "Dequeuing LISTLANGUAGES task";
+    listLanguagesQueue.dequeue();
+    break;
+
+  case Task::LISTCOMPONENTS:
+    qDebug() << "Dequeuing LISTCOMPONENTS task";
+    listComponentsQueue.dequeue();
+    break;
+
+  case Task::INSTALL:
+    qDebug() << "Dequeuing INSTALL task";
+    installQueue.dequeue();
+    break;
+
+  case Task::UNINSTALL:
+    qDebug() << "Dequeueing UNINSTALL task";
+    uninstallQueue.dequeue();
+    break;
+  }
+}
+
+QByteArray WeiduManager::readStdOut()
+{
+  return process->readAllStandardOutput();
+}
+
+void WeiduManager::enqueue(Task task, QQueue<QString>& queue, QString string)
+{
+  taskQueue.enqueue(task);
+  queue.enqueue(string);
+}
+
+void WeiduManager::enqueue(Task task, QQueue<QPair<QString, int>>& queue, QPair<QString, int> tuple)
+{
+  taskQueue.enqueue(task);
+  queue.enqueue(tuple);
+}
+
+void WeiduManager::enqueue(Task task, QQueue<QList<WeiduLogComponent>>& queue, WeiduLog* modList)
+{
+  if (!modList->isEmpty()) {
+    foreach (QList<WeiduLogComponent> mod, modList->data) {
+      if (!mod.isEmpty()) {
+        taskQueue.enqueue(task);
+        queue.enqueue(mod);
+      }
+    }
+  }
+  delete modList;
+  modList = nullptr;
+}
+
+void WeiduManager::versionTask()
+{
+  qDebug() << "Attempting to get version";
+  QStringList arguments;
+  arguments << "--version";
+  startTask(arguments);
+}
+
+void WeiduManager::listLanguagesTask()
+{
+  QString tp2 = listLanguagesQueue.head();
+  qDebug() << "Attempting to list languages in" << tp2;
+  QStringList arguments;
+  arguments << "--list-languages" << tp2;
+  startTask(arguments);
+}
+
+void WeiduManager::listComponentsTask()
+{
+  QPair<QString, int> tuple = listComponentsQueue.head();
+  QString tp2 = tuple.first;
+  int index = tuple.second;
+  qDebug() << "Attempting to list components in" << tp2 << "for language" << index;
+  QStringList arguments;
+  arguments << "--list-components" << tp2 << QString::number(index);
+  startTask(arguments);
+}
+
+/* Not for general use */
 QByteArray WeiduManager::run(const QStringList& arguments)
 {
   process->start(weiduPath, arguments);
@@ -83,27 +268,48 @@ QByteArray WeiduManager::run(const QStringList& arguments)
 
 void WeiduManager::version()
 {
-  qDebug() << "Attempting to get version";
-  QStringList arguments;
-  arguments << "--version";
-  QByteArray message = run(arguments);
-  emit versionSignal(WeiduExtractor::version(message));
+  qDebug() << "Enqueuing VERSION task";
+  taskQueue.enqueue(Task::VERSION);
+  doTask();
+}
+
+void WeiduManager::newGamePath(const QString& path)
+{
+  qDebug() << "WeiduManager got game path" << path;
+  if (!path.isEmpty()) {
+    gamePath = path;
+    enqueue(Task::GAMEPATH, gamePathQueue, gamePath);
+    doTask();
+  }
 }
 
 void WeiduManager::getLanguageList(const QString& tp2)
 {
-  qDebug() << "Attempting to list languages in" << tp2;
-  QStringList arguments;
-  arguments << "--list-languages" << tp2;
-  QByteArray message = run(arguments);
-  emit languageList(WeiduExtractor::languageList(message));
+  qDebug() << "Enqueuing LISTLANGUAGES task";
+  enqueue(Task::LISTLANGUAGES, listLanguagesQueue, tp2);
+  doTask();
 }
 
 void WeiduManager::getComponentList(const QString& tp2, const int& index)
 {
-  qDebug() << "Attempting to list components in" << tp2 << "for language" << index;
-  QStringList arguments;
-  arguments << "--list-components" << tp2 << QString::number(index);
-  QByteArray message = run(arguments);
-  emit componentList(WeiduExtractor::componentList(message));
+  qDebug() << "Enqueuing LISTCOMPONENTS task";
+  QPair<QString, int> tuple;
+  tuple.first = tp2;
+  tuple.second = index;
+  enqueue(Task::LISTCOMPONENTS, listComponentsQueue, tuple);
+  doTask();
+}
+
+void WeiduManager::install(WeiduLog* modList)
+{
+  qDebug() << "Enqueuing INSTALL task(s)";
+  enqueue(Task::INSTALL, installQueue, modList);
+  doTask();
+}
+
+void WeiduManager::uninstall(WeiduLog* modList)
+{
+  qDebug() << "Enqueuing UNINSTALL task(s)";
+  enqueue(Task::UNINSTALL, uninstallQueue, modList);
+  doTask();
 }

@@ -1,9 +1,14 @@
 #ifndef WEIDUMANAGER_H
 #define WEIDUMANAGER_H
 
-#include <QObject>
+#include "weidulog.h"
 
-class WeiduLog;
+#include <QObject>
+#include <QPair>
+#include <QProcess>
+#include <QQueue>
+
+enum class Task { VERSION, GAMEPATH, LISTLANGUAGES, LISTCOMPONENTS, INSTALL, UNINSTALL };
 
 class QByteArray;
 class QProcess;
@@ -21,27 +26,54 @@ public:
 private slots:
   void terminateManager();
   void quack();
-  void newGamePath(const QString& path);
 
+  /* Slots to queue up tasks */
   void version();
+  void newGamePath(const QString& path);
   void getLanguageList(const QString& tp2);
   void getComponentList(const QString& tp2, const int& index);
+  void install(WeiduLog* modList);
+  void uninstall(WeiduLog* modList);
+
+  /* Not for external use, not even as a slot */
+  void endTask(int exitCode, QProcess::ExitStatus exitStatus);
 
 signals:
   void quacks(const bool& quacks);
-  /* Emitted when a game path is needed but this has none */
-  void requestGamePath();
 
+  /* Signals for communicating results */
   void versionSignal(const int& version);
   void languageList(const QStringList& languageList);
   void componentList(WeiduLog* componentList);
 
 private:
   QByteArray run(const QStringList& arguments);
+  void doTask();
+  void startTask(const QStringList& arguments);
+  void dequeue();
+  QByteArray readStdOut();
+  void enqueue(Task task, QQueue<QString>& queue, QString string);
+  void enqueue(Task task, QQueue<QPair<QString, int>>& queue, QPair<QString, int> tuple);
+  void enqueue(Task task, QQueue<QList<WeiduLogComponent>>& queue, WeiduLog* modList);
+
+  /* Tasks */
+  void versionTask();
+  void listLanguagesTask();
+  void listComponentsTask();
+  //void installTask();
+  //void uninstallTask();
 
   const QString weiduPath;
   QString gamePath;
   QProcess* process;
+
+  bool busy = false;
+  QQueue<Task> taskQueue;
+  QQueue<QString> gamePathQueue;
+  QQueue<QString> listLanguagesQueue;
+  QQueue<QPair<QString, int>> listComponentsQueue;
+  QQueue<QList<WeiduLogComponent>> installQueue;
+  QQueue<QList<WeiduLogComponent>> uninstallQueue;
 };
 
 #endif // WEIDUMANAGER_H
