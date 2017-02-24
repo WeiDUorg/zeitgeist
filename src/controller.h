@@ -2,6 +2,7 @@
 #define CONTROLLER_H
 
 #include <QObject>
+#include <QQueue>
 #include <QThread>
 
 class WeiduLog;
@@ -26,6 +27,7 @@ private slots:
   void weiduVersion(const int& version);
   void getLanguageList(const QString& tp2);
   void getComponentList(const QString& tp2, const int& index);
+  void processQueues(WeiduLog* install, WeiduLog* uninstall);
 
 signals:
   void weiduFailedValidation(const QString& weiduPath);
@@ -46,6 +48,8 @@ private:
   QString currentWeidu;
   int currentWeiduVersion;
   WeiduManager* weiduManager;
+  QQueue<WeiduLog*> installQueue;
+  QQueue<WeiduLog*> uninstallQueue;
 };
 
 #endif // CONTROLLER_H

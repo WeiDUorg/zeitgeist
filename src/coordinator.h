@@ -5,6 +5,7 @@
 
 class DataManager;
 class Controller;
+class WeiduLog;
 class WeiduManager;
 
 class Coordinator : public QObject

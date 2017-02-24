@@ -18,13 +18,14 @@
  */
 
 #include "controller.h"
+#include "weidulog.h"
 #include "weidumanager.h"
 
 #include <QDebug>
 
 Controller::Controller(QObject* parent) :
-  QObject(parent), workerThread(new QThread(this)), currentWeidu(QString()),
-  weiduManager(nullptr)
+  QObject(parent), workerThread(new QThread(this)),
+  currentWeidu(QString()), weiduManager(nullptr)
 {
 
 }
@@ -114,4 +115,15 @@ void Controller::getLanguageList(const QString& tp2)
 void Controller::getComponentList(const QString& tp2, const int& index)
 {
   emit weiduListComponents(tp2, index);
+}
+
+void Controller::processQueues(WeiduLog* install, WeiduLog* uninstall)
+{
+  /* WeiduLog objects are intended for WeiduManager */
+  if (!install->isEmpty()) {
+    installQueue.enqueue(install);
+  }
+  if (!uninstall->isEmpty()) {
+    uninstallQueue.enqueue(uninstall);
+  }
 }
