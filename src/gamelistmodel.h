@@ -4,13 +4,30 @@
 #include <QStandardItemModel>
 #include <QList>
 
+class QModelIndex;
 class QObject;
 class QString;
-class QModelIndex;
+class QStringList;
+
+enum class GameType {
+  BG,
+  BG2,
+  IWD,
+  IWD2,
+  PST,
+  BGEE,
+  BG2EE,
+  UNKNOWN
+};
+
+enum GameListMetaData {
+  GAME_TYPE = Qt::UserRole + 1
+};
 
 struct GameListDataEntry {
   QString name;
   QString path;
+  QString type;
 };
 
 class GameListModel : public QStandardItemModel
@@ -34,8 +51,11 @@ public:
 
 private:
   QString findKeyFileDirectory(const QString& path) const;
-  QString fingerprintGameDirectory(const QString& path) const;
+  GameType fingerprintGameDirectory(const QString& path) const;
+  QString prettyPrintGameType(const GameType& type) const;
   bool duplicate(const QString& path) const;
+  QString stringOfType(const GameType& type) const;
+  GameType typeOfString(const QString& name) const;
 };
 
 #endif // GAMELISTMODEL_H

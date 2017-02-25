@@ -19,14 +19,14 @@
 
 #include "gamelistmodel.h"
 
-#include <QString>
-#include <QStringList>
 #include <QDebug>
 #include <QDirIterator>
 #include <QDir>
 #include <QFileInfo>
 #include <QStandardItem>
-#include <QList>
+#include <QString>
+#include <QStringList>
+#include <QVariant>
 
 GameListModel::GameListModel(QObject* parent) : QStandardItemModel(parent)
 {
@@ -41,9 +41,12 @@ void GameListModel::addGame(const QString& path)
   if (gamePath.isEmpty()) {
     emit notAGameDirectory(path);
   } else if (!duplicate(gamePath)) {
-    QString gameType = fingerprintGameDirectory(gamePath);
+    GameType gameType = fingerprintGameDirectory(gamePath);
+    QString gameName = prettyPrintGameType(gameType);
     QList<QStandardItem*> row;
-    row << new QStandardItem(gameType) << new QStandardItem(gamePath);
+    QStandardItem* pathItem = new QStandardItem(gamePath);
+    pathItem->setData(QVariant(stringOfType(gameType)), GAME_TYPE);
+    row << new QStandardItem(gameName) << pathItem;
     appendRow(row);
   }
 }
@@ -76,8 +79,14 @@ void GameListModel::importData(const QList<GameListDataEntry>& dataList)
   int rows = dataList.length();
   for (int i = 0; i < rows; ++i) {
     GameListDataEntry row = dataList.at(i);
-    setItem(i, 0, new QStandardItem(row.name));
-    setItem(i, 1, new QStandardItem(row.path));
+    QDir dir(row.path);
+    if (dir.exists() && !findKeyFileDirectory(row.path).isEmpty()) {
+      GameType type = fingerprintGameDirectory(row.path);
+      QStandardItem* pathItem = new QStandardItem(row.path);
+      pathItem->setData(QVariant(stringOfType(type)), GAME_TYPE);
+      setItem(i, 0, new QStandardItem(row.name));
+      setItem(i, 1, pathItem);
+    }
   }
 }
 
@@ -132,25 +141,47 @@ QString GameListModel::findKeyFileDirectory(const QString& path) const
  * Determine the generic game type of a game directory by
  * looking for characteristic files.
  */
-QString GameListModel::fingerprintGameDirectory(const QString& path) const
+GameType GameListModel::fingerprintGameDirectory(const QString& path) const
 {
   QDir dir(path);
   if (dir.exists("bgmain2.exe")) {
-    return QString("Baldur's Gate");
+    return GameType::BG;
   } else if (dir.exists("baldur.exe") && dir.exists("bgconfig.exe")) {
-    return QString("Baldur's Gate II");
+    return GameType::BG2;
   } else if (dir.exists("idmain.exe")) {
-    return QString("Icewind Dale");
+    return GameType::IWD;
   } else if (dir.exists("iwd2.exe")) {
-    return QString("Icewind Dale II");
+    return GameType::IWD2;
   } else if (dir.exists("torment.exe")) {
-    return QString("Planescape: Torment");
+    return GameType::PST;
   } else if (dir.exists("movies/bgenter.wbm")) {
-    return QString("Baldur's Gate: Enhanced Edition");
+    return GameType::BGEE;
   } else if (dir.exists("movies/melissan.wbm")) {
-    return QString("Baldur's Gate II: Enhanced Edition");
+    return GameType::BG2EE;
   }
-  return QString("IE game");
+  return GameType::UNKNOWN;
+}
+
+QString GameListModel::prettyPrintGameType(const GameType& type) const
+{
+  switch (type) {
+  case GameType::BG:
+    return QString("Baldur's Gate");
+  case GameType::BG2:
+    return QString("Baldur's Gate II");
+  case GameType::IWD:
+    return QString("Icewind Dale");
+  case GameType::IWD2:
+    return QString("Icewind Dale II");
+  case GameType::PST:
+    return QString("Planescape: Torment");
+  case GameType::BGEE:
+    return QString("Baldur's Gate: Enhanced Edition");
+  case GameType::BG2EE:
+    return QString("Baldur's Gate II: Enhanced Edition");
+  default: // GameType::UNKNOWN
+    return QString("IE game");
+  }
 }
 
 bool GameListModel::duplicate(const QString& path) const
@@ -161,4 +192,48 @@ bool GameListModel::duplicate(const QString& path) const
     }
   }
   return false;
+}
+
+//QMetaEnum (4.8) seems to lack a typeOfString equivalent so I ain't bothering
+QString GameListModel::stringOfType(const GameType& type) const
+{
+  switch (type) {
+  case GameType::BG:
+    return "BG";
+  case GameType::BG2:
+    return "BG2";
+  case GameType::IWD:
+    return "IWD";
+  case GameType::IWD2:
+    return "IWD2";
+  case GameType::PST:
+    return "PST";
+  case GameType::BGEE:
+    return "BGEE";
+  case GameType::BG2EE:
+    return "BG2EE";
+  default: // GameType::UNKNOWN
+    return "UNKNOWN";
+  }
+}
+
+GameType GameListModel::typeOfString(const QString& name) const
+{
+  if (name == "BG") {
+    return GameType::BG;
+  } else if (name == "BG2") {
+    return GameType::BG2;
+  } else if (name == "IWD") {
+    return GameType::IWD;
+  } else if (name == "IWD2") {
+    return GameType::IWD2;
+  } else if (name == "PST") {
+    return GameType::PST;
+  } else if (name == "BGEE") {
+    return GameType::BGEE;
+  } else if (name == "BG2EE") {
+    return GameType::BG2EE;
+  } else {
+    return GameType::UNKNOWN;
+  }
 }
