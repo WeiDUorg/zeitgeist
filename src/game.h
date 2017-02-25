@@ -22,6 +22,9 @@ public:
 
   const QString path;
 
+public slots:
+  void reloadLog();
+
 private:
   QList<Mod*> getModList(const QString& path);
   QStringList getTopLevelMods(const QString& path) const;

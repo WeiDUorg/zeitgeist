@@ -45,6 +45,7 @@ signals:
   void versionSignal(const int& version);
   void languageList(const QStringList& languageList);
   void componentList(WeiduLog* componentList);
+  void modStackChanged();
 
 private:
   QByteArray run(const QStringList& arguments);
@@ -52,6 +53,7 @@ private:
   void startTask(const QStringList& arguments);
   void dequeue();
   QByteArray readStdOut();
+  QString debugFile(const QString& gamePath, const QString& modName);
   void enqueue(Task task, QQueue<QString>& queue, QString string);
   void enqueue(Task task, QQueue<QPair<QString, int>>& queue, QPair<QString, int> tuple);
   void enqueue(Task task, QQueue<QList<WeiduLogComponent>>& queue, WeiduLog* modList);
@@ -60,8 +62,8 @@ private:
   void versionTask();
   void listLanguagesTask();
   void listComponentsTask();
-  //void installTask();
-  //void uninstallTask();
+  void installTask();
+  void uninstallTask();
 
   const QString weiduPath;
   QString gamePath;

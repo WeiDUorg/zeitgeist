@@ -226,3 +226,9 @@ void DataManager::getQueues()
   emit clearQueues();
   emit processQueues(installQueue, uninstallQueue);
 }
+
+void DataManager::modStackChanged()
+{
+  currentGame->reloadLog();
+  installedModsModel->populate(currentGame->getInstalledMods());
+}

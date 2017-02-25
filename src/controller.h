@@ -2,7 +2,6 @@
 #define CONTROLLER_H
 
 #include <QObject>
-#include <QQueue>
 #include <QThread>
 
 class WeiduLog;
@@ -42,14 +41,15 @@ signals:
   void languageList(const QStringList& list);
   void weiduListComponents(const QString& tp2, const int& index);
   void componentList(WeiduLog* componentList);
+  void weiduInstall(WeiduLog* modList);
+  void weiduUninstall(WeiduLog* modList);
+  void modStackChanged();
 
 private:
   QThread* workerThread;
   QString currentWeidu;
   int currentWeiduVersion;
   WeiduManager* weiduManager;
-  QQueue<WeiduLog*> installQueue;
-  QQueue<WeiduLog*> uninstallQueue;
 };
 
 #endif // CONTROLLER_H

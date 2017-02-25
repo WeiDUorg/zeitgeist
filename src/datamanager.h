@@ -42,6 +42,7 @@ private slots:
   void unqueueInstallComponents(const QModelIndexList& indices);
   void unqueueUninstallComponents(const QModelIndexList& indices);
   void getQueues();
+  void modStackChanged();
 
 public slots:
   void identifyCurrentGame() const;

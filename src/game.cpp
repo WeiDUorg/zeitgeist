@@ -109,3 +109,8 @@ WeiduLog* Game::getInstalledMods() const
 {
   return installedMods;
 }
+
+void Game::reloadLog()
+{
+  installedMods = LogReader::read(this, WeiduLog::logPath(path));
+}

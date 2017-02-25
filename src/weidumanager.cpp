@@ -22,6 +22,7 @@
 
 #include <QByteArray>
 #include <QDebug>
+#include <QDir>
 #include <QFile>
 //#include <QFileDevice> // Qt 5
 #include <QFileInfo>
@@ -89,14 +90,12 @@ void WeiduManager::doTask()
 
     case Task::INSTALL:
       qDebug() << "Starting INSTALL task";
-      //installTask();
-      endTask(0, QProcess::NormalExit); // tmp
+      installTask();
       break;
 
     case Task::UNINSTALL:
       qDebug() << "Starting UNINSTALL task";
-      //uninstallTask();
-      endTask(0, QProcess::NormalExit); // tmp
+      uninstallTask();
       break;
     }
   }
@@ -118,6 +117,8 @@ void WeiduManager::endTask(int exitCode, QProcess::ExitStatus exitStatus)
 {
   if (!exitCode == 0 || !exitStatus == 0) {
     qDebug() << "Abnormal return values from process";
+    qDebug() << "Exit code:" << QString::number(exitCode) <<
+      "Exit status:" << QString::number(exitStatus);
     // escalate
     // don't forget to dequeue
     // don't forget to unset busy
@@ -152,11 +153,13 @@ void WeiduManager::endTask(int exitCode, QProcess::ExitStatus exitStatus)
     case Task::INSTALL:
       qDebug() << "Ending INSTALL task";
       dequeue();
+      emit modStackChanged();
       break;
 
     case Task::UNINSTALL:
       qDebug() << "Ending UNINSTALL task";
       dequeue();
+      emit modStackChanged();
       break;
     }
   }
@@ -202,6 +205,18 @@ void WeiduManager::dequeue()
 QByteArray WeiduManager::readStdOut()
 {
   return process->readAllStandardOutput();
+}
+
+QString WeiduManager::debugFile(const QString& gamePath, const QString& modName)
+{
+  if (!QFile::exists(gamePath + "/debugs")) {
+    QDir dir(gamePath);
+    dir.mkdir("debugs");
+  }
+  QFileInfo info(modName);
+  QString logLoc = "debugs/";
+  logLoc.append(info.baseName().toLower()).append(".debug");
+  return logLoc;
 }
 
 void WeiduManager::enqueue(Task task, QQueue<QString>& queue, QString string)
@@ -255,6 +270,39 @@ void WeiduManager::listComponentsTask()
   qDebug() << "Attempting to list components in" << tp2 << "for language" << index;
   QStringList arguments;
   arguments << "--list-components" << tp2 << QString::number(index);
+  startTask(arguments);
+}
+
+void WeiduManager::installTask()
+{
+  QList<WeiduLogComponent> mod = installQueue.head();
+  QString tp2 = mod[0].modName;
+  qDebug() << "Attempting to install components for" << tp2;
+  QStringList arguments;
+  arguments << tp2;
+  arguments << "--skip-at-view" << "--no-exit-pause";
+  arguments << "--log" << debugFile(gamePath, tp2);
+  arguments << "--language" << QString::number(mod[0].language);
+  arguments << "--force-install-list";
+  foreach (WeiduLogComponent comp, mod) {
+    arguments << QString::number(comp.number);
+  }
+  startTask(arguments);
+}
+
+void WeiduManager::uninstallTask()
+{
+  QList<WeiduLogComponent> mod = uninstallQueue.head();
+  QString tp2 = mod[0].modName;
+  qDebug() << "Attempting to uninstall components for" << tp2;
+  QStringList arguments;
+  arguments << tp2;
+  arguments << "--skip-at-view" << "--no-exit-pause";
+  arguments << "--log" << debugFile(gamePath, tp2);
+  arguments << "--force-uninstall-list";
+  foreach (WeiduLogComponent comp, mod) {
+    arguments << QString::number(comp.number);
+  }
   startTask(arguments);
 }
 

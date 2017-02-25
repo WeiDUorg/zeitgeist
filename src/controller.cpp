@@ -62,6 +62,12 @@ void Controller::setupWeidu(const QString& weiduPath)
             weiduManager, SLOT(getComponentList(const QString&, const int&)));
     connect(weiduManager, SIGNAL(componentList(WeiduLog*)),
             this, SIGNAL(componentList(WeiduLog*)));
+    connect(this, SIGNAL(weiduInstall(WeiduLog*)),
+            weiduManager, SLOT(install(WeiduLog*)));
+    connect(this, SIGNAL(weiduUninstall(WeiduLog*)),
+            weiduManager, SLOT(uninstall(WeiduLog*)));
+    connect(weiduManager, SIGNAL(modStackChanged()),
+            this, SIGNAL(modStackChanged()));
 
     workerThread->start();
     emit doesItQuack();
@@ -120,10 +126,10 @@ void Controller::getComponentList(const QString& tp2, const int& index)
 void Controller::processQueues(WeiduLog* install, WeiduLog* uninstall)
 {
   /* WeiduLog objects are intended for WeiduManager */
-  if (!install->isEmpty()) {
-    installQueue.enqueue(install);
-  }
   if (!uninstall->isEmpty()) {
-    uninstallQueue.enqueue(uninstall);
+    emit weiduUninstall(uninstall);
+  }
+  if (!install->isEmpty()) {
+    emit weiduInstall(install);
   }
 }
