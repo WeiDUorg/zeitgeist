@@ -48,7 +48,7 @@ void InstalledModsModel::populate(const WeiduLog* logFile)
   clear();
   partitionedData = logFile->data;
   QList<QString> partitionNames = logFile->getPartitionNames();
-  QList<QStandardItem*> parentItems;
+  QList<QStandardItem*> parentItems = takeColumn(0);
   parentItems.reserve(partitionNames.size());
   foreach (QString name, partitionNames) {
     parentItems.append(new QStandardItem(name));
