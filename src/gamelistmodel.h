@@ -34,6 +34,14 @@ class GameListModel : public QStandardItemModel
 {
   Q_OBJECT
 
+public:
+  GameListModel(QObject* parent);
+  QList<GameListDataEntry> exportData() const;
+  void importData(const QList<GameListDataEntry>& dataList);
+  QString pathOfIndex(const QModelIndex& index) const;
+  QString identifierOfPath(const QString& path) const;
+  bool eeGame(const QString& path) const;
+
 private slots:
   void addGame(const QString& path);
   void removeGame(const QModelIndex& row);
@@ -41,13 +49,6 @@ private slots:
 signals:
   void notAGameDirectory(const QString& path) const;
   void gameRemoved(const QString& path) const;
-
-public:
-  GameListModel(QObject* parent);
-  QList<GameListDataEntry> exportData() const;
-  void importData(const QList<GameListDataEntry>& dataList);
-  QString pathOfIndex(const QModelIndex& index) const;
-  QString identifierOfPath(const QString& path) const;
 
 private:
   QString findKeyFileDirectory(const QString& path) const;

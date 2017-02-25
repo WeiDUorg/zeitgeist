@@ -50,7 +50,7 @@ public slots:
 signals:
   void identityOfCurrentGame(const QString& name) const;
   void clearModels();
-  void newGamePath(const QString& gamePath) const;
+  void newGamePath(const QString& gamePath, const bool& eeGame) const;
   void restoreWeidu(const QString& weiduPath) const;
   void clearQueues();
   void processQueues(WeiduLog* installQueue,

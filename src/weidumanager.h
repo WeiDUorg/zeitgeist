@@ -29,7 +29,8 @@ private slots:
 
   /* Slots to queue up tasks */
   void version();
-  void newGamePath(const QString& path);
+  void newGamePath(const QString& path, const bool& eeGame);
+  void eeLang(const QString& lang);
   void getLanguageList(const QString& tp2);
   void getComponentList(const QString& tp2, const int& index);
   void install(WeiduLog* modList);
@@ -67,6 +68,8 @@ private:
 
   const QString weiduPath;
   QString gamePath;
+  bool eeGame = false;
+  QString eeLangDir = "en_us";
   QProcess* process;
 
   bool busy = false;

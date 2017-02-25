@@ -237,3 +237,20 @@ GameType GameListModel::typeOfString(const QString& name) const
     return GameType::UNKNOWN;
   }
 }
+
+bool GameListModel::eeGame(const QString& path) const
+{
+  for (int i = 0; i < rowCount(); ++i) {
+    if (path.compare(item(i, 1)->text()) == 0) {
+      GameType type = typeOfString(item(i, 1)->data(GAME_TYPE).toString());
+      switch (type) {
+      case GameType::BGEE:
+      case GameType::BG2EE:
+        return true;
+      default:
+        return false;
+      }
+    }
+  }
+  return false;
+}

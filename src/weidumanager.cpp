@@ -283,6 +283,9 @@ void WeiduManager::installTask()
   arguments << "--skip-at-view" << "--no-exit-pause";
   arguments << "--log" << debugFile(gamePath, tp2);
   arguments << "--language" << QString::number(mod[0].language);
+  if (eeGame) {
+    arguments << "--use-lang" << eeLangDir;
+  }
   arguments << "--force-install-list";
   foreach (WeiduLogComponent comp, mod) {
     arguments << QString::number(comp.number);
@@ -321,14 +324,21 @@ void WeiduManager::version()
   doTask();
 }
 
-void WeiduManager::newGamePath(const QString& path)
+void WeiduManager::newGamePath(const QString& path, const bool& eeGame)
 {
-  qDebug() << "WeiduManager got game path" << path;
+  qDebug() << "WeiduManager got game path" << path << "; EE game:" << eeGame;
   if (!path.isEmpty()) {
     gamePath = path;
+    this->eeGame = eeGame;
     enqueue(Task::GAMEPATH, gamePathQueue, gamePath);
     doTask();
   }
+}
+
+void WeiduManager::eeLang(const QString& lang)
+{
+  qDebug() << "WeiduManager got EE lang" << lang;
+  eeLangDir = lang;
 }
 
 void WeiduManager::getLanguageList(const QString& tp2)

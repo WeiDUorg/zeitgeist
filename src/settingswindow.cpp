@@ -22,18 +22,19 @@
 #include "controller.h"
 #include "platform.h"
 
+#include <QComboBox>
 #include <QDebug>
-#include <QWidget>
+#include <QDir>
+#include <QErrorMessage>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
 #include <QString>
-#include <QFileDialog>
-#include <QDir>
-#include <QFileInfo>
-#include <QErrorMessage>
+#include <QVBoxLayout>
+#include <QWidget>
 
 SettingsWindow::SettingsWindow(QWidget* parent, const Coordinator* coordinator) :
   QWidget(parent), coordinator(coordinator)
@@ -66,7 +67,36 @@ SettingsWindow::SettingsWindow(QWidget* parent, const Coordinator* coordinator) 
   weiduLayout->addWidget(weiduTextField);
   weiduLayout->addWidget(weiduBrowse);
 
-  setLayout(weiduLayout);
+  QComboBox* eeLangField = new QComboBox(this);
+  eeLangField->setEditable(false);
+  // What the hell kind of language does not have a list literal?
+  eeLangField->addItem("Czech");
+  eeLangField->addItem("German");
+  eeLangField->addItem("English");
+  eeLangField->addItem("French");
+  eeLangField->addItem("Italian");
+  eeLangField->addItem("Japanese");
+  eeLangField->addItem("Korean");
+  eeLangField->addItem("Polish");
+  eeLangField->addItem("Brazilian Portuguese");
+  eeLangField->addItem("Russian");
+  eeLangField->addItem("Simplified Chinese");
+  eeLangField->addItem("Spanish");
+  eeLangField->addItem("Turkish");
+  eeLangField->addItem("Ukrainian");
+  eeLangField->setCurrentIndex(2); // English
+  connect(eeLangField, SIGNAL(currentIndexChanged(const QString&)),
+          this, SLOT(handleEeLang(const QString&)));
+  connect(this, SIGNAL(eeLang(const QString&)),
+          coordinator, SIGNAL(eeLang(const QString&)));
+  connect(coordinator, SIGNAL(eeLangRequest()),
+          this, SLOT(eeLangRequest()));
+
+  QVBoxLayout* mainLayout = new QVBoxLayout;
+  mainLayout->addLayout(weiduLayout);
+  mainLayout->addWidget(eeLangField);
+
+  setLayout(mainLayout);
 
   emit doesWeiduExist();
 }
@@ -120,4 +150,49 @@ void SettingsWindow::weiduPath(const QString& path)
   weiduTextField->blockSignals(true);
   weiduTextField->setText(path);
   weiduTextField->blockSignals(false);
+}
+
+QString SettingsWindow::eeLangToDir(const QString& lang) const
+{
+  if (lang == "Czech") {
+    return "cs_cz";
+  } else if (lang == "German") {
+    return "de_de";
+  } else if (lang == "English") {
+    return "en_us";
+  } else if (lang == "French") {
+    return "fr_fr";
+  } else if (lang == "Italian") {
+    return "it_it";
+  } else if (lang == "Japanese") {
+    return "ja_jp";
+  } else if (lang == "Korean") {
+    return "ko_kr";
+  } else if (lang == "Polish") {
+    return "pl_pl";
+  } else if (lang == "Brazilian Portuguese") {
+    return "pt_br";
+  } else if (lang == "Russian") {
+    return "ru_ru";
+  } else if (lang == "Simplified Chinese") {
+    return "zh_cn";
+  } else if (lang == "Spanish") {
+    return "es_es";
+  } else if (lang == "Turkish") {
+    return "tr_tr";
+  } else if (lang == "Ukrainian") {
+    return "uk_ua";
+  } else {
+    return "en_us";
+  }
+}
+
+void SettingsWindow::handleEeLang(const QString& lang) const
+{
+  emit eeLang(eeLangToDir(lang));
+}
+
+void SettingsWindow::eeLangRequest() const
+{
+  handleEeLang(eeLangField->currentText());
 }

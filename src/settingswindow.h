@@ -5,6 +5,7 @@
 
 class Coordinator;
 
+class QComboBox;
 class QLabel;
 class QLineEdit;
 
@@ -21,16 +22,22 @@ private slots:
   void weiduFailedValidation(const QString& weiduPath);
   void weiduVersion(const int& version);
   void weiduPath(const QString& path);
+  void handleEeLang(const QString& lang) const;
+  void eeLangRequest() const;
 
 signals:
   void weiduPassOff(const QString& weiduPath);
   void doesWeiduExist();
+  void eeLang(const QString& langDir) const;
 
 private:
+  QString eeLangToDir(const QString& lang) const;
+
   const Coordinator* coordinator;
   QLineEdit* weiduTextField;
   const QString locateWeidu = "Locate WeiDU";
   QLabel* weiduLabel;
+  QComboBox* eeLangField;
 };
 
 #endif // SETTINGSWINDOW_H

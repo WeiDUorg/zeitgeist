@@ -70,7 +70,7 @@ void DataManager::restoreState()
 {
   restoreGameList();
   QString settingsGame = settings->value("currentGame").toString();
-  if (!settingsGame.isEmpty() && QDir(settingsGame).exists()) {
+  if (!settingsGame.isEmpty() && QDir(settingsGame).exists()) { // gameListModel->validGame(path)
     qDebug() << "Restoring game:" << settingsGame;
     useGame(settingsGame);
   }
@@ -131,7 +131,7 @@ void DataManager::loadGame(const QString& path)
   identifyCurrentGame();
   availableModsModel->populate(currentGame);
   installedModsModel->populate(currentGame->getInstalledMods());
-  emit newGamePath(newPath);
+  emit newGamePath(newPath, gameListModel->eeGame(newPath));
   emit gotGame(true);
 }
 
@@ -172,7 +172,7 @@ void DataManager::emitCurrentGamePath() const
   } else {
     path = QString();
   }
-  emit newGamePath(path);
+  emit newGamePath(path, gameListModel->eeGame(path));
 }
 
 void DataManager::gameRemoved(const QString& path)
