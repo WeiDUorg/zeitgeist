@@ -18,6 +18,7 @@
  */
 
 #include "mainwindow.h"
+#include "controller.h"
 #include "coordinator.h"
 #include "datamanager.h"
 #include "enqueuemodwindow.h"
@@ -38,7 +39,7 @@ MainWindow::MainWindow(Coordinator* coordinator) :
   coordinator(coordinator),
   dataManager(coordinator->dataManager),
   mainCentralWidget(new MainCentralWidget(this, coordinator)),
-  gameWindow(nullptr), settingsWindow(nullptr)
+  gameWindow(nullptr), settingsWindow(nullptr), terminalWindow(nullptr)
 {
   setCentralWidget(mainCentralWidget);
   connect(mainCentralWidget, SIGNAL(availableModSelected(const bool&)),
@@ -51,7 +52,6 @@ MainWindow::MainWindow(Coordinator* coordinator) :
           this, SLOT(queuedModAvailable(const bool&)));
 
   createActions();
-
   createStatusBar();
   createMenus();
 
@@ -61,6 +61,9 @@ MainWindow::MainWindow(Coordinator* coordinator) :
           this, SLOT(updateNameOfCurrentGame(const QString&)));
   connect(dataManager, SIGNAL(gotGame(const bool&)),
           this, SLOT(gameAvailable(const bool&)));
+
+  connect(coordinator->controller, SIGNAL(installTaskStarted()),
+          this, SLOT(createTerminalWindow()));
 
   setMinimumSize(800, 600);
   setWindowTitle("Zeitgeist");
@@ -211,8 +214,10 @@ void MainWindow::createEnqueueModWindow(const QString& tp2)
 
 void MainWindow::createTerminalWindow()
 {
-  TerminalWindow* terminalWindow = new TerminalWindow(this);
-  terminalWindow->show();
+  if (!terminalWindow) {
+    terminalWindow = new TerminalWindow(this, coordinator);
+    terminalWindow->show();
+  } // else the window is already up and connected
 }
 
 void MainWindow::updateNameOfCurrentGame(const QString& name)

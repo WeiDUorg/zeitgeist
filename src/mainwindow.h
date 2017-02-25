@@ -2,17 +2,20 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPointer>
 
 class Coordinator;
 class DataManager;
 class GameWindow;
-class SettingsWindow;
 class MainCentralWidget;
+class SettingsWindow;
+class TerminalWindow;
 
+class QAction;
 class QCloseEvent;
 class QLabel;
-class QAction;
 class QMenu;
+class QProcess;
 
 class MainWindow : public QMainWindow
 {
@@ -63,6 +66,7 @@ private:
   QMenu* gameMenu;
   GameWindow* gameWindow;
   SettingsWindow* settingsWindow;
+  QPointer<TerminalWindow> terminalWindow;
 
   const QString gameInstallActionEnabled = tr("Queue a mod for installation");
   const QString gameInstallActionDisabled =

@@ -18,15 +18,21 @@
  */
 
 #include "terminalwindow.h"
+#include "controller.h"
+#include "coordinator.h"
 
+#include <QByteArray>
+#include <QDebug>
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QPlainTextEdit>
 #include <QPushButton>
+#include <QString>
 #include <QVBoxLayout>
 
-TerminalWindow::TerminalWindow(QWidget* parent) :
-  QWidget(parent)
+TerminalWindow::TerminalWindow(QWidget* parent,
+                               const Coordinator* coordinator) :
+  QWidget(parent), coordinator(coordinator)
 {
   resize (640, 480);
   setWindowFlags(Qt::Dialog);
@@ -34,10 +40,10 @@ TerminalWindow::TerminalWindow(QWidget* parent) :
   setAttribute(Qt::WA_DeleteOnClose);
   setWindowTitle(windowTitle);
 
-  QPlainTextEdit* outputPane = new QPlainTextEdit(this);
+  outputPane = new QPlainTextEdit(this);
   outputPane->setReadOnly(true);
 
-  QLineEdit* inputLine = new QLineEdit(this);
+  inputLine = new QLineEdit(this);
 
   QPushButton* enterButton = new QPushButton(tr("Enter"), this);
 
@@ -50,9 +56,31 @@ TerminalWindow::TerminalWindow(QWidget* parent) :
   mainLayout->addLayout(inputLayout);
 
   setLayout(mainLayout);
+
+  connect(coordinator->controller, SIGNAL(processOutput(const QString&)),
+          this, SLOT(processOutput(const QString&)));
+  connect(enterButton, SIGNAL(clicked()),
+          this, SLOT(generateInput()));
+  connect(this, SIGNAL(processInput(const QString&)),
+          coordinator->controller, SIGNAL(processInput(const QString&)));
 }
 
 TerminalWindow::~TerminalWindow()
 {
 
+}
+
+void TerminalWindow::processOutput(const QString& text)
+{
+  outputPane->appendPlainText(text);
+}
+
+void TerminalWindow::generateInput()
+{
+  const QString text = inputLine->text();
+  if (!text.isEmpty()) {
+    inputLine->clear();
+    qDebug() << "Emitting process input" << text;
+    emit processInput(text);
+  }
 }

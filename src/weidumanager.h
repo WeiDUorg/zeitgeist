@@ -26,6 +26,8 @@ public:
 private slots:
   void terminateManager();
   void quack();
+  void processInput(const QString& text);
+  void readProcessOutput();
 
   /* Slots to queue up tasks */
   void version();
@@ -47,13 +49,15 @@ signals:
   void languageList(const QStringList& languageList);
   void componentList(WeiduLog* componentList);
   void modStackChanged();
+  void installTaskStarted();
+  void installTaskEnded();
+  void processOutput(const QString& text);
 
 private:
   QByteArray run(const QStringList& arguments);
   void doTask();
   void startTask(const QStringList& arguments);
   void dequeue();
-  QByteArray readStdOut();
   QString debugFile(const QString& gamePath, const QString& modName);
   void enqueue(Task task, QQueue<QString>& queue, QString string);
   void enqueue(Task task, QQueue<QPair<QString, int>>& queue, QPair<QString, int> tuple);
@@ -73,6 +77,8 @@ private:
   QProcess* process;
 
   bool busy = false;
+  bool broadcast = false;
+  QByteArray readBuffer;
   QQueue<Task> taskQueue;
   QQueue<QString> gamePathQueue;
   QQueue<QString> listLanguagesQueue;

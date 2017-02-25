@@ -68,6 +68,14 @@ void Controller::setupWeidu(const QString& weiduPath)
             weiduManager, SLOT(uninstall(WeiduLog*)));
     connect(weiduManager, SIGNAL(modStackChanged()),
             this, SIGNAL(modStackChanged()));
+    connect(weiduManager, SIGNAL(installTaskStarted()),
+            this, SIGNAL(installTaskStarted()));
+    connect(weiduManager, SIGNAL(installTaskEnded()),
+            this, SIGNAL(installTaskEnded()));
+    connect(weiduManager, SIGNAL(processOutput(const QString&)),
+            this, SIGNAL(processOutput(const QString&)));
+    connect(this, SIGNAL(processInput(const QString&)),
+            weiduManager, SLOT(processInput(const QString&)));
 
     workerThread->start();
     emit doesItQuack();

@@ -44,6 +44,10 @@ signals:
   void weiduInstall(WeiduLog* modList);
   void weiduUninstall(WeiduLog* modList);
   void modStackChanged();
+  void installTaskStarted();
+  void installTaskEnded();
+  void processOutput(const QString& text);
+  void processInput(const QString& text);
 
 private:
   QThread* workerThread;

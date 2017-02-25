@@ -31,8 +31,6 @@
 WeiduManager::WeiduManager(const QString& weiduPath) :
   weiduPath(weiduPath), gamePath(QString()), process(new QProcess(this))
 {
-  connect(process, SIGNAL(finished(int, QProcess::ExitStatus)),
-          this, SLOT(endTask(int, QProcess::ExitStatus)));
   // should also monitor the error() signal
 }
 
@@ -46,18 +44,33 @@ bool WeiduManager::executable() const
                           QFile::ExeGroup | QFile::ExeOther);
 }
 
+void WeiduManager::terminateManager()
+{
+  deleteLater();
+}
+
 void WeiduManager::quack()
 {
   QStringList arguments;
   arguments << "--version";
   QByteArray message = run(arguments);
   QByteArray auth("WeiDU version");
-  emit quacks(message.contains(auth));
+  if (message.contains(auth)) {
+    connect(process, SIGNAL(readyReadStandardOutput()),
+            this, SLOT(readProcessOutput()));
+    connect(process, SIGNAL(finished(int, QProcess::ExitStatus)),
+            this, SLOT(endTask(int, QProcess::ExitStatus)));
+    emit quacks(true);
+  } else {
+    emit quacks(false);
+  }
 }
 
-void WeiduManager::terminateManager()
+void WeiduManager::processInput(const QString& text)
 {
-  deleteLater();
+  qDebug() << "Received process intput" << text;
+  QByteArray input = QString(text).append("\n").toUtf8();
+  process->write(input);
 }
 
 void WeiduManager::doTask()
@@ -90,6 +103,7 @@ void WeiduManager::doTask()
 
     case Task::INSTALL:
       qDebug() << "Starting INSTALL task";
+      broadcast = true;
       installTask();
       break;
 
@@ -103,6 +117,7 @@ void WeiduManager::doTask()
 
 void WeiduManager::startTask(const QStringList& arguments)
 {
+  readBuffer.resize(0);
   process->start(weiduPath, arguments);
   bool started = process->waitForStarted();
   if (!started) {
@@ -110,6 +125,9 @@ void WeiduManager::startTask(const QStringList& arguments)
     // escalate
     // don't forget to dequeue
     // don't forget to unset busy
+  }
+  if (taskQueue.head() == Task::INSTALL) {
+    emit installTaskStarted();
   }
 }
 
@@ -123,14 +141,14 @@ void WeiduManager::endTask(int exitCode, QProcess::ExitStatus exitStatus)
     // don't forget to dequeue
     // don't forget to unset busy
   }
-  /* Only do stuff if we started stuff (finished() is emitted by quack()) */
+  /* Only do stuff if we started stuff */
   if (busy) {
     const Task task = taskQueue.head();
     switch (task) {
     case Task::VERSION:
       qDebug() << "Ending VERSION task";
       dequeue();
-      emit versionSignal(WeiduExtractor::version(readStdOut()));
+      emit versionSignal(WeiduExtractor::version(readBuffer));
       break;
 
     case Task::GAMEPATH:
@@ -141,19 +159,21 @@ void WeiduManager::endTask(int exitCode, QProcess::ExitStatus exitStatus)
     case Task::LISTLANGUAGES:
       qDebug() << "Ending LISTLANGUAGES task";
       dequeue();
-      emit languageList(WeiduExtractor::languageList(readStdOut()));
+      emit languageList(WeiduExtractor::languageList(readBuffer));
       break;
 
     case Task::LISTCOMPONENTS:
       qDebug() << "Ending LISTCOMPONENTS task";
       dequeue();
-      emit componentList(WeiduExtractor::componentList(readStdOut()));
+      emit componentList(WeiduExtractor::componentList(readBuffer));
       break;
 
     case Task::INSTALL:
       qDebug() << "Ending INSTALL task";
       dequeue();
       emit modStackChanged();
+      emit installTaskEnded();
+      broadcast = false;
       break;
 
     case Task::UNINSTALL:
@@ -202,9 +222,14 @@ void WeiduManager::dequeue()
   }
 }
 
-QByteArray WeiduManager::readStdOut()
+void WeiduManager::readProcessOutput()
 {
-  return process->readAllStandardOutput();
+  QByteArray message = process->readAllStandardOutput();
+  if (!broadcast) {
+    readBuffer.append(message);
+  } else {
+    emit processOutput(QString(message));
+  }
 }
 
 QString WeiduManager::debugFile(const QString& gamePath, const QString& modName)
