@@ -29,6 +29,7 @@ private slots:
   void showGameWindow();
   void showSettingsWindow();
   void createEnqueueModWindow(const QString& tp2);
+  void createTerminalWindow();
   void updateNameOfCurrentGame(const QString& name);
   void availableModSelected(const bool& selected);
   void installedModSelected(const bool& selected);

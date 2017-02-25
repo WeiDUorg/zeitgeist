@@ -17,6 +17,7 @@ HEADERS += \
         src/platform.h \
         src/queuedmodsmodel.h \
         src/settingswindow.h \
+        src/terminalwindow.h \
         src/weiduextractor.h \
         src/weidulog.h \
         src/weidumanager.h
@@ -38,6 +39,7 @@ SOURCES += \
         src/mod.cpp \
         src/queuedmodsmodel.cpp \
         src/settingswindow.cpp \
+        src/terminalwindow.cpp \
         src/weiduextractor.cpp \
         src/weidulog.cpp \
         src/weidumanager.cpp

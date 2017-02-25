@@ -18,12 +18,13 @@
  */
 
 #include "mainwindow.h"
-#include "maincentralwidget.h"
-#include "gamewindow.h"
-#include "settingswindow.h"
-#include "enqueuemodwindow.h"
 #include "coordinator.h"
 #include "datamanager.h"
+#include "enqueuemodwindow.h"
+#include "gamewindow.h"
+#include "maincentralwidget.h"
+#include "settingswindow.h"
+#include "terminalwindow.h"
 
 #include <QApplication>
 #include <QLabel>
@@ -201,6 +202,12 @@ void MainWindow::createEnqueueModWindow(const QString& tp2)
 {
   EnqueueModWindow* enqueueModWindow = new EnqueueModWindow(this, coordinator, tp2);
   enqueueModWindow->show();
+}
+
+void MainWindow::createTerminalWindow()
+{
+  TerminalWindow* terminalWindow = new TerminalWindow(this);
+  terminalWindow->show();
 }
 
 void MainWindow::updateNameOfCurrentGame(const QString& name)
