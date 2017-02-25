@@ -55,6 +55,7 @@ signals:
   void clearQueues();
   void processQueues(WeiduLog* installQueue,
                      WeiduLog* uninstallQueue);
+  void gotGame(const bool& haveGot);
 
 private:
   void saveGameList();

@@ -59,6 +59,8 @@ MainWindow::MainWindow(Coordinator* coordinator) :
           dataManager, SLOT(saveState()));
   connect(dataManager, SIGNAL(identityOfCurrentGame(const QString&)),
           this, SLOT(updateNameOfCurrentGame(const QString&)));
+  connect(dataManager, SIGNAL(gotGame(const bool&)),
+          this, SLOT(gameAvailable(const bool&)));
 
   setMinimumSize(800, 600);
   setWindowTitle("Zeitgeist");
@@ -97,9 +99,12 @@ void MainWindow::createActions()
   connect(gameEditAction, SIGNAL(triggered()),
           this, SLOT(showGameWindow()));
 
-  /* Should only be enabled while there is a currentGame */
+  /* Should only be enabled while there is a currentGame
+   * Default: disabled (no game is loaded)
+   */
   gameRefreshAction = new QAction(tr("Refresh"), this);
-  gameRefreshAction->setStatusTip(tr("Refresh game"));
+  gameRefreshAction->setStatusTip(gameRefreshActionDisabled);
+  gameRefreshAction->setEnabled(false);
   connect(gameRefreshAction, SIGNAL(triggered()),
           dataManager, SLOT(refreshCurrentGame()));
 
@@ -262,5 +267,16 @@ void MainWindow::queuedModAvailable(const bool& available)
   } else {
     gameProcessAction->setEnabled(false);
     gameProcessAction->setStatusTip(gameProcessActionDisabled);
+  }
+}
+
+void MainWindow::gameAvailable(const bool& haveGot)
+{
+  if (haveGot) {
+    gameRefreshAction->setEnabled(true);
+    gameRefreshAction->setStatusTip(gameRefreshActionEnabled);
+  } else {
+    gameRefreshAction->setEnabled(false);
+    gameRefreshAction->setStatusTip(gameRefreshActionDisabled);
   }
 }

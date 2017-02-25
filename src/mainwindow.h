@@ -35,6 +35,7 @@ private slots:
   void installedModSelected(const bool& selected);
   void queuedModSelected(const bool& selected);
   void queuedModAvailable(const bool& available);
+  void gameAvailable(const bool& haveGot);
 
 signals:
   void saveState();
@@ -75,6 +76,8 @@ private:
   const QString gameProcessActionEnabled = tr("Process queue");
   const QString gameProcessActionDisabled =
     tr("There is no queue to process");
+  const QString gameRefreshActionEnabled = tr("Refresh game");
+  const QString gameRefreshActionDisabled = tr("No game is loaded");
 };
 
 #endif // MAINWINDOW_H
