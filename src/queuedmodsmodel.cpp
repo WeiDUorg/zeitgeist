@@ -139,8 +139,8 @@ WeiduLog* QueuedModsModel::queue()
     QList<WeiduLogComponent> compList;
     for (int j = 0; j < mod->rowCount(); ++j) {
       QStandardItem* comp = mod->child(j);
-      WeiduLogComponent c = { mod->text(), comp->data(Number).toInt(),
-                              comp->data(Language).toInt(), comp->text() };
+      WeiduLogComponent c = { mod->text(), comp->data(Language).toInt(),
+                              comp->data(Number).toInt(), comp->text() };
       compList << c;
     }
     if (!compList.isEmpty()) {
