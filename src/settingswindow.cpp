@@ -67,7 +67,7 @@ SettingsWindow::SettingsWindow(QWidget* parent, const Coordinator* coordinator) 
   weiduLayout->addWidget(weiduTextField);
   weiduLayout->addWidget(weiduBrowse);
 
-  QComboBox* eeLangField = new QComboBox(this);
+  eeLangField = new QComboBox(this);
   eeLangField->setEditable(false);
   // What the hell kind of language does not have a list literal?
   eeLangField->addItem("Czech");
