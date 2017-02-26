@@ -6,7 +6,7 @@
 
 class WeiduLog;
 
-enum dataRole { Number = Qt::UserRole + 1, Language };
+enum QueuedModsModelMetaData { COMPONENT_NUMBER = Qt::UserRole + 1, COMPONENT_LANGUAGE };
 
 class QueuedModsModel : public QStandardItemModel
 {

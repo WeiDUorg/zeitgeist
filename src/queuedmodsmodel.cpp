@@ -49,8 +49,8 @@ void QueuedModsModel::add(WeiduLog* componentList)
     QList<QStandardItem*> childItems;
     foreach (WeiduLogComponent comp, list) {
       QStandardItem* child = new QStandardItem(comp.comment);
-      child->setData(QVariant(comp.number), Number);
-      child->setData(QVariant(comp.language), Language);
+      child->setData(QVariant(comp.number), COMPONENT_NUMBER);
+      child->setData(QVariant(comp.language), COMPONENT_LANGUAGE);
       childItems.append(child);
     }
     bool merged = false;
@@ -81,7 +81,7 @@ QList<int> QueuedModsModel::queuedComponents(const QString& tp2) const
     if (block->text().compare(tp2, Qt::CaseInsensitive) == 0) {
       for (int j = 0; j < block->rowCount(); ++j) {
         QStandardItem* component = block->child(j);
-        result.append(component->data(Number).toInt());
+        result.append(component->data(COMPONENT_NUMBER).toInt());
       }
     }
   }
@@ -139,8 +139,8 @@ WeiduLog* QueuedModsModel::queue()
     QList<WeiduLogComponent> compList;
     for (int j = 0; j < mod->rowCount(); ++j) {
       QStandardItem* comp = mod->child(j);
-      WeiduLogComponent c = { mod->text(), comp->data(Language).toInt(),
-                              comp->data(Number).toInt(), comp->text() };
+      WeiduLogComponent c = { mod->text(), comp->data(COMPONENT_LANGUAGE).toInt(),
+                              comp->data(COMPONENT_NUMBER).toInt(), comp->text() };
       compList << c;
     }
     if (!compList.isEmpty()) {
