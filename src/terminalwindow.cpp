@@ -25,6 +25,7 @@
 #include <QDebug>
 #include <QHBoxLayout>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QString>
@@ -32,7 +33,7 @@
 
 TerminalWindow::TerminalWindow(QWidget* parent,
                                const Coordinator* coordinator) :
-  QWidget(parent), coordinator(coordinator)
+  QWidget(parent), coordinator(coordinator), safeExit(false)
 {
   resize (640, 480);
   setWindowFlags(Qt::Dialog);
@@ -63,11 +64,29 @@ TerminalWindow::TerminalWindow(QWidget* parent,
           this, SLOT(generateInput()));
   connect(this, SIGNAL(processInput(const QString&)),
           coordinator->controller, SIGNAL(processInput(const QString&)));
+  connect(coordinator->controller, SIGNAL(installTaskEnded()),
+          this, SLOT(installTaskEnded()));
 }
 
 TerminalWindow::~TerminalWindow()
 {
 
+}
+
+void TerminalWindow::closeEvent(QCloseEvent* event)
+{
+  if (!safeExit) {
+    QMessageBox msg;
+    msg.setText(tr("To avoid risk of injury, please keep your arms inside the vehicle until it has come to a complete stop."));
+    msg.setInformativeText(tr("Are you sure you wish to exit?"));
+    msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msg.setDefaultButton(QMessageBox::No);
+    msg.setEscapeButton(QMessageBox::No);
+    int ans = msg.exec();
+    if (ans != QMessageBox::Yes) {
+      event->ignore();
+    }
+  }
 }
 
 void TerminalWindow::processOutput(const QString& text)
@@ -83,4 +102,9 @@ void TerminalWindow::generateInput()
     qDebug() << "Emitting process input" << text;
     emit processInput(text);
   }
+}
+
+void TerminalWindow::installTaskEnded()
+{
+  safeExit = true;
 }

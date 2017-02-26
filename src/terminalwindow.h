@@ -17,9 +17,13 @@ public:
   TerminalWindow(QWidget* parent, const Coordinator* coordinator);
   ~TerminalWindow();
 
+protected:
+  void closeEvent(QCloseEvent* event);
+
 private slots:
   void processOutput(const QString& text);
   void generateInput();
+  void installTaskEnded();
 
 signals:
   void processInput(const QString& text);
@@ -27,6 +31,7 @@ signals:
 private:
   const Coordinator* coordinator;
   QString windowTitle = "Terminal";
+  bool safeExit;
   QPlainTextEdit* outputPane;
   QLineEdit* inputLine;
 };

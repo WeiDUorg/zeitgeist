@@ -171,15 +171,20 @@ void WeiduManager::endTask(int exitCode, QProcess::ExitStatus exitStatus)
     case Task::INSTALL:
       qDebug() << "Ending INSTALL task";
       dequeue();
-      emit modStackChanged();
-      emit installTaskEnded();
+      if (taskQueue.isEmpty() || taskQueue.head() != Task::INSTALL) {
+        emit modStackChanged();
+        emit installTaskEnded();
+      }
       broadcast = false;
       break;
 
     case Task::UNINSTALL:
       qDebug() << "Ending UNINSTALL task";
       dequeue();
-      emit modStackChanged();
+      if (taskQueue.isEmpty() || (taskQueue.head() != Task::INSTALL &&
+                                  taskQueue.head() != Task::UNINSTALL)) {
+        emit modStackChanged();
+      }
       break;
     }
   }
