@@ -35,6 +35,16 @@ GameListModel::GameListModel(QObject* parent) : QStandardItemModel(parent)
   setHorizontalHeaderLabels(headerLabels);
 }
 
+void GameListModel::addRow(const QString& gameName, const QString& gamePath,
+                           const GameType& gameType)
+{
+  QList<QStandardItem*> row;
+  QStandardItem* pathItem = new QStandardItem(gamePath);
+  pathItem->setData(QVariant(stringOfType(gameType)), GAME_TYPE);
+  row << new QStandardItem(gameName) << pathItem;
+  appendRow(row);
+}
+
 void GameListModel::addGame(const QString& path)
 {
   QString gamePath = findKeyFileDirectory(path);
@@ -43,11 +53,7 @@ void GameListModel::addGame(const QString& path)
   } else if (!duplicate(gamePath)) {
     GameType gameType = fingerprintGameDirectory(gamePath);
     QString gameName = prettyPrintGameType(gameType);
-    QList<QStandardItem*> row;
-    QStandardItem* pathItem = new QStandardItem(gamePath);
-    pathItem->setData(QVariant(stringOfType(gameType)), GAME_TYPE);
-    row << new QStandardItem(gameName) << pathItem;
-    appendRow(row);
+    addRow(gameName, gamePath, gameType);
   }
 }
 
@@ -82,10 +88,7 @@ void GameListModel::importData(const QList<GameListDataEntry>& dataList)
     QDir dir(row.path);
     if (validGame(row.path)) {
       GameType type = fingerprintGameDirectory(row.path);
-      QStandardItem* pathItem = new QStandardItem(row.path);
-      pathItem->setData(QVariant(stringOfType(type)), GAME_TYPE);
-      setItem(i, 0, new QStandardItem(row.name));
-      setItem(i, 1, pathItem);
+      addRow(row.name, row.path, type);
     }
   }
 }

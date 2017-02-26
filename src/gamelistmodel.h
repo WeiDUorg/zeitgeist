@@ -53,6 +53,8 @@ signals:
   void gameRemoved(const QString& path) const;
 
 private:
+  void addRow(const QString& gameName, const QString& gamePath,
+              const GameType& gameType);
   QString findKeyFileDirectory(const QString& path) const;
   GameType fingerprintGameDirectory(const QString& path) const;
   QString prettyPrintGameType(const GameType& type) const;
