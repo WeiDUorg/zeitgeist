@@ -48,7 +48,14 @@ void QueuedModsModel::add(WeiduLog* componentList)
     QStandardItem* parentItem = new QStandardItem(list.first().modName);
     QList<QStandardItem*> childItems;
     foreach (WeiduLogComponent comp, list) {
-      QStandardItem* child = new QStandardItem(comp.comment);
+      QString compName;
+      if (!comp.comment.isEmpty()) {
+        compName = comp.comment;
+      } else {
+        compName = comp.modName + " #" + QString::number(comp.language) +
+          " #" + QString::number(comp.number);
+      }
+      QStandardItem* child = new QStandardItem(compName);
       child->setData(QVariant(comp.number), COMPONENT_NUMBER);
       child->setData(QVariant(comp.language), COMPONENT_LANGUAGE);
       childItems.append(child);

@@ -67,8 +67,15 @@ void InstalledModsModel::populate(const WeiduLog* logFile)
 QList<QStandardItem*> InstalledModsModel::getChildList(const QList<WeiduLogComponent>& componentList) const
 {
   QList<QStandardItem*> childList;
-  foreach (WeiduLogComponent component, componentList) {
-    childList.append(new QStandardItem(component.comment));
+  foreach (WeiduLogComponent c, componentList) {
+    QString compName;
+    if (!c.comment.isEmpty()) {
+      compName = c.comment;
+    } else {
+      compName = c.modName + " #" + QString::number(c.language) +
+        " #" + QString::number(c.number);
+    }
+    childList.append(new QStandardItem(compName));
   }
   return childList;
 }

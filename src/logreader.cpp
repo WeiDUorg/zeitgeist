@@ -91,7 +91,10 @@ WeiduLogComponent LogReader::parseLine(const QString& line)
                                     firstNumberEnd - firstNumber);
   QString componentNumber = line.mid(secondNumber,
                                      secondNumberEnd - secondNumber);
-  QString comment = line.mid(commentStart);
+  QString comment;
+  if (commentStart != 2) { // -1 + 3 = no comment
+    comment = line.mid(commentStart);
+  }
   const WeiduLogComponent c = {tp2Name, languageNumber.toInt(),
                                componentNumber.toInt(), comment};
   return c;
