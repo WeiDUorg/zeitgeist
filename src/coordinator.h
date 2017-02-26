@@ -33,6 +33,7 @@ signals:
   void restoreStateSignal();
   void eeLang(const QString& lang);
   void eeLangRequest();
+  void installerAvailable(const bool& available);
 };
 
 #endif // COORDINATOR_H

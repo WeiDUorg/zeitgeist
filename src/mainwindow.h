@@ -39,6 +39,7 @@ private slots:
   void queuedModSelected(const bool& selected);
   void queuedModAvailable(const bool& available);
   void gameAvailable(const bool& haveGot);
+  void installerAvailable(const bool& available);
 
 signals:
   void saveState();
@@ -58,7 +59,7 @@ private:
   QAction* programQuitAction;
   QAction* gameEditAction;
   QAction* gameRefreshAction;
-  QAction* gameInstallAction;
+  QAction* gameEnqueueAction;
   QAction* gameUnqueueAction;
   QAction* gameUninstallAction;
   QAction* gameProcessAction;
@@ -68,8 +69,12 @@ private:
   SettingsWindow* settingsWindow;
   QPointer<TerminalWindow> terminalWindow;
 
-  const QString gameInstallActionEnabled = tr("Queue a mod for installation");
-  const QString gameInstallActionDisabled =
+  bool installerToggle = false;
+  bool enqueueToggle = false;
+  bool processToggle = false;
+
+  const QString gameEnqueueActionEnabled = tr("Queue a mod for installation");
+  const QString gameEnqueueActionDisabled =
     tr("You must select an available mod before you can enqueue it");
   const QString gameUnqueueActionEnabled = tr("Remove components from the queue");
   const QString gameUnqueueActionDisabled =
@@ -82,6 +87,8 @@ private:
     tr("There is no queue to process");
   const QString gameRefreshActionEnabled = tr("Refresh game");
   const QString gameRefreshActionDisabled = tr("No game is loaded");
+  const QString installerUnavailable =
+    tr("This action is unavailable until WeiDU has been configured");
 };
 
 #endif // MAINWINDOW_H

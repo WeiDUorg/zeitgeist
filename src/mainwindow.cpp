@@ -51,6 +51,9 @@ MainWindow::MainWindow(Coordinator* coordinator) :
   connect(mainCentralWidget, SIGNAL(queuedModAvailable(const bool&)),
           this, SLOT(queuedModAvailable(const bool&)));
 
+  connect(coordinator, SIGNAL(installerAvailable(const bool&)),
+          this, SLOT(installerAvailable(const bool&)));
+
   createActions();
   createStatusBar();
   createMenus();
@@ -114,12 +117,12 @@ void MainWindow::createActions()
   /* Should only be enabled while there is a selection in availableModsView
    * Default: disabled (no available mod is selected)
    */
-  gameInstallAction = new QAction(tr("Enqueue"), this);
-  gameInstallAction->setStatusTip(gameInstallActionDisabled);
-  gameInstallAction->setEnabled(false);
-  connect(gameInstallAction, SIGNAL(triggered()),
+  gameEnqueueAction = new QAction(tr("Enqueue"), this);
+  gameEnqueueAction->setStatusTip(gameEnqueueActionDisabled);
+  gameEnqueueAction->setEnabled(false);
+  connect(gameEnqueueAction, SIGNAL(triggered()),
           mainCentralWidget, SLOT(getSelectedAvailableMod()));
-  connect(gameInstallAction, SIGNAL(triggered()),
+  connect(gameEnqueueAction, SIGNAL(triggered()),
           mainCentralWidget, SLOT(clearAvailableSelection()));
   connect(mainCentralWidget, SIGNAL(selectedAvailableMod(const QString&)),
           this, SLOT(createEnqueueModWindow(const QString&)));
@@ -176,7 +179,7 @@ void MainWindow::createMenus()
   gameMenu->addAction(gameEditAction);
   // Recent (games)
   gameMenu->addAction(gameRefreshAction);
-  gameMenu->addAction(gameInstallAction);
+  gameMenu->addAction(gameEnqueueAction);
   gameMenu->addAction(gameUnqueueAction);
   gameMenu->addAction(gameUninstallAction);
   gameMenu->addAction(gameProcessAction);
@@ -233,12 +236,17 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 void MainWindow::availableModSelected(const bool& selected)
 {
-  if (selected) {
-    gameInstallAction->setEnabled(true);
-    gameInstallAction->setStatusTip(gameInstallActionEnabled);
+  enqueueToggle = selected;
+  if (selected && installerToggle) {
+    gameEnqueueAction->setEnabled(true);
+    gameEnqueueAction->setStatusTip(gameEnqueueActionEnabled);
   } else {
-    gameInstallAction->setEnabled(false);
-    gameInstallAction->setStatusTip(gameInstallActionDisabled);
+    gameEnqueueAction->setEnabled(false);
+    if (!selected) {
+      gameEnqueueAction->setStatusTip(gameEnqueueActionDisabled);
+    } else if (!installerToggle) {
+      gameEnqueueAction->setStatusTip(installerUnavailable);
+    }
   }
 }
 
@@ -266,12 +274,17 @@ void MainWindow::queuedModSelected(const bool& selected)
 
 void MainWindow::queuedModAvailable(const bool& available)
 {
-  if (available) {
+  processToggle = available;
+  if (available && installerToggle) {
     gameProcessAction->setEnabled(true);
     gameProcessAction->setStatusTip(gameProcessActionEnabled);
   } else {
     gameProcessAction->setEnabled(false);
-    gameProcessAction->setStatusTip(gameProcessActionDisabled);
+    if (!available) {
+      gameProcessAction->setStatusTip(gameProcessActionDisabled);
+    } else if (!installerToggle) {
+      gameProcessAction->setStatusTip(installerUnavailable);
+    }
   }
 }
 
@@ -283,5 +296,30 @@ void MainWindow::gameAvailable(const bool& haveGot)
   } else {
     gameRefreshAction->setEnabled(false);
     gameRefreshAction->setStatusTip(gameRefreshActionDisabled);
+  }
+}
+
+void MainWindow::installerAvailable(const bool& available)
+{
+  installerToggle = available;
+  if (available && enqueueToggle) {
+    gameEnqueueAction->setEnabled(true);
+    gameEnqueueAction->setStatusTip(gameEnqueueActionEnabled);
+  } else if (!enqueueToggle) {
+    gameEnqueueAction->setEnabled(false);
+    gameEnqueueAction->setStatusTip(gameEnqueueActionDisabled);
+  } else if (!available) {
+    gameEnqueueAction->setEnabled(false);
+    gameEnqueueAction->setStatusTip(installerUnavailable);
+  }
+  if (available && processToggle) {
+    gameProcessAction->setEnabled(true);
+    gameProcessAction->setStatusTip(gameProcessActionEnabled);
+  } else if (!processToggle) {
+    gameProcessAction->setEnabled(false);
+    gameProcessAction->setStatusTip(gameProcessActionDisabled);
+  } else if (!available) {
+    gameProcessAction->setEnabled(false);
+    gameProcessAction->setStatusTip(installerUnavailable);
   }
 }

@@ -62,6 +62,7 @@ void Coordinator::newWeiduManager(const WeiduManager* manager)
           manager, SLOT(eeLang(const QString&)));
   provideGamePath();
   emit eeLangRequest();
+  emit installerAvailable(true);
 }
 
 void Coordinator::provideGamePath()

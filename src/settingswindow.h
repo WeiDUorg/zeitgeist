@@ -29,6 +29,7 @@ signals:
   void weiduPassOff(const QString& weiduPath);
   void doesWeiduExist();
   void eeLang(const QString& langDir) const;
+  void installerAvailable(const bool& available);
 
 private:
   QString eeLangToDir(const QString& lang) const;

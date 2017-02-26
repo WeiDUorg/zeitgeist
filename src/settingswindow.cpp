@@ -44,6 +44,8 @@ SettingsWindow::SettingsWindow(QWidget* parent, const Coordinator* coordinator) 
 
   weiduLabel = new QLabel(locateWeidu, this);
   weiduLabel->setMinimumWidth(150); // Could probably be less fragile
+  connect(this, SIGNAL(installerAvailable(const bool&)),
+          parent, SLOT(installerAvailable(const bool&)));
   connect(coordinator->controller, SIGNAL(weiduVersionSignal(const int&)),
           this, SLOT(weiduVersion(const int&)));
   connect(coordinator->controller, SIGNAL(confirmedWeiduPath(const QString&)),
@@ -125,6 +127,7 @@ void SettingsWindow::initialWeiduValidation(const QString& path)
     // There ought to be some kind of visual indication, so the user knows
     // it's ok to close the settings window and proceed
     qDebug() << "WeiDU at" << path << "passes initial inspection";
+    emit installerAvailable(false);
     emit weiduPassOff(path);
   }
 }
