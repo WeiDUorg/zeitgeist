@@ -158,6 +158,8 @@ GameType GameListModel::fingerprintGameDirectory(const QString& path) const
     return GameType::BGEE;
   } else if (dir.exists("movies/melissan.wbm")) {
     return GameType::BG2EE;
+  } else if (dir.exists("movies/howseer.wbm")) {
+    return GameType::IWDEE;
   }
   return GameType::UNKNOWN;
 }
@@ -179,6 +181,8 @@ QString GameListModel::prettyPrintGameType(const GameType& type) const
     return QString("Baldur's Gate: Enhanced Edition");
   case GameType::BG2EE:
     return QString("Baldur's Gate II: Enhanced Edition");
+  case GameType::IWDEE:
+    return QString("Icewind Dale: Enhanced Edition");
   default: // GameType::UNKNOWN
     return QString("IE game");
   }
@@ -212,6 +216,8 @@ QString GameListModel::stringOfType(const GameType& type) const
     return "BGEE";
   case GameType::BG2EE:
     return "BG2EE";
+  case GameType::IWDEE:
+    return "IWDEE";
   default: // GameType::UNKNOWN
     return "UNKNOWN";
   }
@@ -233,6 +239,8 @@ GameType GameListModel::typeOfString(const QString& name) const
     return GameType::BGEE;
   } else if (name == "BG2EE") {
     return GameType::BG2EE;
+  } else if (name == "IWDEE") {
+    return GameType::IWDEE;
   } else {
     return GameType::UNKNOWN;
   }
@@ -246,6 +254,7 @@ bool GameListModel::eeGame(const QString& path) const
       switch (type) {
       case GameType::BGEE:
       case GameType::BG2EE:
+      case GameType::IWDEE:
         return true;
       default:
         return false;

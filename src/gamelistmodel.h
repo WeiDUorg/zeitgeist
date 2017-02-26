@@ -17,6 +17,7 @@ enum class GameType {
   PST,
   BGEE,
   BG2EE,
+  IWDEE,
   UNKNOWN
 };
 
