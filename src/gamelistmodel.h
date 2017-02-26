@@ -41,6 +41,7 @@ public:
   QString pathOfIndex(const QModelIndex& index) const;
   QString identifierOfPath(const QString& path) const;
   bool eeGame(const QString& path) const;
+  bool validGame(const QString& path) const;
 
 private slots:
   void addGame(const QString& path);

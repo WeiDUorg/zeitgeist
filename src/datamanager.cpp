@@ -70,7 +70,7 @@ void DataManager::restoreState()
 {
   restoreGameList();
   QString settingsGame = settings->value("currentGame").toString();
-  if (!settingsGame.isEmpty() && QDir(settingsGame).exists()) { // gameListModel->validGame(path)
+  if (!settingsGame.isEmpty() && gameListModel->validGame(settingsGame)) {
     qDebug() << "Restoring game:" << settingsGame;
     useGame(settingsGame);
   }

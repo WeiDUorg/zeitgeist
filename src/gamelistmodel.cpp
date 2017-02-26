@@ -80,7 +80,7 @@ void GameListModel::importData(const QList<GameListDataEntry>& dataList)
   for (int i = 0; i < rows; ++i) {
     GameListDataEntry row = dataList.at(i);
     QDir dir(row.path);
-    if (dir.exists() && !findKeyFileDirectory(row.path).isEmpty()) {
+    if (validGame(row.path)) {
       GameType type = fingerprintGameDirectory(row.path);
       QStandardItem* pathItem = new QStandardItem(row.path);
       pathItem->setData(QVariant(stringOfType(type)), GAME_TYPE);
@@ -253,4 +253,9 @@ bool GameListModel::eeGame(const QString& path) const
     }
   }
   return false;
+}
+
+bool GameListModel::validGame(const QString& path) const
+{
+  return QDir(path).exists() && !findKeyFileDirectory(path).isEmpty();
 }
