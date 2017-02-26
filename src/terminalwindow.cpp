@@ -29,6 +29,7 @@
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QString>
+#include <QTextCursor>
 #include <QVBoxLayout>
 
 TerminalWindow::TerminalWindow(QWidget* parent,
@@ -91,7 +92,8 @@ void TerminalWindow::closeEvent(QCloseEvent* event)
 
 void TerminalWindow::processOutput(const QString& text)
 {
-  outputPane->appendPlainText(text);
+  outputPane->moveCursor(QTextCursor::End);
+  outputPane->insertPlainText(text);
 }
 
 void TerminalWindow::generateInput()
