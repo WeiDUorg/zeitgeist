@@ -43,40 +43,44 @@ void QueuedModsModel::clear()
 
 void QueuedModsModel::add(WeiduLog* componentList)
 {
-  QList<QStandardItem*> parentList = takeColumn(0);
-  foreach (QList<WeiduLogComponent> list, componentList->data) {
-    QStandardItem* parentItem = new QStandardItem(list.first().modName);
-    QList<QStandardItem*> childItems;
-    foreach (WeiduLogComponent comp, list) {
-      QString compName;
-      if (!comp.comment.isEmpty()) {
-        compName = comp.comment;
-      } else {
-        compName = comp.modName + " #" + QString::number(comp.language) +
-          " #" + QString::number(comp.number);
+  /* our WeiduLog */
+  WeiduLog* deduplicated = deduplicate(componentList);
+  if (!deduplicated->isEmpty()) {
+    QList<QStandardItem*> parentList = takeColumn(0);
+    foreach (QList<WeiduLogComponent> list, deduplicated->data) {
+      QStandardItem* parentItem = new QStandardItem(list.first().modName);
+      QList<QStandardItem*> childItems;
+      foreach (WeiduLogComponent comp, list) {
+        QString compName;
+        if (!comp.comment.isEmpty()) {
+          compName = comp.comment;
+        } else {
+          compName = comp.modName + " #" + QString::number(comp.language)
+            + " #" + QString::number(comp.number);
+        }
+        QStandardItem* child = new QStandardItem(compName);
+        child->setData(QVariant(comp.number), COMPONENT_NUMBER);
+        child->setData(QVariant(comp.language), COMPONENT_LANGUAGE);
+        childItems.append(child);
       }
-      QStandardItem* child = new QStandardItem(compName);
-      child->setData(QVariant(comp.number), COMPONENT_NUMBER);
-      child->setData(QVariant(comp.language), COMPONENT_LANGUAGE);
-      childItems.append(child);
-    }
-    bool merged = false;
-    if (!parentList.isEmpty()) {
-      QStandardItem* lastParent = parentList.last();
-      if (parentItem->text().compare(lastParent->text()) == 0) {
-        QList<QStandardItem*> children = lastParent->takeColumn(0);
-        children.append(childItems);
-        lastParent->appendColumn(children);
-        merged = true;
+      bool merged = false;
+      if (!parentList.isEmpty()) {
+        QStandardItem* lastParent = parentList.last();
+        if (parentItem->text().compare(lastParent->text()) == 0) {
+          QList<QStandardItem*> children = lastParent->takeColumn(0);
+          children.append(childItems);
+          lastParent->appendColumn(children);
+          merged = true;
+        }
+      }
+      if (!merged) {
+        parentItem->appendColumn(childItems);
+        parentList << parentItem;
       }
     }
-    if (!merged) {
-      parentItem->appendColumn(childItems);
-      parentList << parentItem;
-    }
+    appendColumn(parentList);
   }
-  appendColumn(parentList);
-  delete componentList;
+  delete deduplicated;
 }
 
 QList<int> QueuedModsModel::queuedComponents(const QString& tp2) const
@@ -157,4 +161,37 @@ WeiduLog* QueuedModsModel::queue()
     }
   }
   return new WeiduLog(0, result); // WeiduLog intended for Controller
+}
+
+WeiduLog* QueuedModsModel::deduplicate(WeiduLog* logFile) const
+{
+  /* our WeiduLog */
+  QList<QList<WeiduLogComponent>> result;
+  QStandardItem* root = invisibleRootItem();
+  foreach (QList<WeiduLogComponent> modList, logFile->data) {
+    QString modName = modList[0].modName;
+    QList<int> queuedComps;
+    QList<WeiduLogComponent> dedup;
+    for (int i = 0; i < root->rowCount(); ++i) {
+      QStandardItem* queuedMod = root->child(i);
+      if (modName.compare(queuedMod->text(), Qt::CaseInsensitive) == 0) {
+        // grab all the queued component numbers
+        for (int j = 0; j < queuedMod->rowCount(); ++j) {
+          int compNumber = queuedMod->child(j)->data(COMPONENT_NUMBER).toInt();
+          queuedComps << compNumber;
+        }
+      }
+    }
+    foreach (WeiduLogComponent comp, modList) {
+      if (!queuedComps.contains(comp.number)) {
+        dedup << comp;
+      }
+    }
+    if (!dedup.isEmpty()) {
+      result << dedup;
+    }
+  }
+  delete logFile;
+  logFile = nullptr;
+  return new WeiduLog(0, result);
 }

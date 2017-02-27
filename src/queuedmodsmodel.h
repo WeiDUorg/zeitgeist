@@ -26,6 +26,7 @@ private slots:
   void clear();
 
 private:
+  WeiduLog* deduplicate(WeiduLog*) const;
 };
 
 #endif // QUEUEDMODSMODEL_H
