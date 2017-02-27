@@ -40,6 +40,7 @@ private slots:
   void queuedModAvailable(const bool& available);
   void gameAvailable(const bool& haveGot);
   void installerAvailable(const bool& available);
+  void showAboutDialog() const;
 
 signals:
   void saveState();

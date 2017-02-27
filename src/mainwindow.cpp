@@ -27,13 +27,14 @@
 #include "settingswindow.h"
 #include "terminalwindow.h"
 
-#include <QApplication>
-#include <QLabel>
-#include <QStatusBar>
 #include <QAction>
+#include <QApplication>
+#include <QDebug>
+#include <QLabel>
 #include <QMenuBar>
 #include <QMenu>
-#include <QDebug>
+#include <QMessageBox>
+#include <QStatusBar>
 
 MainWindow::MainWindow(Coordinator* coordinator) :
   coordinator(coordinator),
@@ -90,6 +91,8 @@ void MainWindow::createActions()
 {
   programAboutAction = new QAction(tr("About"), this);
   programAboutAction->setStatusTip(tr("About Zeitgeist"));
+  connect(programAboutAction, SIGNAL(triggered()),
+          this, SLOT(showAboutDialog()));
 
   programSettingsAction = new QAction(tr("Settings"), this);
   programSettingsAction->setStatusTip(tr("Edit program settings"));
@@ -322,4 +325,20 @@ void MainWindow::installerAvailable(const bool& available)
     gameProcessAction->setEnabled(false);
     gameProcessAction->setStatusTip(installerUnavailable);
   }
+}
+
+void MainWindow::showAboutDialog() const
+{
+  QString title = "About Zeitgeist";
+  QStringList body;
+  body << "<p>Zeitgeist is a program for installing mods for Infinity Engine";
+  body << " games using WeiDU.</p><p>Version: ";
+  body << QString::number(123);
+  body << "<p>Copyright (C) 2017 Fredrik Lindgren</p>";
+  body << "</p><p>This is free software under the terms of the <a href='htt";
+  body << "ps://www.gnu.org/licenses/gpl.html'>GNU GPL</a>, version 3 or any";
+  body << " later version.</p><p>The source code is available at <a href='ht";
+  body << "tps://github.com/WeiDUorg/zeitgeist'>https://github.com/WeiDUorg/";
+  body << "zeitgeist</a></p>";
+  QMessageBox::about(0, title, body.join(""));
 }
