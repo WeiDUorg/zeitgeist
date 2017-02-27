@@ -1,6 +1,6 @@
 /*
  *  Zeitgeist - Graphical WeiDU frontend
- *  Copyright (C) 2014  Fredrik Lindgren
+ *  Copyright (C) 2017  Fredrik Lindgren
 
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
