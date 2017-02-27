@@ -7,7 +7,7 @@ TEMPLATE = app
 # distribution).
 
 CONFIG += c++11 debug
-QMAKE_CXXFLAGS += -std=c++11 # For Qt 4 (maybe remove on Qt 5)
+QMAKE_CXXFLAGS += -std=c++11 -isystem $$[QT_INSTALL_HEADERS]
 
 CONFIG(debug, debug|release) {
 message ("debug build")
@@ -42,7 +42,7 @@ RCC_DIR = $$BUILD_DIR
 
 include(src.pri)
 
-OUTPUT_FILE = $$quote($$DESTDIR/$$TARGET$$TARGET_EXT)
-win32:OUTPUT_FILE ~= s,/,\\,g
+unix:OUTPUT_FILE = $$quote($$DESTDIR/$$TARGET)
+win32:OUTPUT_FILE = $$quote($$DESTDIR/$$TARGET.exe)
 
 QMAKE_POST_LINK += $$QMAKE_COPY $$OUTPUT_FILE "."

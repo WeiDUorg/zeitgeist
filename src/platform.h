@@ -5,7 +5,7 @@
 #define WEIDU_EXECUTABLE "weidu"
 #elif Q_OS_OSX
 #define WEIDU_EXECUTABLE "weidu"
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
 #define WEIDU_EXECUTABLE "weidu.exe"
 #endif
 
