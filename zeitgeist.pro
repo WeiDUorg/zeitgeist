@@ -43,6 +43,6 @@ RCC_DIR = $$BUILD_DIR
 include(src.pri)
 
 unix:OUTPUT_FILE = $$quote($$DESTDIR/$$TARGET)
-win32:OUTPUT_FILE = $$quote($$DESTDIR/$$TARGET.exe)
+#win32:OUTPUT_FILE = $$quote($$DESTDIR/$${TARGET}.exe)
 
-QMAKE_POST_LINK += $$QMAKE_COPY $$OUTPUT_FILE "."
+unix:QMAKE_POST_LINK += $$QMAKE_COPY $$OUTPUT_FILE "."
