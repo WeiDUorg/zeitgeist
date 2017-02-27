@@ -38,7 +38,8 @@
 #include <QList>
 #include <QDebug>
 
-MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordinator) :
+MainCentralWidget::MainCentralWidget(QWidget* parent,
+                                     const Coordinator* coordinator) :
   QWidget(parent), coordinator(coordinator)
 {
   QLabel* availableModsLabel = new QLabel(tr("Available Mods"), this);
@@ -55,13 +56,16 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
   installQueueView->setHeaderHidden(true);
   installQueueView->setSelectionMode(QAbstractItemView::MultiSelection);
   installQueueView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  connect(installQueueView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
-                                                                      const QItemSelection&)),
+  connect(installQueueView->selectionModel(),
+          SIGNAL(selectionChanged(const QItemSelection&,
+                                  const QItemSelection&)),
           this, SLOT(handleInstallQueueSelection(const QItemSelection&,
                                                  const QItemSelection&)));
-  connect(installQueueView->model(), SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+  connect(installQueueView->model(),
+          SIGNAL(rowsInserted(const QModelIndex&, int, int)),
           this, SLOT(handleQueueAvailability(const QModelIndex, int, int)));
-  connect(installQueueView->model(), SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
+  connect(installQueueView->model(),
+          SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
           this, SLOT(handleQueueAvailability(const QModelIndex, int, int)));
 
   uninstallQueueView = new QTreeView(this);
@@ -69,13 +73,16 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
   uninstallQueueView->setHeaderHidden(true);
   uninstallQueueView->setSelectionMode(QAbstractItemView::MultiSelection);
   uninstallQueueView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  connect(uninstallQueueView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
-                                                                        const QItemSelection&)),
+  connect(uninstallQueueView->selectionModel(),
+          SIGNAL(selectionChanged(const QItemSelection&,
+                                  const QItemSelection&)),
           this, SLOT(handleUninstallQueueSelection(const QItemSelection&,
                                                    const QItemSelection&)));
-  connect(uninstallQueueView->model(), SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+  connect(uninstallQueueView->model(),
+          SIGNAL(rowsInserted(const QModelIndex&, int, int)),
           this, SLOT(handleQueueAvailability(const QModelIndex, int, int)));
-  connect(uninstallQueueView->model(), SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
+  connect(uninstallQueueView->model(),
+          SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
           this, SLOT(handleQueueAvailability(const QModelIndex, int, int)));
 
   installedModsView = new QTreeView(this);
@@ -84,13 +91,17 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
   installedModsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
   availableModsView->setModel(coordinator->dataManager->availableModsModel);
-  connect(availableModsView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
-                                                                       const QItemSelection&)),
-          this, SLOT(handleAvailableSelection(const QItemSelection&, const QItemSelection&)));
+  connect(availableModsView->selectionModel(),
+          SIGNAL(selectionChanged(const QItemSelection&,
+                                  const QItemSelection&)),
+          this, SLOT(handleAvailableSelection(const QItemSelection&,
+                                              const QItemSelection&)));
   installedModsView->setModel(coordinator->dataManager->installedModsModel);
-  connect(installedModsView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
-                                                                       const QItemSelection&)),
-          this, SLOT(handleInstalledSelection(const QItemSelection&, const QItemSelection&)));
+  connect(installedModsView->selectionModel(),
+          SIGNAL(selectionChanged(const QItemSelection&,
+                                  const QItemSelection&)),
+          this, SLOT(handleInstalledSelection(const QItemSelection&,
+                                              const QItemSelection&)));
 
   QVBoxLayout* availableModsLayout = new QVBoxLayout;
   availableModsLayout->addWidget(availableModsLabel);
@@ -112,8 +123,9 @@ MainCentralWidget::MainCentralWidget(QWidget* parent, const Coordinator* coordin
   setLayout(layout);
 }
 
-void MainCentralWidget::handleTreeSelection(QItemSelectionModel* selectionModel, const QItemSelection& selected,
-                         const QItemSelection& deselected)
+void MainCentralWidget::handleTreeSelection(QItemSelectionModel* selectionModel,
+                                            const QItemSelection& selected,
+                                            const QItemSelection& deselected)
 {
   QModelIndex current = selectionModel->currentIndex();
   QItemSelection selectChildren;
@@ -126,7 +138,8 @@ void MainCentralWidget::handleTreeSelection(QItemSelectionModel* selectionModel,
       if (model->hasChildren(index)) {
         if (current.isValid() && current == index) {
           selectChildren.select(model->index(0, 0, index),
-                                model->index(model->rowCount(index) - 1, 0, index));
+                                model->index(model->rowCount(index) - 1,
+                                             0, index));
         }
       } else {
         if (!selectionModel->isSelected(index.parent())) {
@@ -142,7 +155,8 @@ void MainCentralWidget::handleTreeSelection(QItemSelectionModel* selectionModel,
       if (model->hasChildren(index)) {
         QItemSelection selection;
         deselectChildren.select(model->index(0, 0, index),
-                                model->index(model->rowCount(index) - 1, 0, index));
+                                model->index(model->rowCount(index) - 1,
+                                             0, index));
       } else {
         if (selectionModel->isSelected(index.parent())) {
           QModelIndex parent = index.parent();
@@ -233,7 +247,8 @@ void MainCentralWidget::handleQueueAvailability(const QModelIndex&, int, int)
 void MainCentralWidget::getSelectedAvailableMod()
 {
   QModelIndex index = availableModsView->selectionModel()->currentIndex();
-  QString tp2 = coordinator->dataManager->availableModsModel->data(index, Qt::DisplayRole).toString();
+  AvailableModsModel* model = coordinator->dataManager->availableModsModel;
+  QString tp2 = model->data(index, Qt::DisplayRole).toString();
   emit selectedAvailableMod(tp2);
 }
 
@@ -246,7 +261,8 @@ void MainCentralWidget::clearAvailableSelection()
 void MainCentralWidget::getSelectedInstalledMods()
 {
   QModelIndexList list = installedModsView->selectionModel()->selectedIndexes();
-  WeiduLog* componentList = coordinator->dataManager->installedModsModel->selectedComponents(list);
+  InstalledModsModel* model = coordinator->dataManager->installedModsModel;
+  WeiduLog* componentList = model->selectedComponents(list);
   emit selectedInstalledMods(componentList);
 }
 
@@ -257,8 +273,10 @@ void MainCentralWidget::clearInstalledSelection()
 
 void MainCentralWidget::getSelectedQueuedMods()
 {
-  QModelIndexList installQueue = installQueueView->selectionModel()->selectedIndexes();
-  QModelIndexList uninstallQueue = uninstallQueueView->selectionModel()->selectedIndexes();
+  QModelIndexList installQueue =
+    installQueueView->selectionModel()->selectedIndexes();
+  QModelIndexList uninstallQueue =
+    uninstallQueueView->selectionModel()->selectedIndexes();
   emit selectedInstallQueuedMods(installQueue);
   emit selectedUninstallQueuedMods(uninstallQueue);
 }

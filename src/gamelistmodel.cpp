@@ -28,7 +28,8 @@
 #include <QStringList>
 #include <QVariant>
 
-GameListModel::GameListModel(QObject* parent) : QStandardItemModel(parent)
+GameListModel::GameListModel(QObject* parent) :
+  QStandardItemModel(parent)
 {
   QStringList headerLabels;
   headerLabels << tr("Game Name") << tr("Game Location");

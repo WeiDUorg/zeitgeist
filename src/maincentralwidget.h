@@ -26,7 +26,8 @@ public:
 private slots:
   void handleInstalledSelection(const QItemSelection& selected,
                                 const QItemSelection& deselected);
-  void handleAvailableSelection(const QItemSelection& selected, const QItemSelection&);
+  void handleAvailableSelection(const QItemSelection& selected,
+                                const QItemSelection&);
   void handleInstallQueueSelection(const QItemSelection& selected,
                                    const QItemSelection& deselected);
   void handleUninstallQueueSelection(const QItemSelection& selected,

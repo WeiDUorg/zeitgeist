@@ -36,7 +36,8 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-SettingsWindow::SettingsWindow(QWidget* parent, const Coordinator* coordinator) :
+SettingsWindow::SettingsWindow(QWidget* parent,
+                               const Coordinator* coordinator) :
   QWidget(parent), coordinator(coordinator)
 {
   setWindowFlags(Qt::Window);
@@ -138,7 +139,8 @@ void SettingsWindow::initialWeiduValidation(const QString& path)
 void SettingsWindow::weiduFailedValidation(const QString& weiduPath)
 {
   QErrorMessage* error = new QErrorMessage(this);
-  error->showMessage(tr("The selected file is not an executable WeiDU binary: ") + weiduPath);
+  QString message = tr("The selected file is not an executable WeiDU binary: ");
+  error->showMessage(message.append(weiduPath));
   weiduTextField->clear();
   weiduLabel->setText(locateWeidu);
 }

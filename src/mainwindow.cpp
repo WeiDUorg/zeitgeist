@@ -141,10 +141,14 @@ void MainWindow::createActions()
           mainCentralWidget, SLOT(getSelectedQueuedMods()));
   connect(gameUnqueueAction, SIGNAL(triggered()),
           mainCentralWidget, SLOT(clearQueuedSelection()));
-  connect(mainCentralWidget, SIGNAL(selectedInstallQueuedMods(const QModelIndexList&)),
-          dataManager, SLOT(unqueueInstallComponents(const QModelIndexList&)));
-  connect(mainCentralWidget, SIGNAL(selectedUninstallQueuedMods(const QModelIndexList&)),
-          dataManager, SLOT(unqueueUninstallComponents(const QModelIndexList&)));
+  connect(mainCentralWidget,
+          SIGNAL(selectedInstallQueuedMods(const QModelIndexList&)),
+          dataManager,
+          SLOT(unqueueInstallComponents(const QModelIndexList&)));
+  connect(mainCentralWidget,
+          SIGNAL(selectedUninstallQueuedMods(const QModelIndexList&)),
+          dataManager,
+          SLOT(unqueueUninstallComponents(const QModelIndexList&)));
 
   /* Should only be enabled while there is a selection in installedModsView
    * Default: disabled (no installed mod is selected)
@@ -214,7 +218,8 @@ void MainWindow::showSettingsWindow()
 
 void MainWindow::createEnqueueModWindow(const QString& tp2)
 {
-  EnqueueModWindow* enqueueModWindow = new EnqueueModWindow(this, coordinator, tp2);
+  EnqueueModWindow* enqueueModWindow =
+    new EnqueueModWindow(this, coordinator, tp2);
   enqueueModWindow->show();
 }
 

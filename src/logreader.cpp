@@ -106,7 +106,9 @@ QList<QList<WeiduLogComponent>> LogReader::partitionData(const QList<WeiduLogCom
   QList<WeiduLogComponent>::const_iterator i;
   for (i = data.constBegin(); i != data.constEnd(); ++i) {
     int distance = i - data.constBegin();
-    QList<WeiduLogComponent> block = getContiguousBlock(data, distance, (*i).modName);
+    QList<WeiduLogComponent> block = getContiguousBlock(data,
+                                                        distance,
+                                                        (*i).modName);
     partitionedData.append(block);
     i += (block.length() - 1);
   }
@@ -118,7 +120,8 @@ QList<WeiduLogComponent> LogReader::getContiguousBlock(const QList<WeiduLogCompo
 {
   QList<WeiduLogComponent> block;
   QList<WeiduLogComponent>::const_iterator i;
-  for (i = data.constBegin() + index; i != data.constEnd() && (*i).modName.compare(name) == 0; ++i) {
+  for (i = data.constBegin() + index; i != data.constEnd()
+         && (*i).modName.compare(name) == 0; ++i) {
     block.append(*i);
   }
   return block;

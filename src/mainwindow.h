@@ -74,20 +74,26 @@ private:
   bool enqueueToggle = false;
   bool processToggle = false;
 
-  const QString gameEnqueueActionEnabled = tr("Queue a mod for installation");
+  const QString gameEnqueueActionEnabled =
+    tr("Queue a mod for installation");
   const QString gameEnqueueActionDisabled =
     tr("You must select an available mod before you can enqueue it");
-  const QString gameUnqueueActionEnabled = tr("Remove components from the queue");
+  const QString gameUnqueueActionEnabled =
+    tr("Remove components from the queue");
   const QString gameUnqueueActionDisabled =
     tr("You can only unqueue selected components in the queues");
-  const QString gameUninstallActionEnabled = tr("Queue a mod for uninstallation");
+  const QString gameUninstallActionEnabled =
+    tr("Queue a mod for uninstallation");
   const QString gameUninstallActionDisabled =
     tr("You must select an installed mod before you can uninstall it");
-  const QString gameProcessActionEnabled = tr("Process queue");
+  const QString gameProcessActionEnabled =
+    tr("Process queue");
   const QString gameProcessActionDisabled =
     tr("There is no queue to process");
-  const QString gameRefreshActionEnabled = tr("Refresh game");
-  const QString gameRefreshActionDisabled = tr("No game is loaded");
+  const QString gameRefreshActionEnabled =
+    tr("Refresh game");
+  const QString gameRefreshActionDisabled =
+    tr("No game is loaded");
   const QString installerUnavailable =
     tr("This action is unavailable until WeiDU has been configured");
 };

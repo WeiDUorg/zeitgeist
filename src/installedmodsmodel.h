@@ -32,7 +32,8 @@ private slots:
   void clear();
 
 private:
-  QList<QStandardItem*> getChildList(const QList<WeiduLogComponent>& componentList) const;
+  QList<QStandardItem*> getChildList(const QList<WeiduLogComponent>&
+                                     componentList) const;
   QHash<QString, QList<int>> populateLookup();
 
   QList<QList<WeiduLogComponent>> partitionedData;

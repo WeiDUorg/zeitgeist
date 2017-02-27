@@ -18,12 +18,14 @@ class EnqueueModWindow : public QWidget
   Q_OBJECT
 
 public:
-  EnqueueModWindow(QWidget* parent, const Coordinator* coordinator, const QString& tp2);
+  EnqueueModWindow(QWidget* parent, const Coordinator* coordinator,
+                   const QString& tp2);
   ~EnqueueModWindow();
 
 private slots:
   void languageList(const QStringList& list);
-  void handleLanguageSelection(const QItemSelection& selected, const QItemSelection&);
+  void handleLanguageSelection(const QItemSelection& selected,
+                               const QItemSelection&);
   void componentList(WeiduLog* list);
   void handleProceed();
 

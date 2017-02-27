@@ -99,7 +99,8 @@ QList<int> InstalledModsModel::installedComponents(const QString& tp2) const
   return lookup.value(tp2.toUpper());
 }
 
-WeiduLog* InstalledModsModel::selectedComponents(const QModelIndexList& indexList) const
+WeiduLog* InstalledModsModel::selectedComponents(const QModelIndexList&
+                                                 indexList) const
 {
   // Accumulate the component indices by block (parent index)
   QHash<int, QList<int>> acc;

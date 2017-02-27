@@ -8,7 +8,12 @@
 #include <QProcess>
 #include <QQueue>
 
-enum class Task { VERSION, GAMEPATH, LISTLANGUAGES, LISTCOMPONENTS, INSTALL, UNINSTALL };
+enum class Task { VERSION,
+                  GAMEPATH,
+                  LISTLANGUAGES,
+                  LISTCOMPONENTS,
+                  INSTALL,
+                  UNINSTALL };
 
 class QByteArray;
 class QProcess;
@@ -59,9 +64,15 @@ private:
   void startTask(const QStringList& arguments);
   void dequeue();
   QString debugFile(const QString& gamePath, const QString& modName);
-  void enqueue(Task task, QQueue<QString>& queue, QString string);
-  void enqueue(Task task, QQueue<QPair<QString, int>>& queue, QPair<QString, int> tuple);
-  void enqueue(Task task, QQueue<QList<WeiduLogComponent>>& queue, WeiduLog* modList);
+  void enqueue(Task task,
+               QQueue<QString>& queue,
+               QString string);
+  void enqueue(Task task,
+               QQueue<QPair<QString, int>>& queue,
+               QPair<QString, int> tuple);
+  void enqueue(Task task,
+               QQueue<QList<WeiduLogComponent>>& queue,
+               WeiduLog* modList);
 
   /* Tasks */
   void versionTask();

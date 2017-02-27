@@ -43,7 +43,8 @@
 EnqueueModWindow::EnqueueModWindow(QWidget* parent,
                                    const Coordinator* coordinator,
                                    const QString& tp2) :
-  QWidget(parent), coordinator(coordinator), tp2(tp2), currentComponentList(nullptr)
+  QWidget(parent), coordinator(coordinator), tp2(tp2),
+  currentComponentList(nullptr)
 {
   resize (640, 520); // Should ideally assume a size depending on parent's size
   setWindowFlags(Qt::Dialog);
@@ -62,11 +63,14 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
           coordinator->controller, SLOT(getLanguageList(const QString&)));
   connect(coordinator->controller, SIGNAL(languageList(const QStringList&)),
           this, SLOT(languageList(const QStringList&)));
-  connect(languageListView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,
-                                                                      const QItemSelection&)),
-          this, SLOT(handleLanguageSelection(const QItemSelection&, const QItemSelection)));
+  connect(languageListView->selectionModel(),
+          SIGNAL(selectionChanged(const QItemSelection&,
+                                  const QItemSelection&)),
+          this, SLOT(handleLanguageSelection(const QItemSelection&,
+                                             const QItemSelection)));
   connect(this, SIGNAL(getComponentList(const QString&, const int&)),
-          coordinator->controller, SLOT(getComponentList(const QString&, const int&)));
+          coordinator->controller, SLOT(getComponentList(const QString&,
+                                                         const int&)));
   connect(coordinator->controller, SIGNAL(componentList(WeiduLog*)),
           this, SLOT(componentList(WeiduLog*)));
 
@@ -108,18 +112,21 @@ void EnqueueModWindow::languageList(const QStringList& list)
   if (!list.isEmpty()) {
     languageListModel->setStringList(list);
   } else {
-    emit getComponentList(tp2, 0); // If the mod does not include any languages, 0 is default
+    /* If the mod does not include any languages, 0 is default */
+    emit getComponentList(tp2, 0);
   }
 }
 
-void EnqueueModWindow::handleLanguageSelection(const QItemSelection& selected, const QItemSelection&)
+void EnqueueModWindow::handleLanguageSelection(const QItemSelection& selected,
+                                               const QItemSelection&)
 {
   if (!selected.isEmpty()) {
     if (currentComponentList) {
       delete currentComponentList;
       currentComponentList = 0;
     }
-    emit getComponentList(tp2, languageListView->selectionModel()->currentIndex().row());
+    const QModelIndex i = languageListView->selectionModel()->currentIndex();
+    emit getComponentList(tp2, i.row());
   }
 }
 

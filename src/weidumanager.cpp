@@ -249,19 +249,25 @@ QString WeiduManager::debugFile(const QString& gamePath, const QString& modName)
   return logLoc;
 }
 
-void WeiduManager::enqueue(Task task, QQueue<QString>& queue, QString string)
+void WeiduManager::enqueue(Task task,
+                           QQueue<QString>& queue,
+                           QString string)
 {
   taskQueue.enqueue(task);
   queue.enqueue(string);
 }
 
-void WeiduManager::enqueue(Task task, QQueue<QPair<QString, int>>& queue, QPair<QString, int> tuple)
+void WeiduManager::enqueue(Task task,
+                           QQueue<QPair<QString, int>>& queue,
+                           QPair<QString, int> tuple)
 {
   taskQueue.enqueue(task);
   queue.enqueue(tuple);
 }
 
-void WeiduManager::enqueue(Task task, QQueue<QList<WeiduLogComponent>>& queue, WeiduLog* modList)
+void WeiduManager::enqueue(Task task,
+                           QQueue<QList<WeiduLogComponent>>& queue,
+                           WeiduLog* modList)
 {
   if (!modList->isEmpty()) {
     foreach (QList<WeiduLogComponent> mod, modList->data) {
@@ -297,7 +303,8 @@ void WeiduManager::listComponentsTask()
   QPair<QString, int> tuple = listComponentsQueue.head();
   QString tp2 = tuple.first;
   int index = tuple.second;
-  qDebug() << "Attempting to list components in" << tp2 << "for language" << index;
+  qDebug() << "Attempting to list components in" << tp2
+           << "for language" << index;
   QStringList arguments;
   arguments << "--list-components" << tp2 << QString::number(index);
   startTask(arguments);
