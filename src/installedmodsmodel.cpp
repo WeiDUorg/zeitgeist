@@ -22,6 +22,7 @@
 
 #include <algorithm>
 #include <QDebug>
+#include <QHash>
 #include <QList>
 #include <QListIterator>
 #include <QModelIndex>
@@ -138,4 +139,61 @@ WeiduLog* InstalledModsModel::selectedComponents(const QModelIndexList&
     result.append(innerResult);
   }
   return new WeiduLog(0, result); // WeiduLog intended for QueuedModsModel
+}
+
+/*
+ * The provided log may contain more or fewer component blocks than the
+ * reference data
+ */
+WeiduLog* InstalledModsModel::sortForUninstall(const WeiduLog* logFile) const
+{
+  QList<QList<WeiduLogComponent>> data = logFile->data;
+  QList<QList<WeiduLogComponent>> result;
+  QHash<QString, QList<int>> done;
+  // result can (should) never have more blocks than installed
+  result.reserve(partitionedData.size());
+  for (int i = 0; i < partitionedData.size(); ++i) {
+    QList<WeiduLogComponent> l;
+    result << l;
+  }
+
+  for (int i = 0; i < data.size(); ++i) {
+    QList<WeiduLogComponent> sBlock = data.at(i);
+    QString modName = sBlock.at(0).modName;
+    for (int j = 0; j < partitionedData.size(); ++j) {
+      QList<WeiduLogComponent> iBlock = partitionedData.at(j);
+      if (modName.compare(iBlock.at(0).modName, Qt::CaseInsensitive) == 0) {
+        for (int k = 0; k < sBlock.size(); ++k) {
+          if (iBlock.contains(sBlock.at(k))
+              && (done.value(modName).isEmpty()
+                  || !done.value(modName).contains(i))) {
+            QList<WeiduLogComponent> subResult = result.at(j);
+            subResult.append(sBlock);
+            result.replace(j, subResult);
+            QList<int> list = done.value(modName);
+            list << i;
+            done.insert(modName, list);
+            k = sBlock.size();
+            j = partitionedData.size();
+          }
+        }
+      }
+    }
+  }
+  // in case there were fewer blocks provided than installed
+  for (int i = 0; i < result.size(); ++i) {
+    if (result.at(i).isEmpty()) {
+      result.removeAt(i);
+    }
+  }
+  std::reverse(result.begin(), result.end());
+  qDebug() << "Mods sorted, reverse install order:";
+  foreach (QList<WeiduLogComponent> mod, result) {
+    foreach (WeiduLogComponent comp, mod) {
+      qDebug() << comp.comment;
+    }
+  }
+  delete logFile;
+  logFile = nullptr;
+  return new WeiduLog(0, result);
 }

@@ -12,6 +12,11 @@ struct WeiduLogComponent
   int language;
   int number;
   QString comment;
+
+  bool operator==(const WeiduLogComponent& r) const
+  {
+    return (this->modName == r.modName) && (this->number == r.number);
+  }
 };
 
 /* There's also inheriting QList<WeiduLogComponent>, but it seems bothersome */

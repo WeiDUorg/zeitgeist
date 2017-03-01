@@ -224,7 +224,8 @@ void DataManager::unqueueUninstallComponents(const QModelIndexList& indices)
 void DataManager::getQueues()
 {
   WeiduLog* installQueue = inQueuedModsModel->queue();
-  WeiduLog* uninstallQueue = outQueuedModsModel->queue();
+  WeiduLog* uninstallQueue =
+    installedModsModel->sortForUninstall(outQueuedModsModel->queue());
   emit clearQueues();
   emit processQueues(installQueue, uninstallQueue);
 }
