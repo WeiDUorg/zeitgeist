@@ -42,7 +42,7 @@ private slots:
   void unqueueInstallComponents(const QModelIndexList& indices);
   void unqueueUninstallComponents(const QModelIndexList& indices);
   void getQueues();
-  void modStackChanged();
+  void logFile(WeiduLog* logFile);
 
 public slots:
   void identifyCurrentGame() const;
@@ -56,6 +56,7 @@ signals:
   void processQueues(WeiduLog* installQueue,
                      WeiduLog* uninstallQueue);
   void gotGame(const bool& haveGot);
+  void getLog(const QString& gamePath);
 
 private:
   void saveGameList();

@@ -53,7 +53,7 @@ signals:
   void versionSignal(const int& version);
   void languageList(const QStringList& languageList);
   void componentList(WeiduLog* componentList);
-  void modStackChanged();
+  void modStackChanged(const QString& gamePath);
   void installTaskStarted();
   void installTaskEnded();
   void processOutput(const QString& text);

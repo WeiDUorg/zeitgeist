@@ -60,6 +60,16 @@ WeiduLog* LogReader::read(QObject* parent, const QByteArray& data)
   return new WeiduLog(parent, partitionData(list));
 }
 
+void LogReader::readLog(const QString& path) const
+{
+  emit logFile(read(0, path));
+}
+
+void LogReader::terminateReader()
+{
+  deleteLater();
+}
+
 bool LogReader::validLine(const QString& line)
 {
   if (line.isEmpty()) {

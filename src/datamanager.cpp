@@ -130,7 +130,7 @@ void DataManager::loadGame(const QString& path)
 
   identifyCurrentGame();
   availableModsModel->populate(currentGame);
-  installedModsModel->populate(currentGame->getInstalledMods());
+  emit getLog(WeiduLog::logPath(newPath));
   emit newGamePath(newPath, gameListModel->eeGame(newPath));
   emit gotGame(true);
 }
@@ -230,8 +230,7 @@ void DataManager::getQueues()
   emit processQueues(installQueue, uninstallQueue);
 }
 
-void DataManager::modStackChanged()
+void DataManager::logFile(WeiduLog* logFile)
 {
-  currentGame->reloadLog();
-  installedModsModel->populate(currentGame->getInstalledMods());
+  installedModsModel->populate(logFile);
 }

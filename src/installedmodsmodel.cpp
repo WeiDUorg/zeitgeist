@@ -43,7 +43,7 @@ void InstalledModsModel::clear()
   endResetModel();
 }
 
-void InstalledModsModel::populate(const WeiduLog* logFile)
+void InstalledModsModel::populate(WeiduLog* logFile)
 {
   /* logFile belongs to currentGame */
   clear();
@@ -62,6 +62,8 @@ void InstalledModsModel::populate(const WeiduLog* logFile)
     QList<QStandardItem*> children = getChildList(*i);
     parent->appendColumn(children);
   }
+  delete logFile;
+  logFile = nullptr;
   lookup = populateLookup();
 }
 

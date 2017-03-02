@@ -31,6 +31,7 @@ private slots:
 signals:
   void weiduFailedValidation(const QString& weiduPath);
   void terminateManager();
+  void terminateReader();
   void doesItQuack();
   void newWeiduManager(const WeiduManager* manager);
   void confirmedWeiduPath(const QString& path) const;
@@ -43,14 +44,17 @@ signals:
   void componentList(WeiduLog* componentList);
   void weiduInstall(WeiduLog* modList);
   void weiduUninstall(WeiduLog* modList);
-  void modStackChanged();
   void installTaskStarted();
   void installTaskEnded();
   void processOutput(const QString& text);
   void processInput(const QString& text);
 
+  void readLog(const QString& path);
+  void logFile(WeiduLog* logFile);
+
 private:
   QThread* workerThread;
+  QThread* readerThread;
   QString currentWeidu;
   int currentWeiduVersion;
   WeiduManager* weiduManager;

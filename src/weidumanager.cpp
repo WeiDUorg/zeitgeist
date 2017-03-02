@@ -18,6 +18,7 @@
  */
 
 #include "weidumanager.h"
+#include "weidulog.h"
 #include "weiduextractor.h"
 
 #include <QByteArray>
@@ -172,7 +173,7 @@ void WeiduManager::endTask(int exitCode, QProcess::ExitStatus exitStatus)
       qDebug() << "Ending INSTALL task";
       dequeue();
       if (taskQueue.isEmpty() || taskQueue.head() != Task::INSTALL) {
-        emit modStackChanged();
+        emit modStackChanged(WeiduLog::logPath(gamePath));
         emit installTaskEnded();
       }
       broadcast = false;
@@ -183,7 +184,7 @@ void WeiduManager::endTask(int exitCode, QProcess::ExitStatus exitStatus)
       dequeue();
       if (taskQueue.isEmpty() || (taskQueue.head() != Task::INSTALL &&
                                   taskQueue.head() != Task::UNINSTALL)) {
-        emit modStackChanged();
+        emit modStackChanged(WeiduLog::logPath(gamePath));
       }
       break;
     }

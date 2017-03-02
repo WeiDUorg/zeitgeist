@@ -20,7 +20,7 @@ class InstalledModsModel : public QStandardItemModel
 
 public:
   InstalledModsModel(QObject*  parent);
-  void populate(const WeiduLog* logFile);
+  void populate(WeiduLog* logFile);
   QList<int> installedComponents(const QString& tp2) const;
 
 public slots:

@@ -18,6 +18,7 @@
  */
 
 #include "controller.h"
+#include "logreader.h"
 #include "weidulog.h"
 #include "weidumanager.h"
 
@@ -25,14 +26,25 @@
 
 Controller::Controller(QObject* parent) :
   QObject(parent), workerThread(new QThread(this)),
-  currentWeidu(QString()), weiduManager(nullptr)
+  readerThread(new QThread(this)), currentWeidu(QString()),
+  weiduManager(nullptr)
 {
+  LogReader* reader = new LogReader();
+  connect(this, SIGNAL(readLog(const QString&)),
+          reader, SLOT(readLog(const QString&)));
+  connect(reader, SIGNAL(logFile(WeiduLog*)),
+          this, SIGNAL(logFile(WeiduLog*)));
+  connect(this, SIGNAL(terminateReader()),
+          reader, SLOT(terminateReader()));
 
+  reader->moveToThread(readerThread);
+  readerThread->start();
 }
 
 Controller::~Controller()
 {
   emit terminateManager();
+  emit terminateReader();
 }
 
 void Controller::setupWeidu(const QString& weiduPath)
@@ -66,8 +78,8 @@ void Controller::setupWeidu(const QString& weiduPath)
             weiduManager, SLOT(install(WeiduLog*)));
     connect(this, SIGNAL(weiduUninstall(WeiduLog*)),
             weiduManager, SLOT(uninstall(WeiduLog*)));
-    connect(weiduManager, SIGNAL(modStackChanged()),
-            this, SIGNAL(modStackChanged()));
+    connect(weiduManager, SIGNAL(modStackChanged(const QString&)),
+            this, SIGNAL(readLog(const QString&)));
     connect(weiduManager, SIGNAL(installTaskStarted()),
             this, SIGNAL(installTaskStarted()));
     connect(weiduManager, SIGNAL(installTaskEnded()),

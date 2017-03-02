@@ -10,20 +10,27 @@ struct WeiduLogComponent;
 class QByteArray;
 class QString;
 
-/*
- * This class is stupid and the functions herein should obviously be
- * part of the WeiduLog class
- */
-
-class LogReader : QObject
+class LogReader : public QObject
 {
   Q_OBJECT
 
 public:
-  static WeiduLog* read(QObject* parent, const QString& path);
+  LogReader()
+  {
+
+  }
+
   static WeiduLog* read(QObject* parent, const QByteArray& data);
 
+private slots:
+  void readLog(const QString& path) const;
+  void terminateReader();
+
+signals:
+  void logFile(WeiduLog* logFile) const;
+
 private:
+  static WeiduLog* read(QObject* parent, const QString& path);
   static bool validLine(const QString& line);
   static WeiduLogComponent parseLine(const QString& line);
   static QList<QList<WeiduLogComponent>> partitionData(const QList<WeiduLogComponent>& data);

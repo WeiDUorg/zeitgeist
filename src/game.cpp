@@ -32,8 +32,6 @@ Game::Game(QObject* parent, const QString& path) :
   QObject(parent), path(path)
 {
   availableMods = getModList(path);
-  /* WeiduLog intended for us */
-  installedMods = LogReader::read(this, WeiduLog::logPath(path));
 }
 
 QList<Mod*> Game::getModList(const QString& path)
@@ -105,14 +103,4 @@ QList<QString> Game::getModPaths() const
     result.append(mod->tp2Path);
   }
   return result;
-}
-
-WeiduLog* Game::getInstalledMods() const
-{
-  return installedMods;
-}
-
-void Game::reloadLog()
-{
-  installedMods = LogReader::read(this, WeiduLog::logPath(path));
 }
