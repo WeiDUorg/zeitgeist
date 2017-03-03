@@ -63,6 +63,7 @@ void WeiduManager::quack()
             this, SLOT(readProcessOutput()));
     connect(process, SIGNAL(finished(int, QProcess::ExitStatus)),
             this, SLOT(endTask(int, QProcess::ExitStatus)));
+    syncMethodsDisabled = true;
     emit quacks(true);
   } else {
     emit quacks(false);
@@ -355,9 +356,13 @@ void WeiduManager::uninstallTask()
 /* Not for general use */
 QByteArray WeiduManager::run(const QStringList& arguments)
 {
-  process->start(weiduPath, arguments);
-  process->waitForFinished();
-  return process->readAllStandardOutput();
+  if (!syncMethodsDisabled) {
+    process->start(weiduPath, arguments);
+    process->waitForFinished();
+    return process->readAllStandardOutput();
+  }
+  QByteArray dummy;
+  return dummy;
 }
 
 void WeiduManager::version()

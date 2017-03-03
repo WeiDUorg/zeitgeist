@@ -91,6 +91,7 @@ private:
   QString eeLangDir = "en_us";
   QProcess* process;
 
+  bool syncMethodsDisabled = false;
   bool busy = false;
   bool broadcast = false;
   QByteArray readBuffer;
