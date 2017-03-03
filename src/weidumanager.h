@@ -8,6 +8,13 @@
 #include <QProcess>
 #include <QQueue>
 
+class QByteArray;
+class QMutex;
+class QMutexLocker;
+class QProcess;
+class QString;
+class QStringList;
+
 enum class Task { VERSION,
                   GAMEPATH,
                   LISTLANGUAGES,
@@ -15,17 +22,12 @@ enum class Task { VERSION,
                   INSTALL,
                   UNINSTALL };
 
-class QByteArray;
-class QProcess;
-class QString;
-class QStringList;
-
 class WeiduManager : public QObject
 {
   Q_OBJECT
 
 public:
-  WeiduManager(const QString& weiduPath);
+  WeiduManager(const QString& weiduPath, QMutex* weiduLog);
   bool executable() const;
 
 private slots:
@@ -82,6 +84,8 @@ private:
   void uninstallTask();
 
   const QString weiduPath;
+  QMutex* weiduLog;
+  QMutexLocker* weiduLogLocker;
   QString gamePath;
   bool eeGame = false;
   QString eeLangDir = "en_us";

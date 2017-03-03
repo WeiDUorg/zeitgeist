@@ -24,8 +24,15 @@
 #include <QDebug>
 #include <QFile>
 #include <QIODevice>
+#include <QMutexLocker>
 #include <QRegExp>
 #include <QTextStream>
+
+LogReader::LogReader(QMutex* weiduLog) :
+weiduLog(weiduLog)
+{
+
+}
 
 WeiduLog* LogReader::read(QObject* parent, const QString& path)
 {
@@ -33,9 +40,11 @@ WeiduLog* LogReader::read(QObject* parent, const QString& path)
   QList<QList<WeiduLogComponent>> dummy;
   QFile file(path);
   if (file.exists()) {
+    QMutexLocker locker(weiduLog);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
       QByteArray logData = file.readAll();
       file.close();
+      locker.unlock();
       return read(parent, logData);
     } else {
       qDebug() << "Unable to open log file";
@@ -60,7 +69,7 @@ WeiduLog* LogReader::read(QObject* parent, const QByteArray& data)
   return new WeiduLog(parent, partitionData(list));
 }
 
-void LogReader::readLog(const QString& path) const
+void LogReader::readLog(const QString& path)
 {
   emit logFile(read(0, path));
 }

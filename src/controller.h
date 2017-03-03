@@ -1,6 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include <QMutex>
 #include <QObject>
 #include <QThread>
 
@@ -53,6 +54,7 @@ signals:
   void logFile(WeiduLog* logFile);
 
 private:
+  QMutex weiduLog;
   QThread* workerThread;
   QThread* readerThread;
   QString currentWeidu;

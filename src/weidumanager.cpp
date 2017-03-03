@@ -27,10 +27,12 @@
 #include <QFile>
 //#include <QFileDevice> // Qt 5
 #include <QFileInfo>
+#include <QMutex>
 #include <QStringList>
 
-WeiduManager::WeiduManager(const QString& weiduPath) :
-  weiduPath(weiduPath), gamePath(QString()), process(new QProcess(this))
+WeiduManager::WeiduManager(const QString& weiduPath, QMutex* weiduLog) :
+  weiduPath(weiduPath), weiduLog(weiduLog), weiduLogLocker(nullptr),
+  gamePath(QString()), process(new QProcess(this))
 {
   // should also monitor the error() signal
 }
@@ -119,6 +121,7 @@ void WeiduManager::doTask()
 void WeiduManager::startTask(const QStringList& arguments)
 {
   readBuffer.resize(0);
+  weiduLogLocker = new QMutexLocker(weiduLog);
   process->start(weiduPath, arguments);
   bool started = process->waitForStarted();
   if (!started) {
@@ -134,6 +137,8 @@ void WeiduManager::startTask(const QStringList& arguments)
 
 void WeiduManager::endTask(int exitCode, QProcess::ExitStatus exitStatus)
 {
+  delete weiduLogLocker;
+  weiduLogLocker = nullptr;
   if (!exitCode == 0 || !exitStatus == 0) {
     qDebug() << "Abnormal return values from process";
     qDebug() << "Exit code:" << QString::number(exitCode) <<

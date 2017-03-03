@@ -8,6 +8,7 @@ class WeiduLog;
 struct WeiduLogComponent;
 
 class QByteArray;
+class QMutex;
 class QString;
 
 class LogReader : public QObject
@@ -15,22 +16,21 @@ class LogReader : public QObject
   Q_OBJECT
 
 public:
-  LogReader()
-  {
-
-  }
+  LogReader(QMutex* weiduLog);
 
   static WeiduLog* read(QObject* parent, const QByteArray& data);
 
 private slots:
-  void readLog(const QString& path) const;
+  void readLog(const QString& path);
   void terminateReader();
 
 signals:
-  void logFile(WeiduLog* logFile) const;
+  void logFile(WeiduLog* logFile);
 
 private:
-  static WeiduLog* read(QObject* parent, const QString& path);
+  QMutex* weiduLog;
+
+  WeiduLog* read(QObject* parent, const QString& path);
   static bool validLine(const QString& line);
   static WeiduLogComponent parseLine(const QString& line);
   static QList<QList<WeiduLogComponent>> partitionData(const QList<WeiduLogComponent>& data);

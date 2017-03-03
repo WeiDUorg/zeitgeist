@@ -29,7 +29,7 @@ Controller::Controller(QObject* parent) :
   readerThread(new QThread(this)), currentWeidu(QString()),
   weiduManager(nullptr)
 {
-  LogReader* reader = new LogReader();
+  LogReader* reader = new LogReader(&weiduLog);
   connect(this, SIGNAL(readLog(const QString&)),
           reader, SLOT(readLog(const QString&)));
   connect(reader, SIGNAL(logFile(WeiduLog*)),
@@ -51,7 +51,7 @@ void Controller::setupWeidu(const QString& weiduPath)
 {
   emit terminateManager();
   currentWeidu = weiduPath;
-  weiduManager = new WeiduManager(weiduPath);
+  weiduManager = new WeiduManager(weiduPath, &weiduLog);
   if (weiduManager->executable()) {
     qDebug() << "File" << weiduPath << "is executable";
     weiduManager->moveToThread(workerThread);
