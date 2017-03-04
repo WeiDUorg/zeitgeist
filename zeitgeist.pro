@@ -6,7 +6,7 @@ TEMPLATE = app
 # maybe add the release option (depending on the defaults of your Qt
 # distribution).
 
-CONFIG += c++11 debug
+CONFIG += debug
 QMAKE_CXXFLAGS += -std=c++11 -isystem $$[QT_INSTALL_HEADERS]
 
 CONFIG(debug, debug|release) {
