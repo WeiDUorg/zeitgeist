@@ -45,6 +45,8 @@ void GameListModel::addRow(const QString& gameName, const QString& gamePath,
 {
   QList<QStandardItem*> row;
   QStandardItem* pathItem = new QStandardItem(gamePath);
+  /* item is not editable */
+  pathItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
   pathItem->setData(QVariant(stringOfType(gameType)), GAME_TYPE);
   QStringList dirs = langDirs(gamePath);
   QStringList langs;
