@@ -53,6 +53,9 @@ void GameListModel::addRow(const QString& gameName, const QString& gamePath,
   foreach (QString dir, dirs) {
     langs << eeDirToLang(dir);
   }
+  std::sort(langs.begin(), langs.end(), [](const QString& l, const QString& r) {
+      return l < r;
+    });
   QStandardItem* langItem = new QStandardItem();
   if (!langs.isEmpty()) {
     langItem->setData(QVariant(langs), LANG_LIST);
@@ -322,10 +325,6 @@ QStringList GameListModel::langDirs(const QString& gamePath) const
       }
     }
   }
-  std::sort(result.begin(), result.end(),
-            [](const QString& l, const QString& r) {
-              return l < r;
-            });
   return result;
 }
 
