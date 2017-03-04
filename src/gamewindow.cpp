@@ -41,7 +41,8 @@ GameWindow::GameWindow(QWidget* parent, const DataManager* dataManager) :
   QWidget(parent), dataManager(dataManager)
 {
   resize(640, 400);
-  setWindowFlags(Qt::Window);
+  setWindowFlags(Qt::Dialog);
+  setWindowModality(Qt::WindowModal);
   setWindowTitle(tr("Edit Games"));
 
   gameList = new QTableView(this);
