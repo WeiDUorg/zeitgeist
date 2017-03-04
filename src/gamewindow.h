@@ -23,7 +23,7 @@ private slots:
   void select();
   void select(const QModelIndex& index);
   void notAGameDirectory(const QString& path);
-  void rowsInserted(const QModelIndex&, int, int);
+  void rowsInserted(const QModelIndex&, int start, int end);
 
 signals:
   void addGame(const QString& path);

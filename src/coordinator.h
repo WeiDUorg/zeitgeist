@@ -31,8 +31,6 @@ signals:
   void weiduPathSignal(const QString& path);
   void weiduFailedValidationSignal(const QString& weiduPath);
   void restoreStateSignal();
-  void eeLang(const QString& lang);
-  void eeLangRequest();
   void installerAvailable(const bool& available);
 };
 

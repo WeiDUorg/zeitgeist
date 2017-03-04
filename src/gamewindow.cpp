@@ -18,20 +18,24 @@
  */
 
 #include "gamewindow.h"
+#include "comboboxdelegate.h"
 #include "gamelistmodel.h"
 #include "datamanager.h"
 
-#include <QTableView>
-#include <QHeaderView>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QString>
+#include <QAbstractItemView>
+#include <QDebug>
+#include <QDir>
 #include <QFileDialog>
+#include <QHBoxLayout>
+#include <QHeaderView>
 #include <QMessageBox>
 #include <QModelIndex>
-#include <QAbstractItemView>
-#include <QDir>
+#include <QPushButton>
+#include <QString>
+#include <QTableView>
+#include <QVBoxLayout>
+
+/* WTH kind of ugly BS is openPersistentEditor()? */
 
 GameWindow::GameWindow(QWidget* parent, const DataManager* dataManager) :
   QWidget(parent), dataManager(dataManager)
@@ -43,12 +47,17 @@ GameWindow::GameWindow(QWidget* parent, const DataManager* dataManager) :
   gameList = new QTableView(this);
   gameList->verticalHeader()->hide();
   gameList->setSelectionMode(QAbstractItemView::SingleSelection);
+  gameList->setItemDelegate(new ComboBoxDelegate(gameList));
 
   model = dataManager->gameListModel;
   connect(model, SIGNAL(rowsInserted(const QModelIndex&, int, int)),
           this, SLOT(rowsInserted(const QModelIndex&, int, int)));
   gameList->setModel(model);
   gameList->resizeColumnsToContents();
+
+  for (int i = 0; i < model->rowCount(); ++i) {
+    gameList->openPersistentEditor(model->index(i, 2));
+  }
 
   addGameButton = new QPushButton(tr("Add"), this);
   removeGameButton = new QPushButton(tr("Remove"), this);
@@ -116,13 +125,17 @@ void GameWindow::select(const QModelIndex& index)
   }
 }
 
-/* If the game list is empty and the user adds a game, automatically
- * select that game
- */
-void GameWindow::rowsInserted(const QModelIndex&, int, int)
+void GameWindow::rowsInserted(const QModelIndex&, int start, int end)
 {
+  /* If the game list is empty and the user adds a game, automatically
+   * select that game
+   */
   if (model->rowCount() == 1) {
     select(model->index(0,0));
+  }
+  /* openPersistentEditor on column 2 of new rows */
+  for (int i = start; i < end + 1; ++i) {
+    gameList->openPersistentEditor(model->index(i, 2));
   }
 }
 

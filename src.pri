@@ -2,6 +2,7 @@
 
 HEADERS += \
         src/availablemodsmodel.h \
+        src/comboboxdelegate.h \
         src/controller.h \
         src/coordinator.h \
         src/datamanager.h \
@@ -24,6 +25,7 @@ HEADERS += \
 
 SOURCES += \
         src/availablemodsmodel.cpp \
+        src/comboboxdelegate.cpp \
         src/controller.cpp \
         src/coordinator.cpp \
         src/datamanager.cpp \

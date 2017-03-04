@@ -54,6 +54,8 @@ DataManager::DataManager(QObject* parent) :
           inQueuedModsModel, SLOT(clear()));
   connect(this, SIGNAL(clearQueues()),
           outQueuedModsModel, SLOT(clear()));
+  connect(gameListModel, SIGNAL(eeLangSignal(const QString&)),
+          this, SIGNAL(eeLang(const QString&)));
 }
 
 void DataManager::saveState()
@@ -97,6 +99,7 @@ void DataManager::saveGameList()
       settings->setArrayIndex(i);
       settings->setValue("name", gameList.at(i).name);
       settings->setValue("path", gameList.at(i).path);
+      settings->setValue("lang", gameList.at(i).lang);
     }
     settings->endArray();
   }
@@ -112,6 +115,7 @@ void DataManager::restoreGameList()
     GameListDataEntry entry;
     entry.name = settings->value("name").toString();
     entry.path = settings->value("path").toString();
+    entry.lang = settings->value("lang").toString();
     if (QDir(entry.path).exists()) {
       qDebug() << "Restoring game list entry:" << entry.path;
       list.append(entry);
@@ -173,6 +177,7 @@ void DataManager::emitCurrentGamePath() const
     path = QString();
   }
   emit newGamePath(path, gameListModel->eeGame(path));
+  emit eeLang(gameListModel->eeLang(path));
 }
 
 void DataManager::gameRemoved(const QString& path)
