@@ -27,6 +27,12 @@ enum GameListMetaData {
   LANG_LIST
 };
 
+enum GameListColumns {
+  COLUMN_NAME,
+  COLUMN_PATH,
+  COLUMN_LANG
+};
+
 struct GameListDataEntry {
   QString name;
   QString path;

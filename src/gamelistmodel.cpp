@@ -79,7 +79,7 @@ void GameListModel::removeGame(const QModelIndex& index)
   int row = index.row();
   if (index.isValid() && row < rowCount()) {
     emit gameRemoved(pathOfIndex(index));
-    removeRows(row, 1);
+    removeRows(row, COLUMN_PATH);
   }
 }
 
@@ -90,11 +90,11 @@ QList<GameListDataEntry> GameListModel::exportData() const
   result.reserve(rows);
   for (int i = 0; i < rows; ++i) {
     GameListDataEntry row;
-    row.name = item(i, 0)->text();
-    row.path = item(i, 1)->text();
+    row.name = item(i, COLUMN_NAME)->text();
+    row.path = item(i, COLUMN_PATH)->text();
     QString lang;
     if (eeGame(row.path)) {
-      lang = eeLangToDir(item(i, 2)->data(Qt::EditRole).toString());
+      lang = eeLangToDir(item(i, COLUMN_LANG)->data(Qt::EditRole).toString());
     }
     row.lang = lang;
     result.append(row);
@@ -120,7 +120,7 @@ QString GameListModel::pathOfIndex(const QModelIndex& index) const
 {
   int row = index.row();
   if (index.isValid() && row < rowCount()) {
-    return item(row, 1)->text();
+    return item(row, COLUMN_PATH)->text();
   }
   return QString();
 }
@@ -128,8 +128,8 @@ QString GameListModel::pathOfIndex(const QModelIndex& index) const
 QString GameListModel::identifierOfPath(const QString& path) const
 {
   for (int i = 0; i < rowCount(); ++i) {
-    if (path.compare(item(i, 1)->text()) == 0) {
-      return item(i, 0)->text();
+    if (path.compare(item(i, COLUMN_PATH)->text()) == 0) {
+      return item(i, COLUMN_NAME)->text();
     }
   }
   qDebug() << "Could not find an identity for path" << path;
@@ -217,7 +217,7 @@ QString GameListModel::prettyPrintGameType(const GameType& type) const
 bool GameListModel::duplicate(const QString& path) const
 {
   for (int i = 0; i < rowCount(); ++i) {
-    if (path.compare(item(i, 1)->text()) == 0) {
+    if (path.compare(item(i, COLUMN_PATH)->text()) == 0) {
       return true;
     }
   }
@@ -275,8 +275,9 @@ GameType GameListModel::typeOfString(const QString& name) const
 bool GameListModel::eeGame(const QString& path) const
 {
   for (int i = 0; i < rowCount(); ++i) {
-    if (path.compare(item(i, 1)->text()) == 0) {
-      GameType type = typeOfString(item(i, 1)->data(GAME_TYPE).toString());
+    if (path.compare(item(i, COLUMN_PATH)->text()) == 0) {
+      QStandardItem* pathItem = item(i, COLUMN_PATH);
+      GameType type = typeOfString(pathItem->data(GAME_TYPE).toString());
       switch (type) {
       case GameType::BGEE:
       case GameType::BG2EE:
@@ -293,8 +294,8 @@ bool GameListModel::eeGame(const QString& path) const
 QString GameListModel::eeLang(const QString& path) const
 {
   for (int i = 0; i < rowCount(); ++i) {
-    if (path.compare(item(i, 1)->text()) == 0) {
-      return eeLangToDir(item(i, 2)->data(Qt::EditRole).toString());
+    if (path.compare(item(i, COLUMN_PATH)->text()) == 0) {
+      return eeLangToDir(item(i, COLUMN_LANG)->data(Qt::EditRole).toString());
     }
   }
   return QString();
@@ -328,8 +329,8 @@ QStringList GameListModel::langDirs(const QString& gamePath) const
 
 QVariant GameListModel::data(const QModelIndex& index, int role) const
 {
-  if (index.column() == 2 && role == Qt::DisplayRole) {
-    return item(index.row(), 2)->data(LANG_LIST);
+  if (index.column() == COLUMN_LANG && role == Qt::DisplayRole) {
+    return item(index.row(), COLUMN_LANG)->data(LANG_LIST);
   } else {
     return item(index.row(), index.column())->data(role);
   }
@@ -338,9 +339,9 @@ QVariant GameListModel::data(const QModelIndex& index, int role) const
 void GameListModel::handleDataChanged(const QModelIndex& topLeft,
                                       const QModelIndex& bottomRight)
 {
-  if (topLeft.column() == 2 && bottomRight.column() == 2
+  if (topLeft.column() == COLUMN_LANG && bottomRight.column() == COLUMN_LANG
    && topLeft.row() == bottomRight.row()) {
-    QStandardItem* langItem = item(topLeft.row(), 2);
+    QStandardItem* langItem = item(topLeft.row(), COLUMN_LANG);
     QString lang = eeLangToDir(langItem->data(Qt::EditRole).toString());
     qDebug() << "Emitting EE lang" << lang;
     emit eeLangSignal(lang);
