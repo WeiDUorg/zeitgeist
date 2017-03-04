@@ -54,8 +54,8 @@ DataManager::DataManager(QObject* parent) :
           inQueuedModsModel, SLOT(clear()));
   connect(this, SIGNAL(clearQueues()),
           outQueuedModsModel, SLOT(clear()));
-  connect(gameListModel, SIGNAL(eeLangSignal(const QString&)),
-          this, SIGNAL(eeLang(const QString&)));
+  connect(gameListModel, SIGNAL(eeLangSignal(const QString&, const QString&)),
+          this, SLOT(handleEeLang(const QString&, const QString&)));
 }
 
 void DataManager::saveState()
@@ -136,6 +136,7 @@ void DataManager::loadGame(const QString& path)
   availableModsModel->populate(currentGame);
   emit getLog(WeiduLog::logPath(newPath));
   emit newGamePath(newPath, gameListModel->eeGame(newPath));
+  emit eeLang(gameListModel->eeLang(newPath));
   emit gotGame(true);
 }
 
@@ -238,4 +239,11 @@ void DataManager::getQueues()
 void DataManager::logFile(WeiduLog* logFile)
 {
   installedModsModel->populate(logFile);
+}
+
+void DataManager::handleEeLang(const QString& path, const QString& lang) const
+{
+  if (path.compare(currentGame->path, Qt::CaseInsensitive) == 0) {
+    emit eeLang(lang);
+  }
 }

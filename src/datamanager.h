@@ -43,6 +43,7 @@ private slots:
   void unqueueUninstallComponents(const QModelIndexList& indices);
   void getQueues();
   void logFile(WeiduLog* logFile);
+  void handleEeLang(const QString& path, const QString& lang) const;
 
 public slots:
   void identifyCurrentGame() const;

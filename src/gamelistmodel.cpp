@@ -345,8 +345,8 @@ void GameListModel::handleDataChanged(const QModelIndex& topLeft,
    && topLeft.row() == bottomRight.row()) {
     QStandardItem* langItem = item(topLeft.row(), COLUMN_LANG);
     QString lang = eeLangToDir(langItem->data(Qt::EditRole).toString());
-    qDebug() << "Emitting EE lang" << lang;
-    emit eeLangSignal(lang);
+    QString path = item(topLeft.row(), COLUMN_PATH)->text();
+    emit eeLangSignal(path, lang);
   }
 }
 

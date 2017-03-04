@@ -63,7 +63,7 @@ private slots:
 signals:
   void notAGameDirectory(const QString& path) const;
   void gameRemoved(const QString& path) const;
-  void eeLangSignal(const QString& lang) const;
+  void eeLangSignal(const QString& path, const QString& lang) const;
 
 private:
   void addRow(const QString& gameName, const QString& gamePath,
