@@ -8,6 +8,7 @@
 class WeiduLog;
 class WeiduManager;
 
+class QJsonDocument;
 class QString;
 class QStringList;
 
@@ -42,7 +43,8 @@ signals:
   void weiduListLanguages(const QString& tp2);
   void languageList(const QStringList& list);
   void weiduListComponents(const QString& tp2, const int& index);
-  void componentList(WeiduLog* componentList);
+  void componentList(const QString& tp2, int lang,
+                     const QJsonDocument& componentList);
   void weiduInstall(WeiduLog* modList);
   void weiduUninstall(WeiduLog* modList);
   void installTaskStarted();

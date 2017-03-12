@@ -22,7 +22,10 @@
 
 #include <QByteArray>
 #include <QDebug>
+#include <QJsonDocument>
+#include <QJsonParseError>
 #include <QRegExp>
+#include <QString>
 #include <QStringList>
 
 int WeiduExtractor::version(const QByteArray& message)
@@ -48,7 +51,18 @@ QStringList WeiduExtractor::languageList(const QByteArray& message)
   return list;
 }
 
-WeiduLog* WeiduExtractor::componentList(const QByteArray& message)
+QJsonDocument WeiduExtractor::componentList(const QByteArray& message)
 {
-  return LogReader::read(0, message); // WeiduLog intended for EnqueueModWindow
+  QStringList raw = QString::fromUtf8(message).split("\n");
+  QJsonParseError error;
+  while (!raw.isEmpty()) {
+    QString line = raw.takeLast();
+    QJsonDocument doc = QJsonDocument::fromJson(line.toUtf8(), &error);
+    if (error.error == QJsonParseError::NoError) {
+      return doc ;
+    }
+  }
+  qDebug() << "Could not parse anything in component list";
+  // emit something?
+  return QJsonDocument();
 }

@@ -19,6 +19,7 @@
 
 #include "datamanager.h"
 #include "availablemodsmodel.h"
+#include "enqueuemodmodel.h"
 #include "game.h"
 #include "gamelistmodel.h"
 #include "installedmodsmodel.h"
@@ -38,6 +39,7 @@ DataManager::DataManager(QObject* parent) :
   installedModsModel(new InstalledModsModel(this)),
   inQueuedModsModel(new QueuedModsModel(this)),
   outQueuedModsModel(new QueuedModsModel(this)),
+  enqueueModModel(new EnqueueModModel(this)),
   settings(new QSettings("zeitgeist", "zeitgeist", this)), currentGame(nullptr)
 {
   connect(gameListModel, SIGNAL(gameRemoved(const QString&)),
@@ -197,8 +199,10 @@ void DataManager::confirmedWeiduPath(const QString& path)
   settings->setValue("weiduPath", path);
 }
 
-void DataManager::enqueueComponents(WeiduLog* componentList)
+void DataManager::enqueueComponents(const QString& modName, int lang)
 {
+  WeiduLog* componentList = enqueueModModel->selected(modName, lang);
+  enqueueModModel->clear();
   if (!componentList->isEmpty()) {
     componentList->setParent(inQueuedModsModel);
     inQueuedModsModel->add(componentList);
@@ -246,4 +250,12 @@ void DataManager::handleEeLang(const QString& path, const QString& lang) const
   if (path.compare(currentGame->path, Qt::CaseInsensitive) == 0) {
     emit eeLang(lang);
   }
+}
+
+void DataManager::componentList(const QString& tp2, int,
+                                const QJsonDocument& list) const
+{
+  QList<int> installed = installedModsModel->installedComponents(tp2);
+  QList<int> queued = inQueuedModsModel->queuedComponents(tp2);
+  enqueueModModel->populate(list, installed, queued);
 }

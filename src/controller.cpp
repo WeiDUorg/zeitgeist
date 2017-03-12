@@ -72,8 +72,10 @@ void Controller::setupWeidu(const QString& weiduPath)
             weiduManager, SLOT(getLanguageList(const QString&)));
     connect(this, SIGNAL(weiduListComponents(const QString&, const int&)),
             weiduManager, SLOT(getComponentList(const QString&, const int&)));
-    connect(weiduManager, SIGNAL(componentList(WeiduLog*)),
-            this, SIGNAL(componentList(WeiduLog*)));
+    connect(weiduManager, SIGNAL(componentList(const QString&, int,
+                                               const QJsonDocument&)),
+            this, SIGNAL(componentList(const QString&, int,
+                                       const QJsonDocument&)));
     connect(this, SIGNAL(weiduInstall(WeiduLog*)),
             weiduManager, SLOT(install(WeiduLog*)));
     connect(this, SIGNAL(weiduUninstall(WeiduLog*)),

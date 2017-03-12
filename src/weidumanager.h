@@ -9,6 +9,7 @@
 #include <QQueue>
 
 class QByteArray;
+class QJsonDocument;
 class QMutex;
 class QMutexLocker;
 class QProcess;
@@ -54,7 +55,8 @@ signals:
   /* Signals for communicating results */
   void versionSignal(const int& version);
   void languageList(const QStringList& languageList);
-  void componentList(WeiduLog* componentList);
+  void componentList(const QString& tp2, int lang,
+                     const QJsonDocument& componentList);
   void modStackChanged(const QString& gamePath);
   void installTaskStarted();
   void installTaskEnded();

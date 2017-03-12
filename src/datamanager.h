@@ -6,6 +6,7 @@
 #include <QModelIndex>
 
 class AvailableModsModel;
+class EnqueueModModel;
 class Game;
 class GameListModel;
 class InstalledModsModel;
@@ -29,6 +30,7 @@ public:
   InstalledModsModel* installedModsModel;
   QueuedModsModel* inQueuedModsModel;
   QueuedModsModel* outQueuedModsModel;
+  EnqueueModModel* enqueueModModel;
 
 private slots:
   void useGame(const QString& path);
@@ -37,13 +39,15 @@ private slots:
   void refreshCurrentGame();
   void gameRemoved(const QString& path);
   void confirmedWeiduPath(const QString& path);
-  void enqueueComponents(WeiduLog* componentList);
+  void enqueueComponents(const QString& modName, int lang);
   void uninstallComponents(WeiduLog* componentList);
   void unqueueInstallComponents(const QModelIndexList& indices);
   void unqueueUninstallComponents(const QModelIndexList& indices);
   void getQueues();
   void logFile(WeiduLog* logFile);
   void handleEeLang(const QString& path, const QString& lang) const;
+  void componentList(const QString& tp2, int,
+                     const QJsonDocument& list) const;
 
 public slots:
   void identifyCurrentGame() const;

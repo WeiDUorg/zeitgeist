@@ -25,8 +25,8 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
-//#include <QFileDevice> // Qt 5
 #include <QFileInfo>
+#include <QJsonDocument>
 #include <QMutex>
 #include <QStringList>
 
@@ -170,9 +170,13 @@ void WeiduManager::endTask(int exitCode, QProcess::ExitStatus exitStatus)
       break;
 
     case Task::LISTCOMPONENTS:
-      qDebug() << "Ending LISTCOMPONENTS task";
-      dequeue();
-      emit componentList(WeiduExtractor::componentList(readBuffer));
+      {
+        qDebug() << "Ending LISTCOMPONENTS task";
+        QPair<QString, int> tuple = listComponentsQueue.head();
+        dequeue();
+        emit componentList(tuple.first, tuple.second,
+                           WeiduExtractor::componentList(readBuffer));
+      }
       break;
 
     case Task::INSTALL:
@@ -313,7 +317,7 @@ void WeiduManager::listComponentsTask()
   qDebug() << "Attempting to list components in" << tp2
            << "for language" << index;
   QStringList arguments;
-  arguments << "--list-components" << tp2 << QString::number(index);
+  arguments << "--list-components-json" << tp2 << QString::number(index);
   startTask(arguments);
 }
 

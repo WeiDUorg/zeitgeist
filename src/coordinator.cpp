@@ -20,7 +20,10 @@
 #include "coordinator.h"
 #include "controller.h"
 #include "datamanager.h"
+#include "enqueuemodmodel.h"
 #include "weidumanager.h"
+
+class QJsonDocument;
 
 Coordinator::Coordinator(QObject* parent) :
   QObject(parent), dataManager(new DataManager(this)),
@@ -44,6 +47,10 @@ Coordinator::Coordinator(QObject* parent) :
           controller, SIGNAL(readLog(const QString&)));
   connect(controller, SIGNAL(logFile(WeiduLog*)),
           dataManager, SLOT(logFile(WeiduLog*)));
+  connect(controller, SIGNAL(componentList(const QString&, int,
+                                           const QJsonDocument&)),
+          dataManager, SLOT(componentList(const QString&, int,
+                                          const QJsonDocument&)));
 }
 
 void Coordinator::weiduPath(const QString& path)

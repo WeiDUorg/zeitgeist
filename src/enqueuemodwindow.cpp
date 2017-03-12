@@ -21,6 +21,7 @@
 #include "datamanager.h"
 #include "coordinator.h"
 #include "controller.h"
+#include "enqueuemodmodel.h"
 #include "installedmodsmodel.h"
 #include "queuedmodsmodel.h"
 #include "weidulog.h"
@@ -30,29 +31,27 @@
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QItemSelectionModel>
-#include <QListWidget>
-#include <QListWidgetItem>
 #include <QListView>
 #include <QLabel>
 #include <QModelIndex>
-#include <QModelIndexList>
 #include <QPushButton>
 #include <QStringListModel>
+#include <QTreeView>
 #include <QVBoxLayout>
 
 EnqueueModWindow::EnqueueModWindow(QWidget* parent,
                                    const Coordinator* coordinator,
                                    const QString& tp2) :
-  QWidget(parent), coordinator(coordinator), tp2(tp2),
-  currentComponentList(nullptr)
+  QWidget(parent), coordinator(coordinator), tp2(tp2)
 {
   resize (640, 520); // Should ideally assume a size depending on parent's size
   setWindowFlags(Qt::Dialog);
   setWindowModality(Qt::WindowModal);
   setAttribute(Qt::WA_DeleteOnClose);
   setWindowTitle(windowTitle + ": " + tp2);
-  connect(this, SIGNAL(enqueueComponents(WeiduLog*)),
-          coordinator->dataManager, SLOT(enqueueComponents(WeiduLog*)));
+  connect(this, SIGNAL(enqueueComponents(const QString&, int)),
+          coordinator->dataManager,
+          SLOT(enqueueComponents(const QString&, int)));
 
   QLabel* languageLabel = new QLabel(tr("Languages"), this);
   languageListModel = new QStringListModel(this);
@@ -71,11 +70,12 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
   connect(this, SIGNAL(getComponentList(const QString&, const int&)),
           coordinator->controller, SLOT(getComponentList(const QString&,
                                                          const int&)));
-  connect(coordinator->controller, SIGNAL(componentList(WeiduLog*)),
-          this, SLOT(componentList(WeiduLog*)));
 
   QLabel* componentLabel = new QLabel(tr("Components"), this);
-  componentListView = new QListWidget(this);
+  componentListView = new QTreeView(this);
+  componentListView->setModel(coordinator->dataManager->enqueueModModel);
+  componentListView->setHeaderHidden(true);
+  componentListView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
   QGridLayout* paneLayout = new QGridLayout;
   paneLayout->addWidget(languageLabel, 0, 0);
@@ -101,10 +101,7 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
 
 EnqueueModWindow::~EnqueueModWindow()
 {
-  if (currentComponentList) {
-    delete currentComponentList;
-    currentComponentList = 0;
-  }
+
 }
 
 void EnqueueModWindow::languageList(const QStringList& list)
@@ -121,64 +118,13 @@ void EnqueueModWindow::handleLanguageSelection(const QItemSelection& selected,
                                                const QItemSelection&)
 {
   if (!selected.isEmpty()) {
-    if (currentComponentList) {
-      delete currentComponentList;
-      currentComponentList = 0;
-    }
     const QModelIndex i = languageListView->selectionModel()->currentIndex();
     emit getComponentList(tp2, i.row());
   }
 }
 
-void EnqueueModWindow::componentList(WeiduLog* list)
-{
-  /* list originally comes from WeiduManager (other thread)
-   * make a copy in this thread and delete the old object
-   * new object is parented by this object
-   */
-  currentComponentList = new WeiduLog(this, list->data);
-  delete list;
-  list = nullptr;
-  componentListView->clear();
-  QList<int> installedComponents =
-    coordinator->dataManager->installedModsModel->installedComponents(tp2);
-  QList<int> queuedComponents =
-    coordinator->dataManager->inQueuedModsModel->queuedComponents(tp2);
-  int count = 0;
-  foreach (QList<WeiduLogComponent> compList, currentComponentList->data) {
-    foreach (WeiduLogComponent comp, compList) {
-      // Can't preserve index because setHidden() does nothing
-      if (!installedComponents.contains(comp.number) &&
-          !queuedComponents.contains(comp.number)) {
-        QListWidgetItem* item = new QListWidgetItem;
-        item->setText(comp.comment);
-        item->setCheckState(Qt::Unchecked);
-        componentListView->insertItem(count, item);
-        count++;
-      }
-    }
-  }
-}
-
 void EnqueueModWindow::handleProceed() {
-  // QListWidget preclude doing this by index (vide supra)
-  QList<WeiduLogComponent> acc;
-  for (int i = 0; i < componentListView->count(); i++) {
-    QListWidgetItem* item = componentListView->item(i);
-    if (item->checkState()) {
-      foreach (QList<WeiduLogComponent> list, currentComponentList->data) {
-        foreach (WeiduLogComponent comp, list) {
-          if (comp.comment.compare(item->text()) == 0) {
-            acc.append(comp);
-          }
-        }
-      }
-    }
-  }
-  QList<QList<WeiduLogComponent>> result;
-  if (!acc.isEmpty()) {
-    result << acc;
-  }
-  emit enqueueComponents(new WeiduLog(0, result));
+  const QModelIndex i = languageListView->selectionModel()->currentIndex();
+  emit enqueueComponents(tp2, i.row());
   this->close();
 }

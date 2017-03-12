@@ -7,11 +7,11 @@ class Coordinator;
 class WeiduLog;
 
 class QItemSelection;
-class QListWidget;
 class QListView;
 class QPushButton;
 class QString;
 class QStringListModel;
+class QTreeView;
 
 class EnqueueModWindow : public QWidget
 {
@@ -26,13 +26,12 @@ private slots:
   void languageList(const QStringList& list);
   void handleLanguageSelection(const QItemSelection& selected,
                                const QItemSelection&);
-  void componentList(WeiduLog* list);
   void handleProceed();
 
 signals:
   void getLanguageList(const QString& tp2);
   void getComponentList(const QString& tp2, const int& index);
-  void enqueueComponents(WeiduLog* componentList);
+  void enqueueComponents(const QString& modName, int lang);
 
 private:
   const Coordinator* coordinator;
@@ -41,10 +40,8 @@ private:
 
   QListView* languageListView;
   QStringListModel* languageListModel;
-  QListWidget* componentListView;
+  QTreeView* componentListView;
   QPushButton* proceedButton;
-
-  WeiduLog* currentComponentList;
 };
 
 #endif // ENQUEUEMODWINDOW_H
