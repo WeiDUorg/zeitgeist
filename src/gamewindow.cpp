@@ -35,8 +35,6 @@
 #include <QTableView>
 #include <QVBoxLayout>
 
-/* WTH kind of ugly BS is openPersistentEditor()? */
-
 GameWindow::GameWindow(QWidget* parent, const DataManager* dataManager) :
   QWidget(parent), dataManager(dataManager)
 {
@@ -56,8 +54,8 @@ GameWindow::GameWindow(QWidget* parent, const DataManager* dataManager) :
   gameList->setModel(model);
   gameList->resizeColumnsToContents();
 
-  for (int i = 0; i < model->rowCount(); ++i) {
-    gameList->openPersistentEditor(model->index(i, 2));
+  foreach (QModelIndex index, model->specialIndexes()) {
+    gameList->openPersistentEditor(index);
   }
 
   addGameButton = new QPushButton(tr("Add"), this);
@@ -134,9 +132,10 @@ void GameWindow::rowsInserted(const QModelIndex&, int start, int end)
   if (model->rowCount() == 1) {
     select(model->index(0,0));
   }
-  /* openPersistentEditor on column 2 of new rows */
-  for (int i = start; i < end + 1; ++i) {
-    gameList->openPersistentEditor(model->index(i, 2));
+  foreach (QModelIndex index, model->specialIndexes()) {
+    if (index.row() >= start && index.row() <= end) {
+      gameList->openPersistentEditor(index);
+    }
   }
 }
 

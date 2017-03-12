@@ -418,3 +418,16 @@ QString GameListModel::eeDirToLang(const QString& dir) const
     return "English";
   }
 }
+
+QList<QModelIndex> GameListModel::specialIndexes() const
+{
+  QList<QModelIndex> result;
+  for (int i = 0; i < rowCount(); ++i) {
+    QStringList data = item(i, COLUMN_LANG)->data(LANG_LIST).toStringList();
+    if (!data.isEmpty()) {
+      QModelIndex index = createIndex(i, COLUMN_LANG);
+      result << index;
+    }
+  }
+  return result;
+}

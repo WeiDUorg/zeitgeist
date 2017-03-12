@@ -42,6 +42,8 @@ public:
   QString eeLang(const QString& path) const;
   bool validGame(const QString& path) const;
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+  /* List of indices that need openPersistentEditor by the view */
+  QList<QModelIndex> specialIndexes() const;
 
 private slots:
   void addGame(const QString& path);
