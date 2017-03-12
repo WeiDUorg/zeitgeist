@@ -6,9 +6,6 @@
 
 class WeiduLog;
 
-enum QueuedModsModelMetaData { COMPONENT_NUMBER = Qt::UserRole + 1,
-                               COMPONENT_LANGUAGE };
-
 class QueuedModsModel : public QStandardItemModel
 {
   Q_OBJECT
@@ -27,6 +24,11 @@ private slots:
 
 private:
   WeiduLog* deduplicate(WeiduLog*) const;
+
+  enum MetaData {
+    COMPONENT_NUMBER = Qt::UserRole + 1,
+    COMPONENT_LANGUAGE
+  };
 };
 
 #endif // QUEUEDMODSMODEL_H

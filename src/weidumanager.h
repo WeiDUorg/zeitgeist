@@ -16,12 +16,14 @@ class QProcess;
 class QString;
 class QStringList;
 
-enum class Task { VERSION,
-                  GAMEPATH,
-                  LISTLANGUAGES,
-                  LISTCOMPONENTS,
-                  INSTALL,
-                  UNINSTALL };
+enum class Task {
+  VERSION,
+  GAMEPATH,
+  LISTLANGUAGES,
+  LISTCOMPONENTS,
+  INSTALL,
+  UNINSTALL
+};
 
 class WeiduManager : public QObject
 {

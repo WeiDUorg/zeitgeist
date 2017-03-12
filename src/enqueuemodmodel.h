@@ -7,10 +7,6 @@
 
 class WeiduLog;
 
-namespace EnqueueModModelAux {
-  enum EnqueueModModelMetaData { COMPONENT_NUMBER = Qt::UserRole + 1 };
-}
-
 class EnqueueModModel : public QStandardItemModel
 {
   Q_OBJECT
@@ -24,6 +20,11 @@ public slots:
   void populate(const QJsonDocument& components,
                 QList<int> installed,
                 QList<int> queued);
+
+private:
+  enum MetaData {
+    COMPONENT_NUMBER = Qt::UserRole + 1
+  };
 };
 
 #endif // ENQUEUEMODMODEL_H

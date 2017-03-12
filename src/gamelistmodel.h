@@ -22,17 +22,6 @@ enum class GameType {
   UNKNOWN
 };
 
-enum GameListMetaData {
-  GAME_TYPE = Qt::UserRole + 1,
-  LANG_LIST
-};
-
-enum GameListColumns {
-  COLUMN_NAME,
-  COLUMN_PATH,
-  COLUMN_LANG
-};
-
 struct GameListDataEntry {
   QString name;
   QString path;
@@ -77,6 +66,17 @@ private:
   QStringList langDirs(const QString& gamePath) const;
   QString eeLangToDir(const QString& lang) const;
   QString eeDirToLang(const QString& dir) const;
+
+  enum MetaData {
+    GAME_TYPE = Qt::UserRole + 1,
+    LANG_LIST
+  };
+
+  enum Columns {
+    COLUMN_NAME,
+    COLUMN_PATH,
+    COLUMN_LANG
+  };
 };
 
 #endif // GAMELISTMODEL_H
