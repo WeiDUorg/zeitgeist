@@ -62,6 +62,9 @@ void GameListModel::addRow(const QString& gameName, const QString& gamePath,
     if (langs.contains(eeLang)) {
       langItem->setData(QVariant(eeLang), Qt::EditRole);
     }
+  } else {
+    /* item is not editable */
+    langItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
   }
   row << new QStandardItem(gameName) << pathItem << langItem;
   appendRow(row);
