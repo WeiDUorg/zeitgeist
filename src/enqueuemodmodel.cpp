@@ -20,7 +20,9 @@
 #include "enqueuemodmodel.h"
 #include "weidulog.h"
 
+#include <algorithm>
 #include <QDebug>
+#include <QHash>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>
@@ -47,6 +49,7 @@ void EnqueueModModel::populate(const QJsonDocument& components,
                                QList<int> queued)
 {
   clear();
+  QHash<QString, QStandardItem*> subgroups;
   QList<QStandardItem*> itemList;
   QJsonArray componentList = components.array();
   for (int i = 0; i < componentList.size(); ++i) {
@@ -57,27 +60,69 @@ void EnqueueModModel::populate(const QJsonDocument& components,
       item->setData(QVariant(number), COMPONENT_NUMBER);
       item->setData(QVariant(comp.value("index").toInt()), COMPONENT_INDEX);
       item->setCheckable(true);
-      itemList << item;
+
+      // InstallByDefault
+      if (comp.value("forced").toBool() && !comp.contains("subgroup")) {
+        item->setCheckState(Qt::Checked);
+        item->setEnabled(false);
+      }
+
+      // Subgroups
+      if (comp.contains("subgroup")) {
+        QString subgroup = comp.value("subgroup").toString();
+        QStandardItem* parent;
+        if (subgroups.contains(subgroup)) {
+          parent = subgroups.value(subgroup);
+        } else {
+          parent = new QStandardItem(subgroup);
+          subgroups.insert(subgroup, parent);
+          itemList << parent;
+        }
+        parent->setChild(parent->rowCount(), item);
+      } else { // Top-level component
+        itemList << item;
+      }
     }
   }
   appendColumn(itemList);
 }
 
-WeiduLog* EnqueueModModel::selected(const QString& mod, int lang)
+WeiduLog* EnqueueModModel::selected(const QString& mod, int lang) const
 {
-  QList<WeiduLogComponent> result;
   QStandardItem* root = invisibleRootItem();
-  for (int i = 0; i < root->rowCount(); ++i) {
-    QStandardItem* item = root->child(i);
-    if (item->checkState() == Qt::Checked) {
-      WeiduLogComponent c =
-        {mod, item->data(COMPONENT_INDEX).toInt(),
-         lang, item->data(COMPONENT_NUMBER).toInt(),
-         item->text()};
-      result << c;
+  QList<WeiduLogComponent> init;
+  QList<QStandardItem*> queue;
+  QList<QList<WeiduLogComponent>> data;
+  QList<WeiduLogComponent> result = checkChildren(mod, lang, root, init, queue);
+  std::sort(result.begin(), result.end(),
+            [](const WeiduLogComponent l, const WeiduLogComponent r) {
+              return l.index < r.index;
+            });
+  data.append(result);
+  return new WeiduLog(0, data); // WeiduLog intended for QueuedModsModel
+}
+
+QList<WeiduLogComponent> EnqueueModModel::checkChildren(const QString& mod,
+                                                        int lang,
+                                                        const QStandardItem* parent,
+                                                        QList<WeiduLogComponent> acc,
+                                                        QList<QStandardItem*> queue) const
+{
+  for (int i = 0; i < parent->rowCount(); ++i) {
+    QStandardItem* child = parent->child(i);
+    if (child->checkState() == Qt::Checked) {
+      WeiduLogComponent c = {mod, child->data(COMPONENT_INDEX).toInt(),
+                             lang, child->data(COMPONENT_NUMBER).toInt(),
+                             child->text()};
+      acc.append(c);
+    }
+    if (child->hasChildren()) {
+      queue.append(child);
     }
   }
-  QList<QList<WeiduLogComponent>> data;
-  data << result;
-  return new WeiduLog(0, data); // WeiduLog intended for QueuedModsModel
+  if (queue.isEmpty()) {
+    return acc;
+  } else {
+    return checkChildren(mod, lang, queue.takeFirst(), acc, queue.mid(1));
+  }
 }
