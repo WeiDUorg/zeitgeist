@@ -61,6 +61,7 @@ void QueuedModsModel::add(WeiduLog* componentList)
         QStandardItem* child = new QStandardItem(compName);
         child->setData(QVariant(comp.number), COMPONENT_NUMBER);
         child->setData(QVariant(comp.language), COMPONENT_LANGUAGE);
+        child->setData(QVariant(comp.index), COMPONENT_INDEX);
         childItems.append(child);
       }
       bool merged = false;
@@ -151,6 +152,7 @@ WeiduLog* QueuedModsModel::queue()
     for (int j = 0; j < mod->rowCount(); ++j) {
       QStandardItem* comp = mod->child(j);
       WeiduLogComponent c = { mod->text(),
+                              comp->data(COMPONENT_INDEX).toInt(),
                               comp->data(COMPONENT_LANGUAGE).toInt(),
                               comp->data(COMPONENT_NUMBER).toInt(),
                               comp->text() };

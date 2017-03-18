@@ -58,11 +58,13 @@ WeiduLog* LogReader::read(QObject* parent, const QString& path)
 WeiduLog* LogReader::read(QObject* parent, const QByteArray& data)
 {
   QList<WeiduLogComponent> list;
+  int index = 0;
   QTextStream in(data);
   while (!in.atEnd()) {
     QString line = in.readLine();
     if (validLine(line)) {
-      const WeiduLogComponent comp = parseLine(line);
+      const WeiduLogComponent comp = parseLine(index, line);
+      ++index;
       list << comp;
     }
   }
@@ -95,7 +97,7 @@ bool LogReader::validLine(const QString& line)
   return false;
 }
 
-WeiduLogComponent LogReader::parseLine(const QString& line)
+WeiduLogComponent LogReader::parseLine(int index, const QString& line)
 {
   // ~(FOO/\\)?(SETUP-)?FOO.TP2~ #[0-9]+ #[0-9]+ // Comment
   int firstTilde = line.indexOf("~") + 1;
@@ -114,7 +116,7 @@ WeiduLogComponent LogReader::parseLine(const QString& line)
   if (commentStart != 2) { // -1 + 3 = no comment
     comment = line.mid(commentStart);
   }
-  const WeiduLogComponent c = {tp2Name, languageNumber.toInt(),
+  const WeiduLogComponent c = {tp2Name, index, languageNumber.toInt(),
                                componentNumber.toInt(), comment};
   return c;
 }

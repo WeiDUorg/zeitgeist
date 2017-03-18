@@ -55,6 +55,7 @@ void EnqueueModModel::populate(const QJsonDocument& components,
     if (!installed.contains(number) && !queued.contains(number)) {
       QStandardItem* item = new QStandardItem(comp.value("name").toString());
       item->setData(QVariant(number), COMPONENT_NUMBER);
+      item->setData(QVariant(comp.value("index").toInt()), COMPONENT_INDEX);
       item->setCheckable(true);
       itemList << item;
     }
@@ -70,7 +71,8 @@ WeiduLog* EnqueueModModel::selected(const QString& mod, int lang)
     QStandardItem* item = root->child(i);
     if (item->checkState() == Qt::Checked) {
       WeiduLogComponent c =
-        {mod, lang, item->data(COMPONENT_NUMBER).toInt(),
+        {mod, item->data(COMPONENT_INDEX).toInt(),
+         lang, item->data(COMPONENT_NUMBER).toInt(),
          item->text()};
       result << c;
     }

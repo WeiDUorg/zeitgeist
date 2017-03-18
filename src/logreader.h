@@ -32,7 +32,7 @@ private:
 
   WeiduLog* read(QObject* parent, const QString& path);
   static bool validLine(const QString& line);
-  static WeiduLogComponent parseLine(const QString& line);
+  static WeiduLogComponent parseLine(int index, const QString& line);
   static QList<QList<WeiduLogComponent>> partitionData(const QList<WeiduLogComponent>& data);
   static QList<WeiduLogComponent> getContiguousBlock(const QList<WeiduLogComponent>& data,
                                                      const int& index, const QString& name);

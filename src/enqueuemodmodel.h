@@ -23,7 +23,8 @@ public slots:
 
 private:
   enum MetaData {
-    COMPONENT_NUMBER = Qt::UserRole + 1
+    COMPONENT_NUMBER = Qt::UserRole + 1,
+    COMPONENT_INDEX
   };
 };
 

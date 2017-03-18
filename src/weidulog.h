@@ -9,6 +9,7 @@ class QString;
 struct WeiduLogComponent
 {
   QString modName;
+  int index;
   int language;
   int number;
   QString comment;

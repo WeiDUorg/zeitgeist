@@ -27,7 +27,8 @@ private:
 
   enum MetaData {
     COMPONENT_NUMBER = Qt::UserRole + 1,
-    COMPONENT_LANGUAGE
+    COMPONENT_LANGUAGE,
+    COMPONENT_INDEX
   };
 };
 
