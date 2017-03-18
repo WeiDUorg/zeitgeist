@@ -44,6 +44,9 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
                                    const QString& tp2) :
   QWidget(parent), coordinator(coordinator), tp2(tp2)
 {
+  connect(this, SIGNAL(resetModel()),
+          coordinator->dataManager->enqueueModModel, SLOT(clear()));
+  emit resetModel();
   resize (640, 520); // Should ideally assume a size depending on parent's size
   setWindowFlags(Qt::Dialog);
   setWindowModality(Qt::WindowModal);

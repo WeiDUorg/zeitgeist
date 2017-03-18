@@ -32,6 +32,7 @@ signals:
   void getLanguageList(const QString& tp2);
   void getComponentList(const QString& tp2, const int& index);
   void enqueueComponents(const QString& modName, int lang);
+  void resetModel();
 
 private:
   const Coordinator* coordinator;
