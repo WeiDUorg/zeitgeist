@@ -113,6 +113,7 @@ void WeiduManager::doTask()
 
     case Task::UNINSTALL:
       qDebug() << "Starting UNINSTALL task";
+      broadcast = true;
       uninstallTask();
       break;
     }
@@ -131,7 +132,8 @@ void WeiduManager::startTask(const QStringList& arguments)
     // don't forget to dequeue
     // don't forget to unset busy
   }
-  if (taskQueue.head() == Task::INSTALL) {
+  if (taskQueue.head() == Task::INSTALL ||
+      taskQueue.head() == Task::UNINSTALL) {
     emit installTaskStarted();
   }
 }
@@ -195,7 +197,9 @@ void WeiduManager::endTask(int exitCode, QProcess::ExitStatus exitStatus)
       if (taskQueue.isEmpty() || (taskQueue.head() != Task::INSTALL &&
                                   taskQueue.head() != Task::UNINSTALL)) {
         emit modStackChanged(WeiduLog::logPath(gamePath));
+        emit installTaskEnded();
       }
+      broadcast = false;
       break;
     }
   }
