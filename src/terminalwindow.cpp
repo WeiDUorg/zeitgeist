@@ -79,6 +79,10 @@ void TerminalWindow::closeEvent(QCloseEvent* event)
   if (!safeExit) {
     QMessageBox msg;
     msg.setText(tr("To avoid risk of injury, please keep your arms inside the vehicle until it has come to a complete stop."));
+    msg.setStandardButtons(QMessageBox::Ok);
+    msg.exec();
+    event->ignore();
+    /*
     msg.setInformativeText(tr("Are you sure you wish to exit?"));
     msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msg.setDefaultButton(QMessageBox::No);
@@ -87,6 +91,7 @@ void TerminalWindow::closeEvent(QCloseEvent* event)
     if (ans != QMessageBox::Yes) {
       event->ignore();
     }
+    */
   }
 }
 
