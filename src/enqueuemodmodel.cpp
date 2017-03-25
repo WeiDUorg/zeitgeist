@@ -18,6 +18,7 @@
  */
 
 #include "enqueuemodmodel.h"
+#include "radiobuttondelegate.h"
 #include "weidulog.h"
 
 #include <algorithm>
@@ -59,7 +60,7 @@ void EnqueueModModel::populate(const QJsonDocument& components,
       QStandardItem* item = new QStandardItem(comp.value("name").toString());
       item->setData(QVariant(number), COMPONENT_NUMBER);
       item->setData(QVariant(comp.value("index").toInt()), COMPONENT_INDEX);
-      item->setCheckable(true);
+      item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
 
       // InstallByDefault
       if (comp.value("forced").toBool() && !comp.contains("subgroup")) {
@@ -75,11 +76,23 @@ void EnqueueModModel::populate(const QJsonDocument& components,
           parent = subgroups.value(subgroup);
         } else {
           parent = new QStandardItem(subgroup);
+          parent->setFlags(parent->flags() & ~Qt::ItemIsSelectable);
           subgroups.insert(subgroup, parent);
           itemList << parent;
         }
+        item->setCheckable(false);
+        item->setData(QVariant(true), RadioButtonDelegate::RADIO_ROLE);
+        item->setData(QVariant(false), RadioButtonDelegate::RADIO_SELECTED);
         parent->setChild(parent->rowCount(), item);
+        // FORCED_SUBCOMPONENT
+        if (comp.contains("forced") && comp.value("forced").toBool() &&
+            !forcedSubgroups.contains(subgroup)) {
+          forcedSubgroups.append(subgroup);
+          parent->child(0)->setData(QVariant(true),
+                                    RadioButtonDelegate::RADIO_SELECTED);
+        }
       } else { // Top-level component
+        item->setCheckable(true);
         itemList << item;
       }
     }
@@ -116,6 +129,12 @@ QList<WeiduLogComponent> EnqueueModModel::checkChildren(const QString& mod,
                              child->text()};
       acc.append(c);
     }
+    if (child->data(RadioButtonDelegate::RADIO_SELECTED).toBool()) {
+      WeiduLogComponent c = {mod, child->data(COMPONENT_INDEX).toInt(),
+                             lang, child->data(COMPONENT_NUMBER).toInt(),
+                             parent->text() + QString(" -> ") + child->text()};
+      acc.append(c);
+    }
     if (child->hasChildren()) {
       queue.append(child);
     }
@@ -124,5 +143,22 @@ QList<WeiduLogComponent> EnqueueModModel::checkChildren(const QString& mod,
     return acc;
   } else {
     return checkChildren(mod, lang, queue.takeFirst(), acc, queue.mid(1));
+  }
+}
+
+void EnqueueModModel::radioToggled(const QModelIndex& index)
+{
+  QModelIndex parentIndex = index.parent();
+  if (parentIndex.isValid()) {
+    QStandardItem* parent = itemFromIndex(parentIndex);
+    QString name = parent->text();
+    for (int i = 0; i < parent->rowCount(); ++i) {
+      QStandardItem* childItem = parent->child(i, index.column());
+      bool alreadySelected =
+        childItem->data(RadioButtonDelegate::RADIO_SELECTED).toBool();
+      QVariant select(i == index.row() &&
+                      (!alreadySelected || forcedSubgroups.contains(name)));
+      childItem->setData(select, RadioButtonDelegate::RADIO_SELECTED);
+    }
   }
 }

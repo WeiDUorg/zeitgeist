@@ -24,6 +24,7 @@
 #include "enqueuemodmodel.h"
 #include "installedmodsmodel.h"
 #include "queuedmodsmodel.h"
+#include "radiobuttondelegate.h"
 #include "weidulog.h"
 
 #include <QAbstractItemView>
@@ -31,13 +32,57 @@
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QItemSelectionModel>
+#include <QKeyEvent>
 #include <QListView>
 #include <QLabel>
 #include <QModelIndex>
+#include <QMouseEvent>
 #include <QPushButton>
 #include <QStringListModel>
-#include <QTreeView>
 #include <QVBoxLayout>
+
+/*
+ * ComponentListView
+ */
+
+ComponentListView::ComponentListView(QWidget* parent,
+                                     EnqueueModModel* model) :
+  QTreeView(parent)
+{
+  setItemDelegate(new RadioButtonDelegate(this));
+  setModel(model);
+  setHeaderHidden(true);
+  setEditTriggers(QAbstractItemView::NoEditTriggers);
+  connect(this, SIGNAL(radioToggled(const QModelIndex&)),
+          model, SLOT(radioToggled(const QModelIndex&)));
+}
+
+void ComponentListView::mouseReleaseEvent(QMouseEvent* event)
+{
+  QModelIndex index = indexAt(event->pos());
+  if (index.data(RadioButtonDelegate::RADIO_ROLE).value<bool>()) {
+    emit radioToggled(index);
+    event->accept();
+  } else {
+    QTreeView::mouseReleaseEvent(event);
+  }
+}
+
+void ComponentListView::keyReleaseEvent(QKeyEvent* event)
+{
+  QModelIndex index = currentIndex();
+  if (index.data(RadioButtonDelegate::RADIO_ROLE).value<bool>() &&
+      event->key() == Qt::Key_Space) {
+    emit radioToggled(index);
+    event->accept();
+  } else {
+    QTreeView::keyReleaseEvent(event);
+  }
+}
+
+/*
+ * EnqueueModWindow
+ */
 
 EnqueueModWindow::EnqueueModWindow(QWidget* parent,
                                    const Coordinator* coordinator,
@@ -75,10 +120,8 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
                                                          const int&)));
 
   QLabel* componentLabel = new QLabel(tr("Components"), this);
-  componentListView = new QTreeView(this);
-  componentListView->setModel(coordinator->dataManager->enqueueModModel);
-  componentListView->setHeaderHidden(true);
-  componentListView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  EnqueueModModel* model = coordinator->dataManager->enqueueModModel;
+  componentListView = new ComponentListView(this, model);
 
   QGridLayout* paneLayout = new QGridLayout;
   paneLayout->addWidget(languageLabel, 0, 0);

@@ -18,6 +18,7 @@ HEADERS += \
         src/mod.h \
         src/platform.h \
         src/queuedmodsmodel.h \
+        src/radiobuttondelegate.h \
         src/settingswindow.h \
         src/terminalwindow.h \
         src/weiduextractor.h \
@@ -42,6 +43,7 @@ SOURCES += \
         src/mainwindow.cpp \
         src/mod.cpp \
         src/queuedmodsmodel.cpp \
+        src/radiobuttondelegate.cpp \
         src/settingswindow.cpp \
         src/terminalwindow.cpp \
         src/weiduextractor.cpp \

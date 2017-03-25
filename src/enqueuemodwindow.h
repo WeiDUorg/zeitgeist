@@ -1,17 +1,37 @@
 #ifndef ENQUEUEMODWINDOW_H
 #define ENQUEUEMODWINDOW_H
 
+#include <QTreeView>
 #include <QWidget>
 
 class Coordinator;
+class EnqueueModModel;
 class WeiduLog;
 
 class QItemSelection;
+class QKeyEvent;
 class QListView;
+class QMouseEvent;
 class QPushButton;
 class QString;
 class QStringListModel;
 class QTreeView;
+
+class ComponentListView : public QTreeView
+{
+  Q_OBJECT
+
+public:
+  ComponentListView(QWidget* parent,
+                    EnqueueModModel* model);
+
+protected:
+  void mouseReleaseEvent(QMouseEvent* event);
+  void keyReleaseEvent(QKeyEvent* event);
+
+signals:
+  void radioToggled(const QModelIndex& index);
+};
 
 class EnqueueModWindow : public QWidget
 {
@@ -41,7 +61,7 @@ private:
 
   QListView* languageListView;
   QStringListModel* languageListModel;
-  QTreeView* componentListView;
+  ComponentListView* componentListView;
   QPushButton* proceedButton;
 };
 

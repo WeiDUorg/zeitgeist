@@ -9,6 +9,7 @@ class WeiduLog;
 
 struct WeiduLogComponent;
 
+class QModelIndex;
 class QStandardItem;
 
 class EnqueueModModel : public QStandardItemModel
@@ -28,8 +29,10 @@ public slots:
   void populate(const QJsonDocument& components,
                 QList<int> installed,
                 QList<int> queued);
+  void radioToggled(const QModelIndex& index);
 
 private:
+  QStringList forcedSubgroups;
   enum MetaData {
     COMPONENT_NUMBER = Qt::UserRole + 1,
     COMPONENT_INDEX
