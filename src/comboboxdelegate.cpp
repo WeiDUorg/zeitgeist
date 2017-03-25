@@ -32,8 +32,9 @@ ComboBoxDelegate::ComboBoxDelegate(QWidget* parent) :
 
 }
 
-QWidget* ComboBoxDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option,
-                      const QModelIndex& index) const
+QWidget* ComboBoxDelegate::createEditor(QWidget* parent,
+                                        const QStyleOptionViewItem& option,
+                                        const QModelIndex& index) const
 {
   const QAbstractItemModel* model = index.model();
   const QStringList data = model->data(index).toStringList();
@@ -47,7 +48,8 @@ QWidget* ComboBoxDelegate::createEditor(QWidget* parent, const QStyleOptionViewI
   return box;
 }
 
-void ComboBoxDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
+void ComboBoxDelegate::setEditorData(QWidget* editor,
+                                     const QModelIndex& index) const
 {
   const QAbstractItemModel* model = index.model();
   const QStringList data = model->data(index).toStringList();
@@ -65,7 +67,7 @@ void ComboBoxDelegate::setEditorData(QWidget* editor, const QModelIndex& index) 
 }
 
 void ComboBoxDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
-                  const QModelIndex& index) const
+                                    const QModelIndex& index) const
 {
   const QStringList data = model->data(index).toStringList();
   if (data.size() > 1) {
