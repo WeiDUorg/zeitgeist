@@ -28,6 +28,7 @@
 #include "weidulog.h"
 
 #include <QAbstractItemView>
+#include <QCheckBox>
 #include <QDebug>
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -119,14 +120,30 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
           coordinator->controller, SLOT(getComponentList(const QString&,
                                                          const int&)));
 
-  QLabel* componentLabel = new QLabel(tr("Components"), this);
   EnqueueModModel* model = coordinator->dataManager->enqueueModModel;
+  connect(model, SIGNAL(componentsAvailable(bool)),
+          this, SLOT(componentsAvailable(bool)));
+  connect(this, SIGNAL(select(bool)),
+          model, SLOT(select(bool)));
+  connect(model, SIGNAL(stateChanged(Qt::CheckState)),
+          this, SLOT(stateChanged(Qt::CheckState)));
   componentListView = new ComponentListView(this, model);
+
+  QLabel* componentLabel = new QLabel(tr("Components"), this);
+
+  selectAll = new QCheckBox(tr("Select All"), this);
+  selectAll->setEnabled(false);
+  connect(selectAll, SIGNAL(stateChanged(int)),
+          this, SLOT(handleSelectAll(int)));
+
+  QHBoxLayout* componentSubLayout = new QHBoxLayout;
+  componentSubLayout->addWidget(componentLabel);
+  componentSubLayout->addWidget(selectAll);
 
   QGridLayout* paneLayout = new QGridLayout;
   paneLayout->addWidget(languageLabel, 0, 0);
   paneLayout->addWidget(languageListView, 1, 0);
-  paneLayout->addWidget(componentLabel, 0, 1);
+  paneLayout->addLayout(componentSubLayout, 0, 1);
   paneLayout->addWidget(componentListView, 1, 1);
 
   proceedButton = new QPushButton(tr("Proceed"), this);
@@ -173,4 +190,33 @@ void EnqueueModWindow::handleProceed() {
   const QModelIndex i = languageListView->selectionModel()->currentIndex();
   emit enqueueComponents(tp2, i.row());
   this->close();
+}
+
+void EnqueueModWindow::handleSelectAll(int state)
+{
+  switch (state) {
+  case Qt::Unchecked:
+    emit select(false);
+    break;
+
+  case Qt::Checked:
+    emit select(true);
+    break;
+  }
+}
+
+void EnqueueModWindow::componentsAvailable(bool available)
+{
+  selectAll->setCheckState(Qt::Unchecked);
+  selectAll->setEnabled(available);
+}
+
+void EnqueueModWindow::stateChanged(Qt::CheckState state)
+{
+  if (state == Qt::PartiallyChecked) {
+    selectAll->setTristate(true);
+  } else {
+    selectAll->setTristate(false);
+  }
+  selectAll->setCheckState(state);
 }

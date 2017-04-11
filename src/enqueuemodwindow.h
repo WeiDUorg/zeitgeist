@@ -8,6 +8,7 @@ class Coordinator;
 class EnqueueModModel;
 class WeiduLog;
 
+class QCheckBox;
 class QItemSelection;
 class QKeyEvent;
 class QListView;
@@ -47,12 +48,16 @@ private slots:
   void handleLanguageSelection(const QItemSelection& selected,
                                const QItemSelection&);
   void handleProceed();
+  void handleSelectAll(int state);
+  void componentsAvailable(bool available);
+  void stateChanged(Qt::CheckState state);
 
 signals:
   void getLanguageList(const QString& tp2);
   void getComponentList(const QString& tp2, const int& index);
   void enqueueComponents(const QString& modName, int lang);
   void resetModel();
+  void select(bool select);
 
 private:
   const Coordinator* coordinator;
@@ -63,6 +68,7 @@ private:
   QStringListModel* languageListModel;
   ComponentListView* componentListView;
   QPushButton* proceedButton;
+  QCheckBox* selectAll;
 };
 
 #endif // ENQUEUEMODWINDOW_H

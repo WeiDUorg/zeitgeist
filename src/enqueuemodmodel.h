@@ -30,6 +30,12 @@ public slots:
                 QList<int> installed,
                 QList<int> queued);
   void radioToggled(const QModelIndex& index);
+  void select(bool select);
+  void handleChangedState(QStandardItem* item);
+
+signals:
+  void componentsAvailable(bool available);
+  void stateChanged(Qt::CheckState state);
 
 private:
   QStringList forcedSubgroups;
@@ -37,6 +43,18 @@ private:
     COMPONENT_NUMBER = Qt::UserRole + 1,
     COMPONENT_INDEX
   };
+};
+
+class SelectionInProgress : public QObject
+{
+  Q_OBJECT
+
+public:
+  SelectionInProgress(EnqueueModModel* model);
+  ~SelectionInProgress();
+
+private:
+  EnqueueModModel* model;
 };
 
 #endif // ENQUEUEMODMODEL_H

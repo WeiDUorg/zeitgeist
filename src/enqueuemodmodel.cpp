@@ -34,7 +34,8 @@
 EnqueueModModel::EnqueueModModel(QObject* parent) :
   QStandardItemModel(parent)
 {
-
+  connect(this, SIGNAL(itemChanged(QStandardItem*)),
+          this, SLOT(handleChangedState(QStandardItem*)));
 }
 
 void EnqueueModModel::clear()
@@ -98,6 +99,7 @@ void EnqueueModModel::populate(const QJsonDocument& components,
     }
   }
   appendColumn(itemList);
+  emit componentsAvailable(!itemList.isEmpty());
 }
 
 WeiduLog* EnqueueModModel::selected(const QString& mod, int lang) const
@@ -161,4 +163,106 @@ void EnqueueModModel::radioToggled(const QModelIndex& index)
       childItem->setData(select, RadioButtonDelegate::RADIO_SELECTED);
     }
   }
+}
+
+void EnqueueModModel::select(bool select)
+{
+  SelectionInProgress deferSignals(this);
+  QStandardItem* root = invisibleRootItem();
+  for (int i = 0; i < root->rowCount(); ++i) {
+    QStandardItem* child = root->child(i);
+    if (child->hasChildren() && !forcedSubgroups.contains(child->text())) {
+      bool alreadySelected = false;
+      for (int j = 0; j < child->rowCount() && !alreadySelected; ++j) {
+        QStandardItem* childer = child->child(j);
+        bool selected =
+          childer->data(RadioButtonDelegate::RADIO_SELECTED).toBool();
+        if (select && selected) {
+          alreadySelected = true;
+        } else {
+          childer->setData(QVariant(false),
+                           RadioButtonDelegate::RADIO_SELECTED);
+        }
+      }
+      if (select && !alreadySelected) {
+        child->child(0)->setData(QVariant(true),
+                                 RadioButtonDelegate::RADIO_SELECTED);
+      }
+    }
+    if (!child->hasChildren() && child->isEnabled()) {
+      Qt::CheckState state;
+      if (select) {
+        state = Qt::Checked;
+      } else {
+        state = Qt::Unchecked;
+      }
+      child->setCheckState(state);
+    }
+  }
+}
+
+void EnqueueModModel::handleChangedState(QStandardItem*)
+{
+  bool anyChecked = false;
+  bool anyUnchecked = false;
+  QStandardItem* root = invisibleRootItem();
+  for (int i = 0; i < root->rowCount(); ++i) {
+    QStandardItem* child = root->child(i);
+    if (child->hasChildren() && !forcedSubgroups.contains(child->text())) {
+      bool unselected = true;
+      for (int j = 0; j < child->rowCount(); ++j) {
+        QStandardItem* childer = child->child(j);
+        bool selected =
+          childer->data(RadioButtonDelegate::RADIO_SELECTED).toBool();
+        if (selected) {
+          anyChecked = true;
+          unselected = false;
+        }
+      }
+      if (unselected) {
+        anyUnchecked = true;
+      }
+    }
+    if (!child->hasChildren() && child->isEnabled()) {
+      switch (child->checkState()) {
+      case Qt::Checked: {
+        anyChecked = true;
+        break;
+      }
+
+      case Qt::Unchecked: {
+        anyUnchecked = true;
+        break;
+      }
+
+      default: { }
+      }
+    }
+  }
+  if (anyChecked && !anyUnchecked) {
+    emit stateChanged(Qt::Checked);
+  }
+  if (!anyChecked && anyUnchecked) {
+    emit stateChanged(Qt::Unchecked);
+  }
+  if (anyChecked && anyUnchecked) {
+    emit stateChanged(Qt::PartiallyChecked);
+  }
+  if (!anyChecked && !anyUnchecked) {
+    emit stateChanged(Qt::Unchecked);
+  }
+}
+
+SelectionInProgress::SelectionInProgress(EnqueueModModel* model) :
+  model(model)
+{
+  disconnect(model, SIGNAL(itemChanged(QStandardItem*)),
+             model, SLOT(handleChangedState(QStandardItem*)));
+}
+
+SelectionInProgress::~SelectionInProgress()
+{
+  connect(model, SIGNAL(itemChanged(QStandardItem*)),
+          model, SLOT(handleChangedState(QStandardItem*)));
+  model->handleChangedState(new QStandardItem());
 }
