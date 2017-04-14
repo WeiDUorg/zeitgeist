@@ -108,7 +108,8 @@ WeiduLog* EnqueueModModel::selected(const QString& mod, int lang) const
   QList<WeiduLogComponent> init;
   QList<QStandardItem*> queue;
   QList<QList<WeiduLogComponent>> data;
-  QList<WeiduLogComponent> result = checkChildren(mod, lang, root, init, queue);
+  queue.append(root);
+  QList<WeiduLogComponent> result = checkChildren(mod, lang, init, queue);
   std::sort(result.begin(), result.end(),
             [](const WeiduLogComponent l, const WeiduLogComponent r) {
               return l.index < r.index;
@@ -119,10 +120,11 @@ WeiduLog* EnqueueModModel::selected(const QString& mod, int lang) const
 
 QList<WeiduLogComponent> EnqueueModModel::checkChildren(const QString& mod,
                                                         int lang,
-                                                        const QStandardItem* parent,
                                                         QList<WeiduLogComponent> acc,
                                                         QList<QStandardItem*> queue) const
 {
+  const QStandardItem* parent = queue.first();
+  QList<QStandardItem*> tail = queue.mid(1);
   for (int i = 0; i < parent->rowCount(); ++i) {
     QStandardItem* child = parent->child(i);
     if (child->checkState() == Qt::Checked) {
@@ -138,13 +140,13 @@ QList<WeiduLogComponent> EnqueueModModel::checkChildren(const QString& mod,
       acc.append(c);
     }
     if (child->hasChildren()) {
-      queue.append(child);
+      tail.append(child);
     }
   }
-  if (queue.isEmpty()) {
+  if (tail.isEmpty()) {
     return acc;
   } else {
-    return checkChildren(mod, lang, queue.takeFirst(), acc, queue.mid(1));
+    return checkChildren(mod, lang, acc, tail);
   }
 }
 
