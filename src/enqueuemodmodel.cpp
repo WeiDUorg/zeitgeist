@@ -35,7 +35,7 @@ EnqueueModModel::EnqueueModModel(QObject* parent) :
   QStandardItemModel(parent)
 {
   connect(this, SIGNAL(itemChanged(QStandardItem*)),
-          this, SLOT(handleChangedState(QStandardItem*)));
+          this, SLOT(handleChangedState()));
 }
 
 void EnqueueModModel::clear()
@@ -201,7 +201,7 @@ void EnqueueModModel::select(bool select)
   }
 }
 
-void EnqueueModModel::handleChangedState(QStandardItem*)
+void EnqueueModModel::handleChangedState()
 {
   bool anyChecked = false;
   bool anyUnchecked = false;
@@ -257,12 +257,12 @@ SelectionInProgress::SelectionInProgress(EnqueueModModel* model) :
   model(model)
 {
   disconnect(model, SIGNAL(itemChanged(QStandardItem*)),
-             model, SLOT(handleChangedState(QStandardItem*)));
+             model, SLOT(handleChangedState()));
 }
 
 SelectionInProgress::~SelectionInProgress()
 {
   connect(model, SIGNAL(itemChanged(QStandardItem*)),
-          model, SLOT(handleChangedState(QStandardItem*)));
-  model->handleChangedState(new QStandardItem());
+          model, SLOT(handleChangedState()));
+  model->handleChangedState();
 }

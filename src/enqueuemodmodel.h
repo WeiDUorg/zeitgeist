@@ -31,7 +31,7 @@ public slots:
                 QList<int> queued);
   void radioToggled(const QModelIndex& index);
   void select(bool select);
-  void handleChangedState(QStandardItem* item);
+  void handleChangedState();
 
 signals:
   void componentsAvailable(bool available);
