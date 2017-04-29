@@ -188,7 +188,8 @@ void EnqueueModWindow::handleLanguageSelection(const QItemSelection& selected,
 
 void EnqueueModWindow::handleProceed() {
   const QModelIndex i = languageListView->selectionModel()->currentIndex();
-  emit enqueueComponents(tp2, i.row());
+  int language = i.row() < 0 ? 0 : i.row();
+  emit enqueueComponents(tp2, language);
   this->close();
 }
 
