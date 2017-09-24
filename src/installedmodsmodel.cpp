@@ -186,6 +186,7 @@ WeiduLog* InstalledModsModel::sortForUninstall(const WeiduLog* logFile) const
   for (int i = 0; i < result.size(); ++i) {
     if (result.at(i).isEmpty()) {
       result.removeAt(i);
+      --i;
     }
   }
   std::reverse(result.begin(), result.end());
