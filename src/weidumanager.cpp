@@ -28,6 +28,7 @@
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QMutex>
+#include <QProcessEnvironment>
 #include <QStringList>
 
 WeiduManager::WeiduManager(const QString& weiduPath, QMutex* weiduLog) :
@@ -35,6 +36,20 @@ WeiduManager::WeiduManager(const QString& weiduPath, QMutex* weiduLog) :
   gamePath(QString()), process(new QProcess(this))
 {
   // should also monitor the error() signal
+
+  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+  QString path = env.value("PATH");
+  QString dir = QFileInfo(weiduPath).path();
+  if (!path.isEmpty()) {
+    if (!path.contains(dir)) {
+      path += dir.prepend(":");
+    }
+  } else {
+    path = dir;
+  }
+  qDebug() << "Setting PATH to" << path;
+  env.insert("PATH", path);
+  process->setProcessEnvironment(env);
 }
 
 bool WeiduManager::executable() const
