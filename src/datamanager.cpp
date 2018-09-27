@@ -270,4 +270,5 @@ void DataManager::createModDistArchive(const QString& targetName)
   if (!success) {
     qDebug() << "Creation of mod dist archive failed";
   }
+  emit modDistArchiveSuccess(success);
 }

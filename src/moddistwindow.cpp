@@ -68,8 +68,8 @@ ModDistWindow::ModDistWindow(QWidget* parent,
           this, SLOT(selectTargetName()));
   connect(this, SIGNAL(createDist(const QString&)),
           coordinator, SIGNAL(createModDistArchive(const QString&)));
-  // Possibly some sort of progress indicator
-  // In a modal window
+  connect(coordinator->dataManager, SIGNAL(modDistArchiveSuccess(bool)),
+          this, SLOT(modDistArchiveSuccess(bool)));
 
   filesView = new QListView(this);
   filesView->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -189,4 +189,22 @@ void ModDistWindow::hasData(bool empty)
 void ModDistWindow::workingDir(const QString& dir)
 {
   currentDir = dir;
+}
+
+void ModDistWindow::modDistArchiveSuccess(bool success)
+{
+  if (success) {
+    QString title = tr("Success");
+    QString body =
+      tr("The distributable archive was successfully created at: ");
+    body += targetName;
+    QMessageBox::information(this, title, body, QMessageBox::Ok,
+                             QMessageBox::Ok);
+    this->close();
+  } else {
+    QString title = tr("Something went wrong");
+    QString body =
+      tr("Something went wrong during creation of the archive");
+    QMessageBox::information(this, title, body, QMessageBox::Ok);
+  }
 }

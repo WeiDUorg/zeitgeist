@@ -27,6 +27,7 @@ private slots:
   void selectTargetName();
   void hasData(bool empty);
   void workingDir(const QString& dir);
+  void modDistArchiveSuccess(bool success);
 
 signals:
   void createDist(const QString& targetName);

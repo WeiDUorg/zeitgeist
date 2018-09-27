@@ -66,6 +66,7 @@ signals:
                      WeiduLog* uninstallQueue);
   void gotGame(const bool& haveGot);
   void getLog(const QString& gamePath);
+  void modDistArchiveSuccess(bool success);
 
 private:
   void saveGameList();
