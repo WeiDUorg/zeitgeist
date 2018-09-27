@@ -45,6 +45,3 @@ foreach my $dir (@dirs) {
 }
 
 exit 0;
-
-
-
