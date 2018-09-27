@@ -25,23 +25,20 @@ private slots:
   void openFilesDialog();
   void openDirDialog();
   void selectTargetName();
-  void createDistZip();
   void hasData(bool empty);
   void workingDir(const QString& dir);
 
 signals:
-  void createDist();
+  void createDist(const QString& targetName);
   void clearModel();
   void addFiles(const QStringList& files);
   void addDirs(const QStringList& dirs);
-  void finaliseModel();
 
 private:
   QPushButton* createButton;
   QString targetName;
 
   QListView* filesView;
-  ArchiveModel* filesModel;
   QPushButton* filesButton;
   QPushButton* dirButton;
   QString currentDir;

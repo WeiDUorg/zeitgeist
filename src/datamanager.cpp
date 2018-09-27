@@ -26,6 +26,7 @@
 #include "installedmodsmodel.h"
 #include "queuedmodsmodel.h"
 #include "weidulog.h"
+#include "zip.h"
 
 #include <QFileInfo>
 #include <QSettings>
@@ -260,4 +261,13 @@ void DataManager::componentList(const QString& tp2, int,
   QList<int> installed = installedModsModel->installedComponents(tp2);
   QList<int> queued = inQueuedModsModel->queuedComponents(tp2);
   enqueueModModel->populate(list, installed, queued);
+}
+
+void DataManager::createModDistArchive(const QString& targetName)
+{
+  archiveModel->finalise();
+  bool success = Zip::write(archiveModel, targetName);
+  if (!success) {
+    qDebug() << "Creation of mod dist archive failed";
+  }
 }

@@ -51,6 +51,8 @@ Coordinator::Coordinator(QObject* parent) :
                                            const QJsonDocument&)),
           dataManager, SLOT(componentList(const QString&, int,
                                           const QJsonDocument&)));
+  connect(this, SIGNAL(createModDistArchive(const QString&)),
+          dataManager, SLOT(createModDistArchive(const QString&)));
 }
 
 void Coordinator::weiduPath(const QString& path)

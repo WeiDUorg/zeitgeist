@@ -21,7 +21,6 @@
 #include "coordinator.h"
 #include "datamanager.h"
 #include "moddistwindow.h"
-#include "zip.h"
 
 #include <QDebug>
 #include <QDir>
@@ -47,7 +46,7 @@ ModDistWindow::ModDistWindow(QWidget* parent,
   setWindowTitle(tr("Create Mod Distribution"));
   resize(640, 480);
 
-  filesModel = coordinator->dataManager->archiveModel;
+  ArchiveModel* filesModel = coordinator->dataManager->archiveModel;
   connect(this, SIGNAL(clearModel()),
           filesModel, SLOT(clear()));
   connect(this, SIGNAL(addFiles(const QStringList&)),
@@ -58,10 +57,6 @@ ModDistWindow::ModDistWindow(QWidget* parent,
           this, SLOT(hasData(bool)));
   connect(filesModel, SIGNAL(workingDir(const QString&)),
           this, SLOT(workingDir(const QString&)));
-  connect(this, SIGNAL(finaliseModel()),
-          filesModel, SLOT(finalise()));
-  connect(filesModel, SIGNAL(ready()),
-          this, SLOT(createDistZip()));
 
   QLabel* filesLabel = new QLabel(tr("Files"), this);
   //QLabel* presetsLabel = new QLabel(tr("Presets"), this);
@@ -71,8 +66,8 @@ ModDistWindow::ModDistWindow(QWidget* parent,
   createButton->setToolTip(createButtonDisabled);
   connect(createButton, SIGNAL(clicked()),
           this, SLOT(selectTargetName()));
-  connect(this, SIGNAL(createDist()),
-          this, SIGNAL(finaliseModel()));
+  connect(this, SIGNAL(createDist(const QString&)),
+          coordinator, SIGNAL(createModDistArchive(const QString&)));
   // Possibly some sort of progress indicator
   // In a modal window
 
@@ -177,16 +172,7 @@ void ModDistWindow::selectTargetName()
     // Check if the new targetName exists?
   }
   qDebug() << "Saving target as" << targetName;
-  emit createDist();
-}
-
-void ModDistWindow::createDistZip()
-{
-  qDebug() << "Name of ZIP:" << targetName;
-  bool success = Zip::write(filesModel, targetName);
-  if (!success) {
-    qDebug() << "ZIP creation failed";
-  }
+  emit createDist(targetName);
 }
 
 void ModDistWindow::hasData(bool empty)

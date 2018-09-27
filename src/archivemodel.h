@@ -15,12 +15,12 @@ public:
 public slots:
   QStringList archiveNames() const;
   QStringList filePaths() const;
+  void finalise();
 
 private slots:
   void clear();
   void addFiles(const QStringList& files);
   void addDirs(const QStringList& dirs);
-  void finalise();
 
 signals:
   void isEmpty(bool empty);

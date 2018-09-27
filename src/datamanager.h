@@ -50,6 +50,7 @@ private slots:
   void handleEeLang(const QString& path, const QString& lang) const;
   void componentList(const QString& tp2, int,
                      const QJsonDocument& list) const;
+  void createModDistArchive(const QString& targetName);
 
 public slots:
   void identifyCurrentGame() const;

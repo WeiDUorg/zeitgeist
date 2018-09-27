@@ -32,6 +32,7 @@ signals:
   void weiduFailedValidationSignal(const QString& weiduPath);
   void restoreStateSignal();
   void installerAvailable(const bool& available);
+  void createModDistArchive(const QString& targetName);
 };
 
 #endif // COORDINATOR_H
