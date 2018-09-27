@@ -362,5 +362,10 @@ void MainWindow::showAboutDialog() const
   body << " later version.</p><p>The source code is available at <a href='ht";
   body << "tps://github.com/WeiDUorg/zeitgeist'>https://github.com/WeiDUorg/";
   body << "zeitgeist</a></p>";
+  body << "<p>This program makes use of the library:<br />";
+  body << "<a href='https://stachenov.github.io/quazip/'>QuaZIP</a> by ";
+  body << "Sergei Tachenov &ndash; <a href='https://www.gnu.org/licenses/old";
+  body << "-licenses/lgpl-2.1.html'>GNU LGPL v2.1</a></p>";
+
   QMessageBox::about(0, title, body.join(""));
 }
