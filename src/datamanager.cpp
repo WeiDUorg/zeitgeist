@@ -18,6 +18,7 @@
  */
 
 #include "datamanager.h"
+#include "archivemodel.h"
 #include "availablemodsmodel.h"
 #include "enqueuemodmodel.h"
 #include "game.h"
@@ -40,6 +41,7 @@ DataManager::DataManager(QObject* parent) :
   inQueuedModsModel(new QueuedModsModel(this)),
   outQueuedModsModel(new QueuedModsModel(this)),
   enqueueModModel(new EnqueueModModel(this)),
+  archiveModel(new ArchiveModel(this)),
   settings(new QSettings("zeitgeist", "zeitgeist", this)), currentGame(nullptr)
 {
   connect(gameListModel, SIGNAL(gameRemoved(const QString&)),

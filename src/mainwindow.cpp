@@ -24,6 +24,7 @@
 #include "enqueuemodwindow.h"
 #include "gamewindow.h"
 #include "maincentralwidget.h"
+#include "moddistwindow.h"
 #include "settingswindow.h"
 #include "terminalwindow.h"
 
@@ -40,7 +41,8 @@ MainWindow::MainWindow(Coordinator* coordinator) :
   coordinator(coordinator),
   dataManager(coordinator->dataManager),
   mainCentralWidget(new MainCentralWidget(this, coordinator)),
-  gameWindow(nullptr), settingsWindow(nullptr), terminalWindow(nullptr)
+  gameWindow(nullptr), settingsWindow(nullptr), modDistWindow(nullptr),
+  terminalWindow(nullptr)
 {
   setCentralWidget(mainCentralWidget);
   connect(mainCentralWidget, SIGNAL(availableModSelected(const bool&)),
@@ -98,6 +100,11 @@ void MainWindow::createActions()
   programSettingsAction->setStatusTip(tr("Edit program settings"));
   connect(programSettingsAction, SIGNAL(triggered()),
           this, SLOT(showSettingsWindow()));
+
+  programModDistAction = new QAction(tr("Create Mod Distribution"), this);
+  programModDistAction->setStatusTip(tr("Package a mod in a distributable format"));
+  connect(programModDistAction, SIGNAL(triggered()),
+          this, SLOT(showModDistWindow()));
 
   programQuitAction = new QAction(tr("Quit"), this);
   connect(programQuitAction, SIGNAL(triggered()),
@@ -179,6 +186,7 @@ void MainWindow::createMenus()
 {
   programMenu = menuBar()->addMenu(tr("Program"));
   programMenu->addAction(programSettingsAction);
+  programMenu->addAction(programModDistAction);
   programMenu->addAction(programAboutAction);
   programMenu->addAction(programQuitAction);
 
@@ -214,6 +222,15 @@ void MainWindow::showSettingsWindow()
   } else {
     settingsWindow->activateWindow();
   }
+}
+
+void MainWindow::showModDistWindow()
+{
+  if (!modDistWindow) {
+    modDistWindow = new ModDistWindow(this, coordinator);
+  }
+  modDistWindow->show();
+  modDistWindow->activateWindow();
 }
 
 void MainWindow::createEnqueueModWindow(const QString& tp2)

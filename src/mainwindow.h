@@ -8,6 +8,7 @@ class Coordinator;
 class DataManager;
 class GameWindow;
 class MainCentralWidget;
+class ModDistWindow;
 class SettingsWindow;
 class TerminalWindow;
 
@@ -31,6 +32,7 @@ protected:
 private slots:
   void showGameWindow();
   void showSettingsWindow();
+  void showModDistWindow();
   void createEnqueueModWindow(const QString& tp2);
   void createTerminalWindow();
   void updateNameOfCurrentGame(const QString& name);
@@ -58,6 +60,7 @@ private:
   QAction* programAboutAction;
   QAction* programSettingsAction;
   QAction* programQuitAction;
+  QAction* programModDistAction;
   QAction* gameEditAction;
   QAction* gameRefreshAction;
   QAction* gameEnqueueAction;
@@ -68,6 +71,7 @@ private:
   QMenu* gameMenu;
   GameWindow* gameWindow;
   SettingsWindow* settingsWindow;
+  QPointer<ModDistWindow> modDistWindow;
   QPointer<TerminalWindow> terminalWindow;
 
   bool installerToggle = false;

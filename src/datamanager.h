@@ -5,6 +5,7 @@
 #include <QHash>
 #include <QModelIndex>
 
+class ArchiveModel;
 class AvailableModsModel;
 class EnqueueModModel;
 class Game;
@@ -31,6 +32,7 @@ public:
   QueuedModsModel* inQueuedModsModel;
   QueuedModsModel* outQueuedModsModel;
   EnqueueModModel* enqueueModModel;
+  ArchiveModel* archiveModel;
 
 private slots:
   void useGame(const QString& path);
