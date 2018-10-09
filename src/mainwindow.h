@@ -43,9 +43,12 @@ private slots:
   void gameAvailable(const bool& haveGot);
   void installerAvailable(const bool& available);
   void showAboutDialog() const;
+  void browseForModArchives();
+  void importModDistArchiveSuccess(bool success) const;
 
 signals:
   void saveState();
+  void importModArchives(const QStringList& mods);
 
 private:
   void createStatusBar();
@@ -63,6 +66,7 @@ private:
   QAction* programModDistAction;
   QAction* gameEditAction;
   QAction* gameRefreshAction;
+  QAction* gameImportModAction;
   QAction* gameEnqueueAction;
   QAction* gameUnqueueAction;
   QAction* gameUninstallAction;
@@ -100,6 +104,14 @@ private:
     tr("No game is loaded");
   const QString installerUnavailable =
     tr("This action is unavailable until WeiDU has been configured");
+  const QString gameImportModActionEnabled =
+    tr("Import a packaged mod into the current game");
+  const QString gameImportModActionDisabled =
+    tr("No game is loaded");
+  const QString importModSuccess =
+    tr("All mods were successfully imported");
+  const QString importModFailure =
+    tr("One or more mods could not be imported");
 };
 
 #endif // MAINWINDOW_H

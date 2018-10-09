@@ -26,6 +26,7 @@
 #include <QString>
 #include <QStringList>
 
+#include <JlCompress.h>
 #include <quazip.h>
 #include <quazipfile.h>
 
@@ -74,12 +75,17 @@ bool Zip::write(const ArchiveModel* data, const QString& outFile)
 
   return true;
 }
-/*
-bool Zip::read(ArchiveModel* data, const QString& inFile)
-{
 
+bool Zip::extract(const QString& inFile, const QString& outDir)
+{
+  //QuaZip zip(inFile);
+  //zip.setFileNameCodec("UTF-8");
+
+  // should probably test if files exist first
+
+  return !JlCompress::extractDir(inFile, outDir).isEmpty();
 }
-*/
+
 bool Zip::copyData(QIODevice& inFile, QIODevice& outFile)
 {
   const qint64 maxLen = 4096;

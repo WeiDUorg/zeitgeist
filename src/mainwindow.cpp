@@ -31,11 +31,15 @@
 #include <QAction>
 #include <QApplication>
 #include <QDebug>
+#include <QDir>
+#include <QFileDialog>
 #include <QLabel>
 #include <QMenuBar>
 #include <QMenu>
 #include <QMessageBox>
 #include <QStatusBar>
+#include <QString>
+#include <QStringList>
 
 MainWindow::MainWindow(Coordinator* coordinator) :
   coordinator(coordinator),
@@ -56,6 +60,10 @@ MainWindow::MainWindow(Coordinator* coordinator) :
 
   connect(coordinator, SIGNAL(installerAvailable(const bool&)),
           this, SLOT(installerAvailable(const bool&)));
+  connect(this, SIGNAL(importModArchives(const QStringList&)),
+          dataManager, SLOT(importModDistArchive(const QStringList&)));
+  connect(dataManager, SIGNAL(importModDistArchiveSuccess(bool)),
+          this, SLOT(importModDistArchiveSuccess(bool)));
 
   createActions();
   createStatusBar();
@@ -123,6 +131,12 @@ void MainWindow::createActions()
   gameRefreshAction->setEnabled(false);
   connect(gameRefreshAction, SIGNAL(triggered()),
           dataManager, SLOT(refreshCurrentGame()));
+
+  gameImportModAction = new QAction(tr("Import Mod"), this);
+  gameImportModAction->setStatusTip(gameImportModActionDisabled);
+  gameImportModAction->setEnabled(false);
+  connect(gameImportModAction, SIGNAL(triggered()),
+          this, SLOT(browseForModArchives()));
 
   /* Should only be enabled while there is a selection in availableModsView
    * Default: disabled (no available mod is selected)
@@ -194,6 +208,7 @@ void MainWindow::createMenus()
   gameMenu->addAction(gameEditAction);
   // Recent (games)
   gameMenu->addAction(gameRefreshAction);
+  gameMenu->addAction(gameImportModAction);
   gameMenu->addAction(gameEnqueueAction);
   gameMenu->addAction(gameUnqueueAction);
   gameMenu->addAction(gameUninstallAction);
@@ -318,9 +333,13 @@ void MainWindow::gameAvailable(const bool& haveGot)
   if (haveGot) {
     gameRefreshAction->setEnabled(true);
     gameRefreshAction->setStatusTip(gameRefreshActionEnabled);
+    gameImportModAction->setEnabled(true);
+    gameImportModAction->setStatusTip(gameImportModActionEnabled);
   } else {
     gameRefreshAction->setEnabled(false);
     gameRefreshAction->setStatusTip(gameRefreshActionDisabled);
+    gameImportModAction->setEnabled(false);
+    gameImportModAction->setStatusTip(gameImportModActionDisabled);
   }
 }
 
@@ -368,4 +387,23 @@ void MainWindow::showAboutDialog() const
   body << "-licenses/lgpl-2.1.html'>GNU LGPL v2.1</a></p>";
 
   QMessageBox::about(0, title, body.join(""));
+}
+
+void MainWindow::browseForModArchives()
+{
+  QStringList mods =
+    QFileDialog::getOpenFileNames(this, tr("Select mod archives"),
+                                  QDir::homePath(),
+                                  "IE Mod/ZIP (*.iemod *.zip)");
+  qDebug() << "Selected mods were:" << mods;
+  emit importModArchives(mods);
+}
+
+void MainWindow::importModDistArchiveSuccess(bool success) const
+{
+  if (success) {
+    statusBar()->showMessage(importModSuccess, 5000);
+  } else {
+    statusBar()->showMessage(importModFailure, 5000);
+  }
 }

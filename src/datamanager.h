@@ -51,6 +51,7 @@ private slots:
   void componentList(const QString& tp2, int,
                      const QJsonDocument& list) const;
   void createModDistArchive(const QString& targetName);
+  void importModDistArchive(const QStringList& mods);
 
 public slots:
   void identifyCurrentGame() const;
@@ -66,7 +67,8 @@ signals:
                      WeiduLog* uninstallQueue);
   void gotGame(const bool& haveGot);
   void getLog(const QString& gamePath);
-  void modDistArchiveSuccess(bool success);
+  void createModDistArchiveSuccess(bool success);
+  void importModDistArchiveSuccess(bool success);
 
 private:
   void saveGameList();

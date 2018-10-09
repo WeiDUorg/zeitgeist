@@ -270,5 +270,23 @@ void DataManager::createModDistArchive(const QString& targetName)
   if (!success) {
     qDebug() << "Creation of mod dist archive failed";
   }
-  emit modDistArchiveSuccess(success);
+  emit createModDistArchiveSuccess(success);
+}
+
+void DataManager::importModDistArchive(const QStringList& mods)
+{
+  bool overall = true;
+  bool any = false;
+  foreach (QString mod, mods) {
+    bool success = Zip::extract(mod, currentGame->path);
+    overall = overall && success;
+    any = any || success;
+    if (!success) {
+      qDebug() << "Failed to read mod archive:" << mod;
+    }
+  }
+  if (!mods.isEmpty()) {
+    if (any) refreshCurrentGame();
+    emit importModDistArchiveSuccess(overall);
+  }
 }

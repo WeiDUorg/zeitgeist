@@ -11,7 +11,7 @@ class Zip
 
 public:
   static bool write(const ArchiveModel* data, const QString& outFile);
-  //static bool read(ArchiveModel* data, const QString& inFile);
+  static bool extract(const QString& inFile, const QString& outDir);
 
 private:
   static bool copyData(QIODevice& inFile, QIODevice& outFile);

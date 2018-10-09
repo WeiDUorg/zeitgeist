@@ -68,7 +68,7 @@ ModDistWindow::ModDistWindow(QWidget* parent,
           this, SLOT(selectTargetName()));
   connect(this, SIGNAL(createDist(const QString&)),
           coordinator, SIGNAL(createModDistArchive(const QString&)));
-  connect(coordinator->dataManager, SIGNAL(modDistArchiveSuccess(bool)),
+  connect(coordinator->dataManager, SIGNAL(createModDistArchiveSuccess(bool)),
           this, SLOT(modDistArchiveSuccess(bool)));
 
   filesView = new QListView(this);
