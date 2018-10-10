@@ -378,7 +378,7 @@ void MainWindow::showAboutDialog() const
   body << "<p>Copyright (C) 2017 Fredrik Lindgren</p>";
   body << "</p><p>This is free software under the terms of the <a href='htt";
   body << "ps://www.gnu.org/licenses/gpl.html'>GNU GPL</a>, version 3 or any";
-  body << " later version.</p><p>The source code is available at <a href='ht";
+  body << " later version. The source code is available at <a href='ht";
   body << "tps://github.com/WeiDUorg/zeitgeist'>https://github.com/WeiDUorg/";
   body << "zeitgeist</a></p>";
   body << "<p>This program makes use of the library:<br />";
