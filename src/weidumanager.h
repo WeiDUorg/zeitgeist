@@ -41,10 +41,10 @@ private slots:
 
   /* Slots to queue up tasks */
   void version();
-  void newGamePath(const QString& path, const bool& eeGame);
+  void newGamePath(const QString& path, bool eeGame);
   void eeLang(const QString& lang);
   void getLanguageList(const QString& tp2);
-  void getComponentList(const QString& tp2, const int& index);
+  void getComponentList(const QString& tp2, int index);
   void install(WeiduLog* modList);
   void uninstall(WeiduLog* modList);
 
@@ -52,10 +52,10 @@ private slots:
   void endTask(int exitCode, QProcess::ExitStatus exitStatus);
 
 signals:
-  void quacks(const bool& quacks);
+  void quacks(bool quacks);
 
   /* Signals for communicating results */
-  void versionSignal(const int& version);
+  void versionSignal(int version);
   void languageList(const QStringList& languageList);
   void componentList(const QString& tp2, int lang,
                      const QJsonDocument& componentList);

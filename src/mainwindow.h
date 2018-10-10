@@ -36,12 +36,12 @@ private slots:
   void createEnqueueModWindow(const QString& tp2);
   void createTerminalWindow();
   void updateNameOfCurrentGame(const QString& name);
-  void availableModSelected(const bool& selected);
-  void installedModSelected(const bool& selected);
-  void queuedModSelected(const bool& selected);
-  void queuedModAvailable(const bool& available);
-  void gameAvailable(const bool& haveGot);
-  void installerAvailable(const bool& available);
+  void availableModSelected(bool selected);
+  void installedModSelected(bool selected);
+  void queuedModSelected(bool selected);
+  void queuedModAvailable(bool available);
+  void gameAvailable(bool haveGot);
+  void installerAvailable(bool available);
   void showAboutDialog() const;
   void browseForModArchives();
   void importModDistArchiveSuccess(bool success) const;

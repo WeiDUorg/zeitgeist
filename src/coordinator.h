@@ -31,7 +31,7 @@ signals:
   void weiduPathSignal(const QString& path);
   void weiduFailedValidationSignal(const QString& weiduPath);
   void restoreStateSignal();
-  void installerAvailable(const bool& available);
+  void installerAvailable(bool available);
   void createModDistArchive(const QString& targetName);
 };
 

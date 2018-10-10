@@ -59,13 +59,13 @@ public slots:
 signals:
   void identityOfCurrentGame(const QString& name) const;
   void clearModels();
-  void newGamePath(const QString& gamePath, const bool& eeGame) const;
+  void newGamePath(const QString& gamePath, bool eeGame) const;
   void eeLang(const QString& eeLang) const;
   void restoreWeidu(const QString& weiduPath) const;
   void clearQueues();
   void processQueues(WeiduLog* installQueue,
                      WeiduLog* uninstallQueue);
-  void gotGame(const bool& haveGot);
+  void gotGame(bool haveGot);
   void getLog(const QString& gamePath);
   void createModDistArchiveSuccess(bool success);
   void importModDistArchiveSuccess(bool success);

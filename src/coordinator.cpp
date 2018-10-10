@@ -67,8 +67,8 @@ void Coordinator::weiduFailedValidation(const QString& weiduPath)
 
 void Coordinator::newWeiduManager(const WeiduManager* manager)
 {
-  connect(dataManager, SIGNAL(newGamePath(const QString&, const bool&)),
-          manager, SLOT(newGamePath(const QString&, const bool&)));
+  connect(dataManager, SIGNAL(newGamePath(const QString&, bool)),
+          manager, SLOT(newGamePath(const QString&, bool)));
   connect(dataManager, SIGNAL(eeLang(const QString&)),
           manager, SLOT(eeLang(const QString&)));
   provideGamePath();

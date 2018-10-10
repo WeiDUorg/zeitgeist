@@ -116,9 +116,9 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
                                   const QItemSelection&)),
           this, SLOT(handleLanguageSelection(const QItemSelection&,
                                              const QItemSelection)));
-  connect(this, SIGNAL(getComponentList(const QString&, const int&)),
+  connect(this, SIGNAL(getComponentList(const QString&, int)),
           coordinator->controller, SLOT(getComponentList(const QString&,
-                                                         const int&)));
+                                                         int)));
 
   EnqueueModModel* model = coordinator->dataManager->enqueueModModel;
   connect(model, SIGNAL(componentsAvailable(bool)),

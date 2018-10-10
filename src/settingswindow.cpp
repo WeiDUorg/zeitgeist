@@ -45,10 +45,10 @@ SettingsWindow::SettingsWindow(QWidget* parent,
 
   weiduLabel = new QLabel(locateWeidu, this);
   weiduLabel->setMinimumWidth(150); // Could probably be less fragile
-  connect(this, SIGNAL(installerAvailable(const bool&)),
-          parent, SLOT(installerAvailable(const bool&)));
-  connect(coordinator->controller, SIGNAL(weiduVersionSignal(const int&)),
-          this, SLOT(weiduVersion(const int&)));
+  connect(this, SIGNAL(installerAvailable(bool)),
+          parent, SLOT(installerAvailable(bool)));
+  connect(coordinator->controller, SIGNAL(weiduVersionSignal(int)),
+          this, SLOT(weiduVersion(int)));
   connect(coordinator->controller, SIGNAL(confirmedWeiduPath(const QString&)),
           this, SLOT(weiduPath(const QString&)));
   connect(this, SIGNAL(doesWeiduExist()),
@@ -119,7 +119,7 @@ void SettingsWindow::weiduFailedValidation(const QString& weiduPath)
   weiduLabel->setText(locateWeidu);
 }
 
-void SettingsWindow::weiduVersion(const int& version)
+void SettingsWindow::weiduVersion(int version)
 {
   weiduLabel->setText(tr("WeiDU version: ") + QString::number(version));
 }

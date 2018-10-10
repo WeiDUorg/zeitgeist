@@ -59,19 +59,19 @@ void Controller::setupWeidu(const QString& weiduPath)
             weiduManager, SLOT(terminateManager()));
     connect(this, SIGNAL(doesItQuack()),
             weiduManager, SLOT(quack()));
-    connect(weiduManager, SIGNAL(quacks(const bool&)),
-            this, SLOT(quacks(const bool&)));
+    connect(weiduManager, SIGNAL(quacks(bool)),
+            this, SLOT(quacks(bool)));
 
-    connect(weiduManager, SIGNAL(versionSignal(const int&)),
-            this, SLOT(weiduVersion(const int&)));
+    connect(weiduManager, SIGNAL(versionSignal(int)),
+            this, SLOT(weiduVersion(int)));
     connect(this, SIGNAL(getVersion()),
             weiduManager, SLOT(version()));
     connect(weiduManager, SIGNAL(languageList(const QStringList&)),
             this, SIGNAL(languageList(const QStringList&)));
     connect(this, SIGNAL(weiduListLanguages(const QString&)),
             weiduManager, SLOT(getLanguageList(const QString&)));
-    connect(this, SIGNAL(weiduListComponents(const QString&, const int&)),
-            weiduManager, SLOT(getComponentList(const QString&, const int&)));
+    connect(this, SIGNAL(weiduListComponents(const QString&, int)),
+            weiduManager, SLOT(getComponentList(const QString&, int)));
     connect(weiduManager, SIGNAL(componentList(const QString&, int,
                                                const QJsonDocument&)),
             this, SIGNAL(componentList(const QString&, int,
@@ -103,7 +103,7 @@ void Controller::setupWeidu(const QString& weiduPath)
   }
 }
 
-void Controller::quacks(const bool& quacks)
+void Controller::quacks(bool quacks)
 {
   if (quacks) {
     qDebug() << "File quacks like a WeiDU";
@@ -121,7 +121,7 @@ void Controller::quacks(const bool& quacks)
   }
 }
 
-void Controller::weiduVersion(const int& version)
+void Controller::weiduVersion(int version)
 {
   currentWeiduVersion = version;
   emit weiduVersionSignal(version);
@@ -140,7 +140,7 @@ void Controller::getLanguageList(const QString& tp2)
   emit weiduListLanguages(tp2);
 }
 
-void Controller::getComponentList(const QString& tp2, const int& index)
+void Controller::getComponentList(const QString& tp2, int index)
 {
   emit weiduListComponents(tp2, index);
 }

@@ -137,7 +137,7 @@ QList<QList<WeiduLogComponent>> LogReader::partitionData(const QList<WeiduLogCom
 }
 
 QList<WeiduLogComponent> LogReader::getContiguousBlock(const QList<WeiduLogComponent>& data,
-                                                       const int& index, const QString& name)
+                                                       int index, const QString& name)
 {
   QList<WeiduLogComponent> block;
   QList<WeiduLogComponent>::const_iterator i;

@@ -22,12 +22,12 @@ public:
 
 private slots:
   void setupWeidu(const QString& weiduPath);
-  void quacks(const bool& quacks);
+  void quacks(bool quacks);
   void weiduCheck() const;
 
-  void weiduVersion(const int& version);
+  void weiduVersion(int version);
   void getLanguageList(const QString& tp2);
-  void getComponentList(const QString& tp2, const int& index);
+  void getComponentList(const QString& tp2, int index);
   void processQueues(WeiduLog* install, WeiduLog* uninstall);
 
 signals:
@@ -39,7 +39,7 @@ signals:
   void confirmedWeiduPath(const QString& path) const;
 
   void getVersion();
-  void weiduVersionSignal(const int& version) const;
+  void weiduVersionSignal(int version) const;
   void weiduListLanguages(const QString& tp2);
   void languageList(const QStringList& list);
   void weiduListComponents(const QString& tp2, const int& index);

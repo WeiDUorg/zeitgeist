@@ -395,7 +395,7 @@ void WeiduManager::version()
   doTask();
 }
 
-void WeiduManager::newGamePath(const QString& path, const bool& eeGame)
+void WeiduManager::newGamePath(const QString& path, bool eeGame)
 {
   qDebug() << "WeiduManager got game path" << path << "; EE game:" << eeGame;
   if (!path.isEmpty()) {
@@ -419,7 +419,7 @@ void WeiduManager::getLanguageList(const QString& tp2)
   doTask();
 }
 
-void WeiduManager::getComponentList(const QString& tp2, const int& index)
+void WeiduManager::getComponentList(const QString& tp2, int index)
 {
   qDebug() << "Enqueuing LISTCOMPONENTS task";
   QPair<QString, int> tuple;

@@ -41,14 +41,14 @@ private slots:
   void clearQueuedSelection();
 
 signals:
-  void availableModSelected(const bool& selected);
+  void availableModSelected(bool selected);
   void selectedAvailableMod(const QString&);
-  void installedModSelected(const bool& selected);
+  void installedModSelected(bool selected);
   void selectedInstalledMods(WeiduLog* selection);
-  void queuedModSelected(const bool& selected);
+  void queuedModSelected(bool selected);
   void selectedInstallQueuedMods(const QModelIndexList& indices);
   void selectedUninstallQueuedMods(const QModelIndexList& indices);
-  void queuedModAvailable(const bool& available);
+  void queuedModAvailable(bool available);
 
 private:
   void handleTreeSelection(QItemSelectionModel* selectionModel,

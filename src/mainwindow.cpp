@@ -49,17 +49,17 @@ MainWindow::MainWindow(Coordinator* coordinator) :
   terminalWindow(nullptr)
 {
   setCentralWidget(mainCentralWidget);
-  connect(mainCentralWidget, SIGNAL(availableModSelected(const bool&)),
-          this, SLOT(availableModSelected(const bool&)));
-  connect(mainCentralWidget, SIGNAL(installedModSelected(const bool&)),
-          this, SLOT(installedModSelected(const bool&)));
-  connect(mainCentralWidget, SIGNAL(queuedModSelected(const bool&)),
-          this, SLOT(queuedModSelected(const bool&)));
-  connect(mainCentralWidget, SIGNAL(queuedModAvailable(const bool&)),
-          this, SLOT(queuedModAvailable(const bool&)));
+  connect(mainCentralWidget, SIGNAL(availableModSelected(bool)),
+          this, SLOT(availableModSelected(bool)));
+  connect(mainCentralWidget, SIGNAL(installedModSelected(bool)),
+          this, SLOT(installedModSelected(bool)));
+  connect(mainCentralWidget, SIGNAL(queuedModSelected(bool)),
+          this, SLOT(queuedModSelected(bool)));
+  connect(mainCentralWidget, SIGNAL(queuedModAvailable(bool)),
+          this, SLOT(queuedModAvailable(bool)));
 
-  connect(coordinator, SIGNAL(installerAvailable(const bool&)),
-          this, SLOT(installerAvailable(const bool&)));
+  connect(coordinator, SIGNAL(installerAvailable(bool)),
+          this, SLOT(installerAvailable(bool)));
   connect(this, SIGNAL(importModArchives(const QStringList&)),
           dataManager, SLOT(importModDistArchive(const QStringList&)));
   connect(dataManager, SIGNAL(importModDistArchiveSuccess(bool)),
@@ -73,8 +73,8 @@ MainWindow::MainWindow(Coordinator* coordinator) :
           dataManager, SLOT(saveState()));
   connect(dataManager, SIGNAL(identityOfCurrentGame(const QString&)),
           this, SLOT(updateNameOfCurrentGame(const QString&)));
-  connect(dataManager, SIGNAL(gotGame(const bool&)),
-          this, SLOT(gameAvailable(const bool&)));
+  connect(dataManager, SIGNAL(gotGame(bool)),
+          this, SLOT(gameAvailable(bool)));
 
   connect(coordinator->controller, SIGNAL(installTaskStarted()),
           this, SLOT(createTerminalWindow()));
@@ -274,7 +274,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
   QMainWindow::closeEvent(event);
 }
 
-void MainWindow::availableModSelected(const bool& selected)
+void MainWindow::availableModSelected(bool selected)
 {
   enqueueToggle = selected;
   if (selected && installerToggle) {
@@ -290,7 +290,7 @@ void MainWindow::availableModSelected(const bool& selected)
   }
 }
 
-void MainWindow::installedModSelected(const bool& selected)
+void MainWindow::installedModSelected(bool selected)
 {
   if (selected) {
     gameUninstallAction->setEnabled(true);
@@ -301,7 +301,7 @@ void MainWindow::installedModSelected(const bool& selected)
   }
 }
 
-void MainWindow::queuedModSelected(const bool& selected)
+void MainWindow::queuedModSelected(bool selected)
 {
   if (selected) {
     gameUnqueueAction->setEnabled(true);
@@ -312,7 +312,7 @@ void MainWindow::queuedModSelected(const bool& selected)
   }
 }
 
-void MainWindow::queuedModAvailable(const bool& available)
+void MainWindow::queuedModAvailable(bool available)
 {
   processToggle = available;
   if (available && installerToggle) {
@@ -328,7 +328,7 @@ void MainWindow::queuedModAvailable(const bool& available)
   }
 }
 
-void MainWindow::gameAvailable(const bool& haveGot)
+void MainWindow::gameAvailable(bool haveGot)
 {
   if (haveGot) {
     gameRefreshAction->setEnabled(true);
@@ -343,7 +343,7 @@ void MainWindow::gameAvailable(const bool& haveGot)
   }
 }
 
-void MainWindow::installerAvailable(const bool& available)
+void MainWindow::installerAvailable(bool available)
 {
   installerToggle = available;
   if (available && enqueueToggle) {
