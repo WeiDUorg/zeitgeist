@@ -25,6 +25,7 @@
 #include <QRect>
 #include <QSize>
 #include <QStyle>
+#include <QStyleOptionButton>
 #include <QStyleOptionViewItem>
 
 RadioButtonDelegate::RadioButtonDelegate(QWidget* parent) :
@@ -39,22 +40,15 @@ void RadioButtonDelegate::paint(QPainter* painter,
 {
   const QAbstractItemModel* model = index.model();
   if (model->data(index, RADIO_ROLE).toBool()) {
-    int radioButtonWidth =
-      QApplication::style()->pixelMetric(QStyle::PM_ExclusiveIndicatorWidth,
-                                         &option);
-    int spacing =
-      QApplication::style()->pixelMetric(QStyle::PM_RadioButtonLabelSpacing,
-                                         &option);
-    QStyleOptionViewItem opt = option;
-    int left = opt.rect.left();
-    opt.rect.setLeft(left + spacing + radioButtonWidth);
-    QStyledItemDelegate::paint(painter, opt, index);
-    opt.rect.setLeft(left + spacing / 2);
-    opt.rect.setWidth(radioButtonWidth);
+    QStyleOptionButton opt;
+    opt.rect = option.rect;
+    opt.text = index.data().toString();
+    opt.state = option.state;
     opt.state |= model->data(index, RADIO_SELECTED).toBool() ?
       QStyle::State_On : QStyle::State_Off;
-    QApplication::style()->drawPrimitive(QStyle::PE_IndicatorRadioButton,
-                                         &opt, painter);
+    QStyle* style = option.widget ?
+      option.widget->style() : QApplication::style();
+    style->drawControl(QStyle::CE_RadioButton, &opt, painter, option.widget);
   } else {
     QStyledItemDelegate::paint(painter, option, index);
   }
