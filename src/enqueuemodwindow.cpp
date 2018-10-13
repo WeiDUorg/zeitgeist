@@ -106,6 +106,7 @@ EnqueueModWindow::EnqueueModWindow(QWidget* parent,
   languageListModel = new QStringListModel(this);
   languageListView = new QListView(this);
   languageListView->setSelectionMode(QAbstractItemView::SingleSelection);
+  languageListView->setEditTriggers(QAbstractItemView::NoEditTriggers);
   languageListView->setModel(languageListModel);
   connect(this, SIGNAL(getLanguageList(const QString&)),
           coordinator->controller, SLOT(getLanguageList(const QString&)));
