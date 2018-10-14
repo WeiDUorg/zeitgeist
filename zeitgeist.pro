@@ -9,8 +9,11 @@ TEMPLATE = app
 CONFIG += debug
 QMAKE_CXXFLAGS += -std=c++11 -isystem $$[QT_INSTALL_HEADERS]
 
-INCLUDEPATH += /usr/include/quazip5
-LIBS += -L/usr/lib64 -lquazip5
+unix:INCLUDEPATH += /usr/include/quazip5
+unix:LIBS += -L/usr/lib64 -lquazip5
+
+win32:INCLUDEPATH += C:\lib\include\quazip
+win32:LIBS += -LC:\lib\bin -lquazip
 
 CONFIG(debug, debug|release) {
 message ("debug build")
