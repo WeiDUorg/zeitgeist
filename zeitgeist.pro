@@ -9,11 +9,11 @@ TEMPLATE = app
 CONFIG += debug
 QMAKE_CXXFLAGS += -std=c++11 -isystem $$[QT_INSTALL_HEADERS]
 
-unix:INCLUDEPATH += /usr/include/quazip5
-unix:LIBS += -L/usr/lib64 -lquazip5
+unix:INCLUDEPATH += /usr/include/quazip5 # Directory with header files
+unix:LIBS += -L/usr/lib64 -lquazip5 # -L<path/to> -l<library>
 
-win32:INCLUDEPATH += C:\lib\include\quazip
-win32:LIBS += -LC:\lib\bin -lquazip
+win32:INCLUDEPATH += C:\lib\include\quazip # Folder with header files
+win32:LIBS += -LC:\lib\bin -lquazip # -L<path/to> -l<library>
 
 CONFIG(debug, debug|release) {
 message ("debug build")
@@ -49,6 +49,5 @@ RCC_DIR = $$BUILD_DIR
 include(src.pri)
 
 unix:OUTPUT_FILE = $$quote($$DESTDIR/$$TARGET)
-#win32:OUTPUT_FILE = $$quote($$DESTDIR/$${TARGET}.exe)
 
 unix:QMAKE_POST_LINK += $$QMAKE_COPY $$OUTPUT_FILE "."
