@@ -81,12 +81,16 @@ void DataManager::restoreState()
     qDebug() << "Restoring game:" << settingsGame;
     useGame(settingsGame);
   }
+  qDebug() << "Finished restoring state";
+}
+
+void DataManager::restoreWeidu() const
+{
   QString settingsWeidu = settings->value("weiduPath").toString();
   if (!settingsWeidu.isEmpty() && QFileInfo(settingsWeidu).exists()) {
     qDebug() << "Attempting to restore WeiDU path" << settingsWeidu;
-    emit restoreWeidu(settingsWeidu);
+    emit storedWeiduPath(settingsWeidu);
   }
-  qDebug() << "Finished restoring state";
 }
 
 void DataManager::useGame(const QString& path)

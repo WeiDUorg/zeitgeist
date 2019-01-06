@@ -23,6 +23,8 @@
 #include "enqueuemodmodel.h"
 #include "weidumanager.h"
 
+#include <QFile>
+
 class QJsonDocument;
 
 Coordinator::Coordinator(QObject* parent) :
@@ -37,7 +39,7 @@ Coordinator::Coordinator(QObject* parent) :
           this, SLOT(newWeiduManager(const WeiduManager*)));
   connect(controller, SIGNAL(confirmedWeiduPath(const QString&)),
           dataManager, SLOT(confirmedWeiduPath(const QString&)));
-  connect(dataManager, SIGNAL(restoreWeidu(const QString&)),
+  connect(dataManager, SIGNAL(storedWeiduPath(const QString&)),
           this, SLOT(weiduPath(const QString&)));
   connect(this, SIGNAL(restoreStateSignal()),
           dataManager, SLOT(restoreState()));
@@ -83,4 +85,14 @@ void Coordinator::provideGamePath()
 void Coordinator::restoreState()
 {
   emit restoreStateSignal();
+}
+
+void Coordinator::initWeidu(const QString& weidu)
+{
+  QFile f(weidu);
+  if (f.exists()) {
+    weiduPath(weidu);
+  } else {
+    dataManager->restoreWeidu();
+  }
 }

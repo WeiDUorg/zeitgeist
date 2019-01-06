@@ -8,6 +8,8 @@ class Controller;
 class WeiduLog;
 class WeiduManager;
 
+class QString;
+
 class Coordinator : public QObject
 {
   Q_OBJECT
@@ -26,6 +28,7 @@ private slots:
 
 public slots:
   void restoreState();
+  void initWeidu(const QString& weidu);
 
 signals:
   void weiduPathSignal(const QString& path);

@@ -55,13 +55,14 @@ private slots:
 
 public slots:
   void identifyCurrentGame() const;
+  void restoreWeidu() const;
 
 signals:
   void identityOfCurrentGame(const QString& name) const;
   void clearModels();
   void newGamePath(const QString& gamePath, bool eeGame) const;
   void eeLang(const QString& eeLang) const;
-  void restoreWeidu(const QString& weiduPath) const;
+  void storedWeiduPath(const QString& weiduPath) const;
   void clearQueues();
   void processQueues(WeiduLog* installQueue,
                      WeiduLog* uninstallQueue);

@@ -19,8 +19,10 @@
 
 #include "mainwindow.h"
 #include "coordinator.h"
+#include "platform.h"
 
 #include <QApplication>
+#include <QCoreApplication>
 #include <QFile>
 #include <QIODevice>
 
@@ -40,6 +42,8 @@ int main(int argc, char* argv[])
     MainWindow w(coordinator);
 
     coordinator->restoreState();
+    coordinator->initWeidu(QCoreApplication::applicationDirPath() +
+                           "/" + WEIDU_EXECUTABLE);
 
     w.show();
 
