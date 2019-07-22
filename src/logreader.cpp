@@ -71,6 +71,12 @@ WeiduLog* LogReader::read(QObject* parent, const QByteArray& data)
   return new WeiduLog(parent, partitionData(list));
 }
 
+WeiduLog* LogReader::read(QObject* parent,
+                          const QList<WeiduLogComponent>& logList)
+{
+  return new WeiduLog(parent, partitionData(logList));
+}
+
 void LogReader::readLog(const QString& path)
 {
   emit logFile(read(0, path));

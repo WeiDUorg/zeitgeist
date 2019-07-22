@@ -65,7 +65,8 @@ signals:
   void storedWeiduPath(const QString& weiduPath) const;
   void clearQueues();
   void processQueues(WeiduLog* installQueue,
-                     WeiduLog* uninstallQueue);
+                     WeiduLog* uninstallQueue,
+                     WeiduLog* log);
   void gotGame(bool haveGot);
   void getLog(const QString& gamePath);
   void createModDistArchiveSuccess(bool success);

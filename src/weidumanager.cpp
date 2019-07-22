@@ -17,6 +17,7 @@
  *
  */
 
+#include "stackmanager.h"
 #include "weidumanager.h"
 #include "weidulog.h"
 #include "weiduextractor.h"
@@ -304,9 +305,9 @@ void WeiduManager::enqueue(Task task,
       if (!mod.isEmpty()) {
         taskQueue.enqueue(task);
         queue.enqueue(mod);
-      }
+      } else { qDebug() << "Attempt to enqueue empty mod"; }
     }
-  }
+  } else { qDebug() << "Attempt to enqueue empty mod list"; }
   delete modList;
   modList = nullptr;
 }
@@ -436,9 +437,18 @@ void WeiduManager::install(WeiduLog* modList)
   doTask();
 }
 
-void WeiduManager::uninstall(WeiduLog* modList)
+void WeiduManager::uninstall(WeiduLog* modList, WeiduLog* logFile)
 {
   qDebug() << "Enqueuing UNINSTALL task(s)";
+  modList = StackManager::uninstall(modList, logFile, reinstallStack);
+  delete logFile; logFile = nullptr;
   enqueue(Task::UNINSTALL, uninstallQueue, modList);
+  if (!reinstallStack.isEmpty()) {
+    QList<QList<WeiduLogComponent>> reinstall;
+    while (!reinstallStack.isEmpty()) {
+      reinstall.append(reinstallStack.pop());
+    }
+    enqueue(Task::INSTALL, installQueue, new WeiduLog(this, reinstall));
+  }
   doTask();
 }

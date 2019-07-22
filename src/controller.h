@@ -28,7 +28,8 @@ private slots:
   void weiduVersion(int version);
   void getLanguageList(const QString& tp2);
   void getComponentList(const QString& tp2, int index);
-  void processQueues(WeiduLog* install, WeiduLog* uninstall);
+  void processQueues(WeiduLog* install, WeiduLog* uninstall,
+                     WeiduLog* log);
 
 signals:
   void weiduFailedValidation(const QString& weiduPath);
@@ -46,7 +47,7 @@ signals:
   void componentList(const QString& tp2, int lang,
                      const QJsonDocument& componentList);
   void weiduInstall(WeiduLog* modList);
-  void weiduUninstall(WeiduLog* modList);
+  void weiduUninstall(WeiduLog* modList, WeiduLog* logFile);
   void installTaskStarted();
   void installTaskEnded();
   void processOutput(const QString& text);

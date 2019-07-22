@@ -78,8 +78,8 @@ void Controller::setupWeidu(const QString& weiduPath)
                                        const QJsonDocument&)));
     connect(this, SIGNAL(weiduInstall(WeiduLog*)),
             weiduManager, SLOT(install(WeiduLog*)));
-    connect(this, SIGNAL(weiduUninstall(WeiduLog*)),
-            weiduManager, SLOT(uninstall(WeiduLog*)));
+    connect(this, SIGNAL(weiduUninstall(WeiduLog*, WeiduLog*)),
+            weiduManager, SLOT(uninstall(WeiduLog*, WeiduLog*)));
     connect(weiduManager, SIGNAL(modStackChanged(const QString&)),
             this, SIGNAL(readLog(const QString&)));
     connect(weiduManager, SIGNAL(installTaskStarted()),
@@ -145,11 +145,12 @@ void Controller::getComponentList(const QString& tp2, int index)
   emit weiduListComponents(tp2, index);
 }
 
-void Controller::processQueues(WeiduLog* install, WeiduLog* uninstall)
+void Controller::processQueues(WeiduLog* install, WeiduLog* uninstall,
+                               WeiduLog* log)
 {
   /* WeiduLog objects are intended for WeiduManager */
   if (!uninstall->isEmpty()) {
-    emit weiduUninstall(uninstall);
+    emit weiduUninstall(uninstall, log);
   }
   if (!install->isEmpty()) {
     emit weiduInstall(install);

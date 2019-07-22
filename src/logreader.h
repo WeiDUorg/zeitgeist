@@ -19,6 +19,8 @@ public:
   LogReader(QMutex* weiduLog);
 
   static WeiduLog* read(QObject* parent, const QByteArray& data);
+  static WeiduLog* read(QObject* parent,
+                        const QList<WeiduLogComponent>& logList);
 
 private slots:
   void readLog(const QString& path);

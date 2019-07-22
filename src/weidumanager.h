@@ -6,7 +6,10 @@
 #include <QObject>
 #include <QPair>
 #include <QProcess>
+#include <QStack>
 #include <QQueue>
+
+class StackManager;
 
 class QByteArray;
 class QJsonDocument;
@@ -46,7 +49,7 @@ private slots:
   void getLanguageList(const QString& tp2);
   void getComponentList(const QString& tp2, int index);
   void install(WeiduLog* modList);
-  void uninstall(WeiduLog* modList);
+  void uninstall(WeiduLog* modList, WeiduLog* logFile);
 
   /* Not for external use, not even as a slot */
   void endTask(int exitCode, QProcess::ExitStatus exitStatus);
@@ -105,6 +108,7 @@ private:
   QQueue<QPair<QString, int>> listComponentsQueue;
   QQueue<QList<WeiduLogComponent>> installQueue;
   QQueue<QList<WeiduLogComponent>> uninstallQueue;
+  QStack<QList<WeiduLogComponent>> reinstallStack;
 };
 
 #endif // WEIDUMANAGER_H

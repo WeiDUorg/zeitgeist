@@ -43,8 +43,8 @@ Coordinator::Coordinator(QObject* parent) :
           this, SLOT(weiduPath(const QString&)));
   connect(this, SIGNAL(restoreStateSignal()),
           dataManager, SLOT(restoreState()));
-  connect(dataManager, SIGNAL(processQueues(WeiduLog*, WeiduLog*)),
-          controller, SLOT(processQueues(WeiduLog*, WeiduLog*)));
+  connect(dataManager, SIGNAL(processQueues(WeiduLog*, WeiduLog*, WeiduLog*)),
+          controller, SLOT(processQueues(WeiduLog*, WeiduLog*, WeiduLog*)));
   connect(dataManager, SIGNAL(getLog(const QString&)),
           controller, SIGNAL(readLog(const QString&)));
   connect(controller, SIGNAL(logFile(WeiduLog*)),

@@ -1,6 +1,7 @@
 #ifndef WEIDULOG_H
 #define WEIDULOG_H
 
+#include <QDebug>
 #include <QObject>
 #include <QList>
 
@@ -17,6 +18,11 @@ struct WeiduLogComponent
   bool operator==(const WeiduLogComponent& r) const
   {
     return (this->modName == r.modName) && (this->number == r.number);
+  }
+
+  bool operator<(const WeiduLogComponent& r) const
+  {
+    return (this->index < r.index);
   }
 };
 
