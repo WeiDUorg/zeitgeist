@@ -83,7 +83,7 @@ GameWindow::GameWindow(QWidget* parent, const DataManager* dataManager) :
   connect(this, SIGNAL(useGame(const QString&)),
           dataManager, SLOT(useGame(const QString&)));
     connect(closeWindowButton, SIGNAL(clicked()),
-	    this, SLOT(onClickClose()));
+	    this, SLOT(close()));
 
   QHBoxLayout* layout = new QHBoxLayout;
   layout->addWidget(gameList);
@@ -110,11 +110,6 @@ void GameWindow::remove()
     emit removeGame(index);
     gameList->resizeColumnsToContents();
   }
-}
-
-void GameWindow::onClickClose()
-{
-  this->close();
 }
 
 void GameWindow::select()
