@@ -3,3 +3,5 @@ Makefile
 zeitgeist
 *.exe
 *.user.pro
+.qmake*
+*.app
