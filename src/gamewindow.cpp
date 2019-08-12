@@ -82,8 +82,8 @@ GameWindow::GameWindow(QWidget* parent, const DataManager* dataManager) :
           this, SLOT(select()));
   connect(this, SIGNAL(useGame(const QString&)),
           dataManager, SLOT(useGame(const QString&)));
-    connect(closeWindowButton, SIGNAL(clicked()),
-	    this, SLOT(close()));
+  connect(closeWindowButton, SIGNAL(clicked()),
+	  this, SLOT(close()));
 
   QHBoxLayout* layout = new QHBoxLayout;
   layout->addWidget(gameList);
