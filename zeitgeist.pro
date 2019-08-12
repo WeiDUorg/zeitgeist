@@ -4,7 +4,7 @@ TEMPLATE = app
 # QMake's debug/release build mechanics are complete BS. So, in order
 # to build a release build, you need to remove the debug option and
 # maybe add the release option (depending on the defaults of your Qt
-x# distribution).
+# distribution).
 
 CONFIG += debug
 QMAKE_CXXFLAGS += -std=c++11 -isystem $$[QT_INSTALL_HEADERS]
