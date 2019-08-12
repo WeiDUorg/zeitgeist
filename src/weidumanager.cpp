@@ -157,7 +157,7 @@ void WeiduManager::endTask(int exitCode, QProcess::ExitStatus exitStatus)
 {
   delete weiduLogLocker;
   weiduLogLocker = nullptr;
-  if (!exitCode == 0 || !exitStatus == 0) {
+  if (exitCode != 0 || exitStatus != 0) {
     qDebug() << "Abnormal return values from process";
     qDebug() << "Exit code:" << QString::number(exitCode) <<
       "Exit status:" << QString::number(exitStatus);
