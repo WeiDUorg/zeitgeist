@@ -139,7 +139,7 @@ void QueuedModsModel::unqueue(const QModelIndexList& indices)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     if (!parent.model()->hasIndex(0, 0, parent)) {
 #else
-    if (!parent.child(0, 0)) {
+    if (!parent.child(0, 0).isValid()) {
 #endif
       removeRow(modIndex);
     }
