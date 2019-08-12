@@ -21,6 +21,7 @@ private slots:
   void browse();
   void remove();
   void select();
+  void onClickClose();
   void select(const QModelIndex& index);
   void notAGameDirectory(const QString& path);
   void rowsInserted(const QModelIndex&, int start, int end);
@@ -33,6 +34,7 @@ signals:
 private:
   const DataManager* dataManager;
   QTableView* gameList;
+  QPushButton* closeWindowButton;
   QPushButton* addGameButton;
   QPushButton* removeGameButton;
   QPushButton* selectGameButton;
