@@ -61,11 +61,13 @@ GameWindow::GameWindow(QWidget* parent, const DataManager* dataManager) :
   addGameButton = new QPushButton(tr("Add"), this);
   removeGameButton = new QPushButton(tr("Remove"), this);
   selectGameButton = new QPushButton(tr("Select"), this);
+  closeWindowButton = new QPushButton(tr("Close"), this);
   QVBoxLayout* buttonLayout = new QVBoxLayout;
   buttonLayout->addStretch();
   buttonLayout->addWidget(addGameButton);
   buttonLayout->addWidget(removeGameButton);
   buttonLayout->addWidget(selectGameButton);
+  buttonLayout->addWidget(closeWindowButton);
   connect(addGameButton, SIGNAL(clicked()),
           this, SLOT(browse()));
   connect(this, SIGNAL(addGame(const QString&)),
@@ -80,6 +82,8 @@ GameWindow::GameWindow(QWidget* parent, const DataManager* dataManager) :
           this, SLOT(select()));
   connect(this, SIGNAL(useGame(const QString&)),
           dataManager, SLOT(useGame(const QString&)));
+  connect(closeWindowButton, SIGNAL(clicked()),
+	  this, SLOT(close()));
 
   QHBoxLayout* layout = new QHBoxLayout;
   layout->addWidget(gameList);

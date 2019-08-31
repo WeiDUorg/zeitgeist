@@ -136,7 +136,7 @@ void QueuedModsModel::unqueue(const QModelIndexList& indices)
     foreach (int compIndex, compList) {
       removeRow(compIndex, parent);
     }
-    if (!parent.child(0, 0).isValid()) {
+    if (!parent.model()->hasIndex(0, 0, parent)) {
       removeRow(modIndex);
     }
   }

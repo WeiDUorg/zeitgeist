@@ -48,10 +48,12 @@ TerminalWindow::TerminalWindow(QWidget* parent,
   inputLine = new QLineEdit(this);
 
   QPushButton* enterButton = new QPushButton(tr("Enter"), this);
+  QPushButton* closeButton = new QPushButton(tr("Close"), this);
 
   QHBoxLayout* inputLayout = new QHBoxLayout;
   inputLayout->addWidget(inputLine);
   inputLayout->addWidget(enterButton);
+  inputLayout->addWidget(closeButton);
 
   QVBoxLayout* mainLayout = new QVBoxLayout;
   mainLayout->addWidget(outputPane);
@@ -67,6 +69,8 @@ TerminalWindow::TerminalWindow(QWidget* parent,
           coordinator->controller, SIGNAL(processInput(const QString&)));
   connect(coordinator->controller, SIGNAL(installTaskEnded()),
           this, SLOT(installTaskEnded()));
+  connect(closeButton, SIGNAL(clicked()),
+          this, SLOT(close()));
 }
 
 TerminalWindow::~TerminalWindow()

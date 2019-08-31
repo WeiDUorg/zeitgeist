@@ -33,6 +33,7 @@ signals:
 private:
   const DataManager* dataManager;
   QTableView* gameList;
+  QPushButton* closeWindowButton;
   QPushButton* addGameButton;
   QPushButton* removeGameButton;
   QPushButton* selectGameButton;
