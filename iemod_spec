@@ -1,15 +1,18 @@
 Specification of the IEMOD file format
 
-Version 0.9.0
+Version 0.10.0
 
 The IEMOD format is intended to be a platform-independent distribution
 format for modifications for games using the Infinity Engine, using
 WeiDU for installation.
 
 An IEMOD file is a ZIP archive using either no compression or
-compression with the DEFLATE algorithm. The file must have the
-extension ".iemod" and the archive must not span multiple files or be
-segmented, nor shall it be encrypted.
+compression with the DEFLATE algorithm (compression method 8). The
+file must have the extension ".iemod" and the archive must not span
+multiple files or be segmented, nor shall it be encrypted, constitute
+or contain patched data, or contain any provisions for
+self-extraction. All file and directory names must be encoded in
+UTF-8.
 
 Of the files contained within the archive, there must be a WeiDU TP2
 file either in the toplevel or within a directory that is itself
